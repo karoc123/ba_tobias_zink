@@ -1,4 +1,4 @@
-package test8;
+package textures;
 
 public class ModelTexture {
 	

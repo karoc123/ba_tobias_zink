@@ -1,4 +1,6 @@
-package test8;
+package models;
+
+import textures.ModelTexture;
 
 public class TexturedModel {
 

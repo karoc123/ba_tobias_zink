@@ -1,4 +1,4 @@
-package test8;
+package renderer;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,6 +12,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+
+import models.RawModel;
+import textures.Texture;
+import textures.TextureLoader;
 
 public class Loader {
 	

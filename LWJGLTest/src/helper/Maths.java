@@ -1,7 +1,9 @@
-package test8;
+package helper;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+
+import blockengine.Camera;
 
 public class Maths {
 

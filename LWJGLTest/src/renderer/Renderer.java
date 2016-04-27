@@ -1,4 +1,4 @@
-package test8;
+package renderer;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.GL11;
@@ -7,6 +7,12 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.Display;
 import org.lwjgl.util.vector.Matrix4f;
+
+import blockengine.Entity;
+import helper.Maths;
+import models.RawModel;
+import models.TexturedModel;
+import shaders.StaticShader;
 
 public class Renderer {
 	

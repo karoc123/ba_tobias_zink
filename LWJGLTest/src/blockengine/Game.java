@@ -1,4 +1,4 @@
-package test8;
+package blockengine;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -8,8 +8,14 @@ import java.util.ArrayList;
 
 import org.lwjgl.Version;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector3f;
+
+import models.RawModel;
+import models.TexturedModel;
+import renderer.Loader;
+import renderer.Renderer;
+import shaders.StaticShader;
+import textures.ModelTexture;
 
 public class Game {
 	private long windowID;
@@ -19,7 +25,6 @@ public class Game {
 	private TexturedModel texturedModel;
 	private StaticShader shader;
 	private Entity entity;
-	private Entity entity2;
 	private ArrayList<Entity> entitys = new ArrayList<Entity>();
 	private Camera camera;
 
@@ -40,7 +45,7 @@ public class Game {
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-		windowID = glfwCreateWindow(1200, 920, "My GLFW Window", NULL, NULL);
+		windowID = glfwCreateWindow(1200, 920, "LWJGL Block Engine", NULL, NULL);
 
 		if (windowID == NULL) {
 			System.err.println("Error creating a window");

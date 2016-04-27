@@ -1,11 +1,14 @@
-package test8;
+package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
 
+import blockengine.Camera;
+import helper.Maths;
+
 public class StaticShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/test8/vertexShader";
-	private static final String FRAGMENT_FILE = "src/test8/fragmentShader";
+	private static final String VERTEX_FILE = "src/shaders/vertexShader";
+	private static final String FRAGMENT_FILE = "src/shaders/fragmentShader";
 	
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;

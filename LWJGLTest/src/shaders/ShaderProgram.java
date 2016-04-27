@@ -1,4 +1,4 @@
-package test8;
+package shaders;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
