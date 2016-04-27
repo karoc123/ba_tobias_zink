@@ -59,6 +59,10 @@ public class Game {
 		glfwShowWindow(windowID);
 	}
 
+	/**
+	 * Initializes opengl, shaders, entities, camera and loads everything
+	 * 
+	 */
 	public void init() {
 		glEnable(GL_DEPTH_TEST);
 		System.out.println("OpenGL: " + glGetString(GL_VERSION));
@@ -153,7 +157,10 @@ public class Game {
 		ModelTexture texture = new ModelTexture(loader.loadTexture("grass"));
 		texturedModel = new TexturedModel(model, texture);
 		
-		entity = new Entity(texturedModel, new Vector3f(0,0,-1.0f),0,0,0,0.25f);
+		texture = new ModelTexture(loader.loadTexture("stone"));
+		TexturedModel texMod2 = new TexturedModel(model, texture);
+		
+		entity = new Entity(texMod2, new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
 //		entity2 = new Entity(texturedModel, new Vector3f(0.5f,-0.5f,-2.0f),0,0,0,0.25f);
 //		Entity entity3 = new Entity(texturedModel, new Vector3f(0.25f,-0.5f,-2.0f),0,0,0,0.25f);
 //		Entity entity4 = new Entity(texturedModel, new Vector3f(0.0f,-0.5f,-2.0f),0,0,0,0.25f);
@@ -169,42 +176,69 @@ public class Game {
 			}
 		}
 		
+		for(int i = 0; i < 1; i++){
+			for(int k = 0; k< 15; k++){
+				Entity entity = new Entity(texMod2, new Vector3f(0.4f*i-0.9f, -0.39f, -1.8f-0.21f*k),0,0,0,0.2f);
+				entitys.add(entity);				
+			}
+		}
+		
 		
 		camera = new Camera();
 		
 	}
 
+	/**
+	 * This method is used to update the game logic
+	 * 
+	 * @param delta
+	 *            time since last call
+	 */
 	public void update(float delta) {
 	}
 
+	/**
+	 * This method is used to initialize the renderer & shader
+	 * 
+	 * @param delta
+	 *            time since last call
+	 */
 	public void render(float delta) {
-		entity.increaseRotation(1, 1, 0);
-		camera.move(0, 0, 0, 0, 0, 0);
+		entity.increaseRotation(0, 0, 0);
 		
+		camera.move(0, 0, 0, 0, 0, 0);
+
 		renderer.prepare();
 		shader.start();
 		shader.loadViewMatrix(camera);
-		
-		for(Entity entity:entitys){
+
+		for (Entity entity : entitys) {
 			renderer.render(entity, shader);
 		}
-		
-		//renderer.render(entity, shader);
-		//renderer.render(entity2, shader);
+
+		// renderer.render(entity, shader);
+		// renderer.render(entity2, shader);
 		shader.stop();
 	}
 
+	/**
+	 * Called after the game ends to cleanup
+	 * 
+	 */
 	public void dispose() {
 		loader.cleanUp();
 		shader.cleanUp();
 	}
 
+	/**
+	 * Starts the engine
+	 * 
+	 */
 	public void start() {
 		float now, last, delta;
-
 		last = 0;
 
-		// Initialise the Game
+		// Initialize the Game
 		init();
 
 		// Loop continuously and render and update

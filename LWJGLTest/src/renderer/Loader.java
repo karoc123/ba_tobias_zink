@@ -21,7 +21,6 @@ public class Loader {
 	
 	private List<Integer> vaos = new ArrayList<Integer>();
 	private List<Integer> vbos = new ArrayList<Integer>();
-	
 	private List<Integer> textures = new ArrayList<Integer>();
 	
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, int[] indices) {
@@ -32,14 +31,18 @@ public class Loader {
 		ubindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
-	
+
+	/**
+	 * To load a single Texture from res/filename.png
+	 * 
+	 * @param fileName
+	 *            only the name without .png
+	 */
 	public int loadTexture(String fileName){
 		Texture texture = null;
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/"+fileName+".png"));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		int textureID = texture.getTextureID();
@@ -47,6 +50,10 @@ public class Loader {
 		return textureID;
 	}
 	
+	/**
+	 * Deletes all loaded resources
+	 * 
+	 */
 	public void cleanUp(){
 		for(int vao:vaos){
 			GL30.glDeleteVertexArrays(vao);

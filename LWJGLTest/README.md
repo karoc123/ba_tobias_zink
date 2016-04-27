@@ -1,4 +1,5 @@
 # ba_tobias_zink
 Implementation of a block-based graphics library with LWJGL
 
-Texturen von: http://opengameart.org/content/seamless-2 (Pubilc Domain)
+Textures from: http://opengameart.org/content/seamless-2 (Pubilc Domain)
+Documentation on: http://lwjglblog.wordpress.com

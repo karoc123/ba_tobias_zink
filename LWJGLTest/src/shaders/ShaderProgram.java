@@ -37,14 +37,26 @@ public abstract class ShaderProgram {
 		return GL20.glGetUniformLocation(programID, uniformName);
 	}
 	
+	/**
+	 * Binds the shaders
+	 * 
+	 */
 	public void start(){
 		GL20.glUseProgram(programID);
 	}
 	
+	/**
+	 * Unbinds the shaders from opengl
+	 * 
+	 */
 	public void stop(){
 		GL20.glUseProgram(0);
 	}
-	
+
+	/**
+	 * Cleans up the shaders from video ram
+	 * 
+	 */
 	public void cleanUp() {
 		stop();
 		GL20.glDetachShader(programID, vertexShaderID);
@@ -82,6 +94,14 @@ public abstract class ShaderProgram {
 		GL20.glBindAttribLocation(programID, attribute, variableName);
 	}
 	
+	/**
+	 * Loads shader
+	 * 
+	 * @param file
+	 *            location of shader
+	 * @param type
+	 *            shader type
+	 */
 	private static int loadShader(String file, int type){
 		StringBuilder shaderSource = new StringBuilder();
 		try {
