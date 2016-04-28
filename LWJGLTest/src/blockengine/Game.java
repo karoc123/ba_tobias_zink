@@ -7,26 +7,33 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.util.ArrayList;
 
 import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.util.vector.Vector3f;
 
+import Input.KeyboardHandler;
+import entities.Camera;
+import entities.Entity;
+import entities.Light;
+import models.OBJLoader;
 import models.RawModel;
 import models.TexturedModel;
 import renderer.Loader;
-import renderer.Renderer;
+import renderer.MasterRenderer;
+import renderer.EntityRenderer;
 import shaders.StaticShader;
 import textures.ModelTexture;
 
 public class Game {
 	private long windowID;
+	private GLFWKeyCallback keyCallback;
 	private Loader loader;
-	private Renderer renderer;
+	private MasterRenderer renderer;
 	private RawModel model;
-	private TexturedModel texturedModel;
-	private StaticShader shader;
 	private Entity entity;
 	private ArrayList<Entity> entitys = new ArrayList<Entity>();
 	private Camera camera;
+	private Light light;
 
 	public Game() {
 		System.out.println("LWJGL " + Version.getVersion() + "!");
@@ -57,6 +64,9 @@ public class Game {
 
 		glfwSwapInterval(1);
 		glfwShowWindow(windowID);
+		
+		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
+        glfwSetKeyCallback(windowID, keyCallback = new KeyboardHandler());
 	}
 
 	/**
@@ -64,114 +74,32 @@ public class Game {
 	 * 
 	 */
 	public void init() {
-		glEnable(GL_DEPTH_TEST);
+		// Debuginformation
 		System.out.println("OpenGL: " + glGetString(GL_VERSION));
 
-		shader = new StaticShader();
-		renderer = new Renderer(shader);
+		// Init Shader & Renderer
+		glEnable(GL_DEPTH_TEST);
+		renderer = new MasterRenderer();
 		
-		float[] vertices = {			
-				-0.5f,0.5f,-0.5f,	
-				-0.5f,-0.5f,-0.5f,	
-				0.5f,-0.5f,-0.5f,	
-				0.5f,0.5f,-0.5f,		
-				
-				-0.5f,0.5f,0.5f,	
-				-0.5f,-0.5f,0.5f,	
-				0.5f,-0.5f,0.5f,	
-				0.5f,0.5f,0.5f,
-				
-				0.5f,0.5f,-0.5f,	
-				0.5f,-0.5f,-0.5f,	
-				0.5f,-0.5f,0.5f,	
-				0.5f,0.5f,0.5f,
-				
-				-0.5f,0.5f,-0.5f,	
-				-0.5f,-0.5f,-0.5f,	
-				-0.5f,-0.5f,0.5f,	
-				-0.5f,0.5f,0.5f,
-				
-				-0.5f,0.5f,0.5f,
-				-0.5f,0.5f,-0.5f,
-				0.5f,0.5f,-0.5f,
-				0.5f,0.5f,0.5f,
-				
-				-0.5f,-0.5f,0.5f,
-				-0.5f,-0.5f,-0.5f,
-				0.5f,-0.5f,-0.5f,
-				0.5f,-0.5f,0.5f
-				
-		};
+		// Load 3d Models
+		//ModelLoader modelLoader = new ModelLoader(loader);
+		//model = modelLoader.loadCube();
+		model = OBJLoader.loadObjModel("cube", loader);
 		
-		float[] textureCoords = {
-				
-				0,0,
-				0,1,
-				1,1,
-				1,0,			
-				0,0,
-				0,1,
-				1,1,
-				1,0,			
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0
-
-				
-		};
-		
-		int[] indices = {
-				0,1,3,	
-				3,1,2,
-				
-				4,5,7,
-				7,5,6,
-				
-				8,9,11,
-				11,9,10,
-				
-				12,13,15,
-				15,13,14,
-				
-				16,17,19,
-				19,17,18,
-				
-				20,21,23,
-				23,21,22
-
-		};
-		model = loader.loadToVAO(vertices, textureCoords, indices);
-		ModelTexture texture = new ModelTexture(loader.loadTexture("grass"));
-		texturedModel = new TexturedModel(model, texture);
-		
+		// Load Textures and Create Models with them
+		ModelTexture texture;
+		texture = new ModelTexture(loader.loadTexture("grass"));
+		TexturedModel texMod1 = new TexturedModel(model, texture);
 		texture = new ModelTexture(loader.loadTexture("stone"));
 		TexturedModel texMod2 = new TexturedModel(model, texture);
 		
 		entity = new Entity(texMod2, new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
-//		entity2 = new Entity(texturedModel, new Vector3f(0.5f,-0.5f,-2.0f),0,0,0,0.25f);
-//		Entity entity3 = new Entity(texturedModel, new Vector3f(0.25f,-0.5f,-2.0f),0,0,0,0.25f);
-//		Entity entity4 = new Entity(texturedModel, new Vector3f(0.0f,-0.5f,-2.0f),0,0,0,0.25f);
-//		entitys.add(entity);
-//		entitys.add(entity2);
-//		entitys.add(entity3);
-//		entitys.add(entity4);
+
+		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
 		
 		for(int i = 0; i < 10; i++){
 			for(int k = 0; k< 15; k++){
-				Entity entity = new Entity(texturedModel, new Vector3f(0.21f*i-0.9f,-0.6f,-1.8f-0.21f*k),0,0,0,0.2f);
+				Entity entity = new Entity(texMod1, new Vector3f(0.21f*i-0.9f,-0.6f,-1.8f-0.21f*k),0,0,0,0.2f);
 				entitys.add(entity);				
 			}
 		}
@@ -185,16 +113,79 @@ public class Game {
 		
 		
 		camera = new Camera();
-		
 	}
 
 	/**
 	 * This method is used to update the game logic
 	 * 
+	 * TODO: keyboardHandler auslagern
+	 * 
 	 * @param delta
 	 *            time since last call
 	 */
 	public void update(float delta) {
+		
+		// TOOD: Playermovement nicht Kameramovement
+    	if(KeyboardHandler.isKeyDown(GLFW_KEY_SPACE))
+    	{
+    		System.out.println("Space Key Pressed");
+    		camera.move(0, delta*1.0f, 0, 0, 0, 0);
+    	}
+    	
+    	if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT_SHIFT))
+    	{
+    		System.out.println("Left Shift Key Pressed");
+    		camera.move(0, -delta*1.0f, 0, 0, 0, 0);
+    	}
+    	
+    	if(KeyboardHandler.isKeyDown(GLFW_KEY_W))
+    	{
+    		System.out.println("W Key Pressed");
+    		camera.move(0, 0, -delta*1.0f, 0, 0, 0);
+    	}
+    	
+    	if(KeyboardHandler.isKeyDown(GLFW_KEY_A))
+    	{
+    		System.out.println("A Key Pressed");
+    		camera.move(-delta*1.0f, 0, 0, 0, 0, 0);
+    	}
+    	
+    	if(KeyboardHandler.isKeyDown(GLFW_KEY_S))
+    	{
+    		System.out.println("S Key Pressed");
+    		camera.move(0, 0, delta*1.0f, 0, 0, 0);
+    	}
+    	
+    	if(KeyboardHandler.isKeyDown(GLFW_KEY_D))
+    	{
+    		System.out.println("D Key Pressed");
+    		camera.move(delta*1.0f, 0, 0, 0, 0, 0);
+    	}
+    	
+    	// TOOD: Playermovement nicht Kameramovement
+//    	if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT))
+//    	{
+//    		System.out.println("LEFT Key Pressed");
+//    		camera.move(0, 0, 0, 0, -delta*20.0f, 0);
+//    	}
+//    	
+//    	if(KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT))
+//    	{
+//    		System.out.println("RIGHT Key Pressed");
+//    		camera.move(0, 0, 0, 0, delta*20.0f, 0);
+//    	}
+//    	
+//    	if(KeyboardHandler.isKeyDown(GLFW_KEY_UP))
+//    	{
+//    		System.out.println("UP Key Pressed");
+//    		camera.move(0, 0, 0, -delta*20.0f, 0, 0);
+//    	}
+//    	
+//    	if(KeyboardHandler.isKeyDown(GLFW_KEY_DOWN))
+//    	{
+//    		System.out.println("DOWN Key Pressed");
+//    		camera.move(0, 0, 0, delta*20.0f, 0, 0);;
+//    	}
 	}
 
 	/**
@@ -206,19 +197,17 @@ public class Game {
 	public void render(float delta) {
 		entity.increaseRotation(0, 0, 0);
 		
-		camera.move(0, 0, 0, 0, 0, 0);
-
-		renderer.prepare();
-		shader.start();
-		shader.loadViewMatrix(camera);
-
+		// DEBUGSTUFF
+		//camera.move(0.002f, 0, -0.002f, 0.02f, -0.05f, 0);
+		//light.setPosition(new Vector3f(light.getPosition().x+0.02f, 5, 5));
+		
+		// Add every entity in the renderer
 		for (Entity entity : entitys) {
-			renderer.render(entity, shader);
+			renderer.processEntity(entity);
 		}
-
-		// renderer.render(entity, shader);
-		// renderer.render(entity2, shader);
-		shader.stop();
+		
+		// render scene
+		renderer.render(light, camera);
 	}
 
 	/**
@@ -227,7 +216,8 @@ public class Game {
 	 */
 	public void dispose() {
 		loader.cleanUp();
-		shader.cleanUp();
+		renderer.cleanUp();
+		//shader.cleanUp();
 	}
 
 	/**
