@@ -141,51 +141,53 @@ public class Game {
     	if(KeyboardHandler.isKeyDown(GLFW_KEY_W))
     	{
     		System.out.println("W Key Pressed");
-    		camera.move(0, 0, -delta*1.0f, 0, 0, 0);
+    		//camera.move(0, 0, -delta*1.0f, 0, 0, 0);
+    		camera.walkForward(-delta*1.0f);
     	}
     	
     	if(KeyboardHandler.isKeyDown(GLFW_KEY_A))
     	{
     		System.out.println("A Key Pressed");
-    		camera.move(-delta*1.0f, 0, 0, 0, 0, 0);
+    		//camera.move(-delta*1.0f, 0, 0, 0, 0, 0);
+    		camera.strafeLeft(-delta*1.0f);
     	}
     	
     	if(KeyboardHandler.isKeyDown(GLFW_KEY_S))
     	{
     		System.out.println("S Key Pressed");
-    		camera.move(0, 0, delta*1.0f, 0, 0, 0);
+    		//camera.move(0, 0, delta*1.0f, 0, 0, 0);
+    		camera.walkBackwards(-delta*1.0f);
     	}
     	
     	if(KeyboardHandler.isKeyDown(GLFW_KEY_D))
     	{
     		System.out.println("D Key Pressed");
-    		camera.move(delta*1.0f, 0, 0, 0, 0, 0);
+    		camera.strafeRight(-delta*1.0f);
     	}
     	
-    	// TOOD: Playermovement nicht Kameramovement
-//    	if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT))
-//    	{
-//    		System.out.println("LEFT Key Pressed");
-//    		camera.move(0, 0, 0, 0, -delta*20.0f, 0);
-//    	}
-//    	
-//    	if(KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT))
-//    	{
-//    		System.out.println("RIGHT Key Pressed");
-//    		camera.move(0, 0, 0, 0, delta*20.0f, 0);
-//    	}
-//    	
-//    	if(KeyboardHandler.isKeyDown(GLFW_KEY_UP))
-//    	{
-//    		System.out.println("UP Key Pressed");
-//    		camera.move(0, 0, 0, -delta*20.0f, 0, 0);
-//    	}
-//    	
-//    	if(KeyboardHandler.isKeyDown(GLFW_KEY_DOWN))
-//    	{
-//    		System.out.println("DOWN Key Pressed");
-//    		camera.move(0, 0, 0, delta*20.0f, 0, 0);;
-//    	}
+    	if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT))
+    	{
+    		System.out.println("LEFT Key Pressed");
+    		camera.move(0, 0, 0, 0, -delta*40.0f, 0);
+    	}
+    	
+    	if(KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT))
+    	{
+    		System.out.println("RIGHT Key Pressed");
+    		camera.move(0, 0, 0, 0, delta*40.0f, 0);
+    	}
+    	
+    	if(KeyboardHandler.isKeyDown(GLFW_KEY_UP))
+    	{
+    		System.out.println("UP Key Pressed");
+    		camera.move(0, 0, 0, -delta*20.0f, 0, 0);
+    	}
+    	
+    	if(KeyboardHandler.isKeyDown(GLFW_KEY_DOWN))
+    	{
+    		System.out.println("DOWN Key Pressed");
+    		camera.move(0, 0, 0, delta*20.0f, 0, 0);;
+    	}
 	}
 
 	/**

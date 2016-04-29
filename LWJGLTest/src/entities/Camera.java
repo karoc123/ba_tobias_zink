@@ -35,6 +35,34 @@ public class Camera {
 		this.roll += roll;
 	}
 	
+	//moves the camera forward relative to its current rotation (yaw)
+	public void walkForward(float distance)
+	{
+	    position.x -= distance * (float)Math.sin(Math.toRadians(yaw));
+	    position.z += distance * (float)Math.cos(Math.toRadians(yaw));
+	}
+	 
+	//moves the camera backward relative to its current rotation (yaw)
+	public void walkBackwards(float distance)
+	{
+	    position.x += distance * (float)Math.sin(Math.toRadians(yaw));
+	    position.z -= distance * (float)Math.cos(Math.toRadians(yaw));
+	}
+	 
+	//strafes the camera left relitive to its current rotation (yaw)
+	public void strafeLeft(float distance)
+	{
+	    position.x -= distance * (float)Math.sin(Math.toRadians(yaw-90));
+	    position.z += distance * (float)Math.cos(Math.toRadians(yaw-90));
+	}
+	 
+	//strafes the camera right relitive to its current rotation (yaw)
+	public void strafeRight(float distance)
+	{
+	    position.x -= distance * (float)Math.sin(Math.toRadians(yaw+90));
+	    position.z += distance * (float)Math.cos(Math.toRadians(yaw+90));
+	}
+	
 	public Vector3f getPosition() {
 		return position;
 	}
