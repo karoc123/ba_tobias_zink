@@ -1,4 +1,4 @@
-package models;
+package modelLoader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,6 +10,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import models.RawModel;
 import renderer.Loader;
 
 public class OBJLoader {

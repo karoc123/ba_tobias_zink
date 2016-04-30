@@ -15,13 +15,12 @@ import Input.KeyboardHandler;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
-import models.OBJLoader;
+import modelLoader.ModelData;
+import modelLoader.OBJLoader;
 import models.RawModel;
 import models.TexturedModel;
 import renderer.Loader;
 import renderer.MasterRenderer;
-import renderer.EntityRenderer;
-import shaders.StaticShader;
 import textures.ModelTexture;
 
 public class Game {
@@ -84,6 +83,8 @@ public class Game {
 		// Load 3d Models
 		//ModelLoader modelLoader = new ModelLoader(loader);
 		//model = modelLoader.loadCube();
+//		ModelData modelData = OBJLoader.loadOBJ("cube");
+//		model = OBJLoader.loadOBJ("cube");
 		model = OBJLoader.loadObjModel("cube", loader);
 		
 		// Load Textures and Create Models with them
