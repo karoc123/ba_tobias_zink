@@ -17,6 +17,7 @@ import entities.Entity;
 import entities.Light;
 import modelLoader.ModelData;
 import modelLoader.OBJLoader;
+import modelLoader.OBJLoaderNew;
 import models.RawModel;
 import models.TexturedModel;
 import renderer.Loader;
@@ -81,11 +82,11 @@ public class Game {
 		renderer = new MasterRenderer();
 		
 		// Load 3d Models
-		//ModelLoader modelLoader = new ModelLoader(loader);
-		//model = modelLoader.loadCube();
-//		ModelData modelData = OBJLoader.loadOBJ("cube");
-//		model = OBJLoader.loadOBJ("cube");
-		model = OBJLoader.loadObjModel("cube", loader);
+		ModelData modelData = OBJLoaderNew.loadOBJ("cube");
+		model = loader.loadToVAO(modelData.getVertices(), 
+				modelData.getTextureCoords(), 
+				modelData.getNormals(), 
+				modelData.getIndices());
 		
 		// Load Textures and Create Models with them
 		ModelTexture texture;
@@ -100,14 +101,14 @@ public class Game {
 		
 		for(int i = 0; i < 10; i++){
 			for(int k = 0; k< 15; k++){
-				Entity entity = new Entity(texMod1, new Vector3f(0.21f*i-0.9f,-0.6f,-1.8f-0.21f*k),0,0,0,0.2f);
+				Entity entity = new Entity(texMod1, new Vector3f(0.20f*i-0.9f,-0.6f,-1.8f-0.2f*k),0,0,0,0.2f);
 				entitys.add(entity);				
 			}
 		}
 		
 		for(int i = 0; i < 1; i++){
 			for(int k = 0; k< 15; k++){
-				Entity entity = new Entity(texMod2, new Vector3f(0.4f*i-0.9f, -0.39f, -1.8f-0.21f*k),0,0,0,0.2f);
+				Entity entity = new Entity(texMod2, new Vector3f(0.4f*i-0.9f, -0.4f, -1.8f-0.20f*k),0,0,0,0.2f);
 				entitys.add(entity);				
 			}
 		}
