@@ -3,6 +3,7 @@ package blockengine;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
+import static helper.Log.*;
 
 import java.util.ArrayList;
 
@@ -11,13 +12,14 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.util.vector.Vector3f;
 
+import Input.Keyboard;
 import Input.KeyboardHandler;
+import World.WorldData;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import modelLoader.ModelData;
 import modelLoader.OBJLoader;
-import modelLoader.OBJLoaderNew;
 import models.RawModel;
 import models.TexturedModel;
 import renderer.Loader;
@@ -26,6 +28,7 @@ import textures.ModelTexture;
 
 public class Game {
 	private long windowID;
+	private Configuration config = new Configuration();
 	private GLFWKeyCallback keyCallback;
 	private Loader loader;
 	private MasterRenderer renderer;
@@ -34,11 +37,15 @@ public class Game {
 	private ArrayList<Entity> entitys = new ArrayList<Entity>();
 	private Camera camera;
 	private Light light;
+	private WorldData world;
+    int fps;
+    long lastFPS;
 
 	public Game() {
 		System.out.println("LWJGL " + Version.getVersion() + "!");
 		loader = new Loader();
 		
+		config.loadConfiguration();
 
 		if (glfwInit() != GL_TRUE) {
 			System.err.println("Error initializing GLFW");
@@ -52,7 +59,12 @@ public class Game {
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-		windowID = glfwCreateWindow(1200, 920, "LWJGL Block Engine", NULL, NULL);
+		if(Configuration.FULLSCREEN){
+			windowID = glfwCreateWindow(config.getWidth(), config.getHeight(), "LWJGL Block Engine", glfwGetPrimaryMonitor(), NULL);
+
+		} else {
+			windowID = glfwCreateWindow(config.getWidth(), config.getHeight(), "LWJGL Block Engine", NULL, NULL);
+		}
 
 		if (windowID == NULL) {
 			System.err.println("Error creating a window");
@@ -76,13 +88,14 @@ public class Game {
 	public void init() {
 		// Debuginformation
 		System.out.println("OpenGL: " + glGetString(GL_VERSION));
+		lastFPS = getTime();
 
 		// Init Shader & Renderer
 		glEnable(GL_DEPTH_TEST);
-		renderer = new MasterRenderer();
+		renderer = new MasterRenderer(world);
 		
 		// Load 3d Models
-		ModelData modelData = OBJLoaderNew.loadOBJ("cube");
+		ModelData modelData = OBJLoader.loadOBJ("cube");
 		model = loader.loadToVAO(modelData.getVertices(), 
 				modelData.getTextureCoords(), 
 				modelData.getNormals(), 
@@ -99,19 +112,24 @@ public class Game {
 
 		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
 		
-		for(int i = 0; i < 10; i++){
-			for(int k = 0; k< 15; k++){
-				Entity entity = new Entity(texMod1, new Vector3f(0.20f*i-0.9f,-0.6f,-1.8f-0.2f*k),0,0,0,0.2f);
-				entitys.add(entity);				
-			}
-		}
+		// Create World
+		world = new WorldData(20);
 		
-		for(int i = 0; i < 1; i++){
-			for(int k = 0; k< 15; k++){
-				Entity entity = new Entity(texMod2, new Vector3f(0.4f*i-0.9f, -0.4f, -1.8f-0.20f*k),0,0,0,0.2f);
-				entitys.add(entity);				
-			}
-		}
+//		for(int i = 0; i < 0; i++){
+//			for(int k = 0; k< 0; k++){
+//				for(int j = 0; j< 0; j++){
+//					Entity entity = new Entity(texMod1, new Vector3f(0.20f*i-0.9f,-0.6f-0.2f*j,-1.8f-0.2f*k),0,0,0,0.2f);
+//					entitys.add(entity);
+//				}				
+//			}
+//		}
+		
+//		for(int i = 0; i < 1; i++){
+//			for(int k = 0; k< 15; k++){
+//				Entity entity = new Entity(texMod2, new Vector3f(0.4f*i-0.9f, -0.4f, -1.8f-0.20f*k),0,0,0,0.2f);
+//				entitys.add(entity);				
+//			}
+//		}
 		
 		
 		camera = new Camera();
@@ -120,76 +138,11 @@ public class Game {
 	/**
 	 * This method is used to update the game logic
 	 * 
-	 * TODO: keyboardHandler auslagern
-	 * 
 	 * @param delta
 	 *            time since last call
 	 */
 	public void update(float delta) {
-		
-		// TOOD: Playermovement nicht Kameramovement
-    	if(KeyboardHandler.isKeyDown(GLFW_KEY_SPACE))
-    	{
-    		System.out.println("Space Key Pressed");
-    		camera.move(0, delta*1.0f, 0, 0, 0, 0);
-    	}
-    	
-    	if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT_SHIFT))
-    	{
-    		System.out.println("Left Shift Key Pressed");
-    		camera.move(0, -delta*1.0f, 0, 0, 0, 0);
-    	}
-    	
-    	if(KeyboardHandler.isKeyDown(GLFW_KEY_W))
-    	{
-    		System.out.println("W Key Pressed");
-    		//camera.move(0, 0, -delta*1.0f, 0, 0, 0);
-    		camera.walkForward(-delta*1.0f);
-    	}
-    	
-    	if(KeyboardHandler.isKeyDown(GLFW_KEY_A))
-    	{
-    		System.out.println("A Key Pressed");
-    		//camera.move(-delta*1.0f, 0, 0, 0, 0, 0);
-    		camera.strafeLeft(-delta*1.0f);
-    	}
-    	
-    	if(KeyboardHandler.isKeyDown(GLFW_KEY_S))
-    	{
-    		System.out.println("S Key Pressed");
-    		//camera.move(0, 0, delta*1.0f, 0, 0, 0);
-    		camera.walkBackwards(-delta*1.0f);
-    	}
-    	
-    	if(KeyboardHandler.isKeyDown(GLFW_KEY_D))
-    	{
-    		System.out.println("D Key Pressed");
-    		camera.strafeRight(-delta*1.0f);
-    	}
-    	
-    	if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT))
-    	{
-    		System.out.println("LEFT Key Pressed");
-    		camera.move(0, 0, 0, 0, -delta*40.0f, 0);
-    	}
-    	
-    	if(KeyboardHandler.isKeyDown(GLFW_KEY_RIGHT))
-    	{
-    		System.out.println("RIGHT Key Pressed");
-    		camera.move(0, 0, 0, 0, delta*40.0f, 0);
-    	}
-    	
-    	if(KeyboardHandler.isKeyDown(GLFW_KEY_UP))
-    	{
-    		System.out.println("UP Key Pressed");
-    		camera.move(0, 0, 0, -delta*20.0f, 0, 0);
-    	}
-    	
-    	if(KeyboardHandler.isKeyDown(GLFW_KEY_DOWN))
-    	{
-    		System.out.println("DOWN Key Pressed");
-    		camera.move(0, 0, 0, delta*20.0f, 0, 0);;
-    	}
+		Keyboard.HandleInput(delta, camera, windowID);
 	}
 
 	/**
@@ -203,7 +156,7 @@ public class Game {
 		
 		// DEBUGSTUFF
 		//camera.move(0.002f, 0, -0.002f, 0.02f, -0.05f, 0);
-		//light.setPosition(new Vector3f(light.getPosition().x+0.02f, 5, 5));
+		//light.setPosition(new Vector3f(light.getPosition().x-0.2f, light.getPosition().y-3.2f, 0));
 		
 		// Add every entity in the renderer
 		for (Entity entity : entitys) {
@@ -211,7 +164,7 @@ public class Game {
 		}
 		
 		// render scene
-		renderer.render(light, camera);
+		renderer.render(light, camera, world);
 	}
 
 	/**
@@ -245,6 +198,7 @@ public class Game {
 			// Update and render
 			update(delta);
 			render(delta);
+			performanceLog(delta);
 
 			// Poll the events and swap the buffers
 			glfwPollEvents();
@@ -261,6 +215,53 @@ public class Game {
 		System.exit(0);
 	}
 
+	/**
+	 * Prints information about the performance of the engine
+	 * @param delta time since last update call
+	 */
+	public void performanceLog(float delta){
+		// Calculate Memory
+		int mb = 1024*1024;
+        if (getTime() - lastFPS > 1000) {
+		    //Getting the runtime reference from system
+		    Runtime runtime = Runtime.getRuntime();
+		     
+		    info("##### Heap utilization statistics [MB] #####");
+		     
+		    //Print used memory
+		    info("Used Memory:"
+		            + (runtime.totalMemory() - runtime.freeMemory()) / mb);
+		 
+		        //Print free memory
+		    info("Free Memory:"
+		        + runtime.freeMemory() / mb);
+		     
+		    //Print total available memory
+		    info("Total Memory:" + runtime.totalMemory() / mb);
+		 
+		        //Print Maximum available memory
+		    info("Max Memory:" + runtime.maxMemory() / mb);
+        }
+        
+		// Calculate FPS
+	    if (getTime() - lastFPS > 1000) {
+	    	glfwSetWindowTitle(windowID, "FPS: " + fps);
+	    	info("FPS: " + fps);
+	        fps = 0; //reset the FPS counter
+	        lastFPS += 1000; //add one second
+	    }
+	    fps++;
+	}
+
+	/**
+	 * Get the time in milliseconds
+	 * 
+	 * @return The system time in milliseconds
+	 */
+	public long getTime() {
+	    return System.nanoTime() / 1000000;
+	}
+	
 	public static void main(String[] args) {
 		new Game().start();
 	}

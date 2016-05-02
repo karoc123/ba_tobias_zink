@@ -9,6 +9,10 @@ import org.lwjgl.util.vector.Vector3f;
 import helper.Maths;
 import renderer.Loader;
 
+/**
+ * TODO: merge with OBJ Loader or delete class
+ *
+ */
 public class ModelLoader {
 
 	private static Loader loader;
