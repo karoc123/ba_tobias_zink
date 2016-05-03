@@ -43,7 +43,7 @@ public class Loader {
 		ubindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
-
+	
 	/**
 	 * To load a single Texture from res/filename.png
 	 * 
@@ -93,6 +93,12 @@ public class Loader {
 		return vaoID;
 	}
 	
+	/**
+	 * stores data in glBufferData
+	 * @param attributeNumber
+	 * @param coordinateSize
+	 * @param data
+	 */
 	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data){
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);

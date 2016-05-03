@@ -4,5 +4,7 @@ public enum Biome {
 
 	Nothing,
 	Grass,
-	Stone
+	GrassInvisible,
+	Stone,
+	StoneInvisible
 }

@@ -113,7 +113,7 @@ public class Game {
 		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
 		
 		// Create World
-		world = new WorldData(20);
+		world = new WorldData(35, loader);
 		
 //		for(int i = 0; i < 0; i++){
 //			for(int k = 0; k< 0; k++){
@@ -130,8 +130,7 @@ public class Game {
 //				entitys.add(entity);				
 //			}
 //		}
-		
-		
+
 		camera = new Camera();
 	}
 
