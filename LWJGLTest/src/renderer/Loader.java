@@ -1,7 +1,6 @@
 package renderer;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class Loader {
 	private List<Integer> textures = new ArrayList<Integer>();
 	
 	/**
-	 * Fills VAO with Data
+	 * Fills VAO with Data for RawModel
 	 * 
 	 * @param positions
 	 *            array of vertices
@@ -43,6 +42,20 @@ public class Loader {
 		ubindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
+	
+	/**
+	 * Fills VAO with Data
+	 * 
+	 * @param positions
+	 *            array of vertices
+	 * @return RawModel with all arrays
+	 */
+	public RawModel loadToVAO(FloatBuffer positions, int length) {
+		int vaoID = createVAO();
+		storeDataInAttributeList(0, 3, positions);
+		ubindVAO();
+		return new RawModel(vaoID, length);
+	}	
 	
 	/**
 	 * To load a single Texture from res/filename.png
@@ -104,6 +117,21 @@ public class Loader {
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		FloatBuffer buffer = storeDataInFloatBuffer(data);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
+	/**
+	 * stores data in glBufferData
+	 * @param attributeNumber
+	 * @param coordinateSize
+	 * @param data
+	 */
+	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, FloatBuffer buffer){
+		int vboID = GL15.glGenBuffers();
+		vbos.add(vboID);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);

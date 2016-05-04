@@ -93,8 +93,9 @@ public class WorldData {
 	    });
 	}
 	
-	public void createMesh(){
+	public RawModel createMesh(){
 		vertexPositionData = BufferUtils.createFloatBuffer((24*3)*worldSize*worldSize*worldSize);
+		int length = 72*worldSize*worldSize*worldSize;
 		
 		for (int x = 0; x < worldSize; x++) {
 	        for (int y = 0; y < worldSize; y++) {
@@ -105,5 +106,6 @@ public class WorldData {
 	    }
 		
 		vertexPositionData.flip();
+		return loader.loadToVAO(vertexPositionData, length);
 	}
 }
