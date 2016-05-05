@@ -14,12 +14,18 @@ import renderer.Loader;
  */
 public class WorldData {
 	
+	//cube size of the world
 	public int worldSize;
+	
+	
 	private Loader loader;
 	private RawModel rawModel;
 	
+	// 
 	private static int xOffset = 20;
 	private static int zOffset = 20;
+	
+	// Buffer for render process
 	public FloatBuffer vertexPositionData;
 	
 	Biome[][][] world;
@@ -55,6 +61,12 @@ public class WorldData {
 	}
 
 
+	/**
+	 * Creates a single cube for a greater mesh
+	 * @param tx
+	 * @param ty
+	 * @param tz
+	 */
 	public void putVertices(float tx, float ty, float tz) {
 	    float l_length = 1.0f;
 	    float l_height = 1.0f;
@@ -93,6 +105,10 @@ public class WorldData {
 	    });
 	}
 	
+	/**
+	 * Creates a RawModel(?) of a complete Mesh from one Biome
+	 * @return
+	 */
 	public RawModel createMesh(){
 		vertexPositionData = BufferUtils.createFloatBuffer((24*3)*worldSize*worldSize*worldSize);
 		int length = 72*worldSize*worldSize*worldSize;

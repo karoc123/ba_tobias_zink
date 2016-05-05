@@ -114,6 +114,12 @@ public class Game {
 		
 		// Create World
 		world = new WorldData(35, loader);
+
+
+		// TEMP
+		texture = new ModelTexture(loader.loadTexture("grass"));
+		entity = new Entity(new TexturedModel(world.createMesh(), texture), new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
+		entitys.add(entity);
 		
 //		for(int i = 0; i < 0; i++){
 //			for(int k = 0; k< 0; k++){
