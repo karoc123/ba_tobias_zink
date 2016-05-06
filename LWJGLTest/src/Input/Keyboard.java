@@ -7,6 +7,12 @@ import entities.Camera;
 
 public class Keyboard {
 
+	/**
+	 * Callback to handle Keyboardinputs
+	 * @param delta since last update
+	 * @param camera current camera to move
+	 * @param window window to catch keyboard input
+	 */
 	public static void HandleInput(float delta, Camera camera, long window) {
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_SPACE))
     	{
@@ -23,21 +29,18 @@ public class Keyboard {
     	if(KeyboardHandler.isKeyDown(GLFW_KEY_W))
     	{
     		debug("W Key Pressed");
-    		//camera.move(0, 0, -delta*1.0f, 0, 0, 0);
     		camera.walkForward(-delta*1.0f);
     	}
     	
     	if(KeyboardHandler.isKeyDown(GLFW_KEY_A))
     	{
     		debug("A Key Pressed");
-    		//camera.move(-delta*1.0f, 0, 0, 0, 0, 0);
     		camera.strafeLeft(-delta*1.0f);
     	}
     	
     	if(KeyboardHandler.isKeyDown(GLFW_KEY_S))
     	{
     		debug("S Key Pressed");
-    		//camera.move(0, 0, delta*1.0f, 0, 0, 0);
     		camera.walkBackwards(-delta*1.0f);
     	}
     	

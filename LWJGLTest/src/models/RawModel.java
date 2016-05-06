@@ -14,6 +14,10 @@ public class RawModel {
 		return vaoID;
 	}
 
+	/**
+	 * Number of vertices in vao from the model
+	 * @return
+	 */
 	public int getVertexCount() {
 		return vertexCount;
 	}

@@ -13,6 +13,10 @@ public class Configuration {
 	public static final float FAR_PLANE = 1000;
 	public static final boolean FULLSCREEN = false;
 	
+	/**
+	 * Hight of the window
+	 * @return Default: 1080
+	 */
 	public static int getHeight() {
 		return Height;
 	}
@@ -21,6 +25,10 @@ public class Configuration {
 		Height = height;
 	}
 
+	/**
+	 * Width of the window
+	 * @return Default: 1920
+	 */
 	public static int getWidth() {
 		return Width;
 	}
@@ -29,6 +37,12 @@ public class Configuration {
 		Width = width;
 	}
 
+	/**
+	 * Loads default configuration
+	 * Loglevel: 6
+	 * Height: 1080
+	 * Width: 1920
+	 */
 	public void loadConfiguration(){
 		Log.set(6);
 		Configuration.Height = 1080;
