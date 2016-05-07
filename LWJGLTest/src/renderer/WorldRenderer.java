@@ -17,7 +17,7 @@ import shaders.StaticShader;
 import textures.ModelTexture;
 
 public class WorldRenderer {
-	
+
 	private TexturedModel texturedModel;
 	private RawModel rawModel;
 	private ModelData modelData;
@@ -25,7 +25,9 @@ public class WorldRenderer {
 
 	/**
 	 * Setups a single renderer with shader and loads projection matrix
-	 * @param shader initialized shader to use
+	 * 
+	 * @param shader
+	 *            initialized shader to use
 	 */
 	public WorldRenderer(StaticShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
@@ -42,11 +44,9 @@ public class WorldRenderer {
 		Loader loader = new Loader();
 		// Load 3d Models
 		modelData = OBJLoader.loadOBJ("cube");
-		rawModel = loader.loadToVAO(modelData.getVertices(), 
-				modelData.getTextureCoords(), 
-				modelData.getNormals(), 
+		rawModel = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(),
 				modelData.getIndices());
-		
+
 		ModelTexture texture;
 		texture = new ModelTexture(loader.loadTexture("grass"));
 		this.texturedModel = new TexturedModel(rawModel, texture);
@@ -54,28 +54,33 @@ public class WorldRenderer {
 
 	/**
 	 * Renders a world array
-	 * @param worldData worldData array
+	 * 
+	 * @param worldData
+	 *            worldData array
 	 */
 	public void render(WorldData worldData) {
 		prepareTexturedModel(texturedModel);
-		
-		for(int i = 0; i < worldData.worldSize; i++){
-			for(int k = 0; k< worldData.worldSize; k++){
-				for(int j = 0; j< worldData.worldSize; j++){
-					prepareInstance(new Vector3f(0.20f*i-0.9f,-0.6f-0.2f*j,-1.8f-0.2f*k));
-					GL11.glDrawElements(GL11.GL_TRIANGLES, texturedModel.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-				}				
+
+		for (int i = 0; i < worldData.worldSize; i++) {
+			for (int k = 0; k < worldData.worldSize; k++) {
+				for (int j = 0; j < worldData.worldSize; j++) {
+					prepareInstance(new Vector3f(0.20f * i - 0.9f, -0.6f - 0.2f * j, -1.8f - 0.2f * k));
+					GL11.glDrawElements(GL11.GL_TRIANGLES, texturedModel.getRawModel().getVertexCount(),
+							GL11.GL_UNSIGNED_INT, 0);
+				}
 			}
 		}
-		
+
 		unbindTexturedModel();
 	}
-	
+
 	/**
 	 * Prepares rendering, called once a frame
-	 * @param model a single textured model
+	 * 
+	 * @param model
+	 *            a single textured model
 	 */
-	private void prepareTexturedModel(TexturedModel model){
+	private void prepareTexturedModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -84,23 +89,22 @@ public class WorldRenderer {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 	}
-	
+
 	/**
 	 * Called once rendering is finished
 	 */
-	private void unbindTexturedModel(){
+	private void unbindTexturedModel() {
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);
 		GL30.glBindVertexArray(0);
 	}
-	
+
 	/**
 	 * Prepares instances of TexturedModels
 	 */
-	private void prepareInstance(Vector3f position){
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(position, 
-				0, 0,0, 0.2f);
+	private void prepareInstance(Vector3f position) {
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(position, 0, 0, 0, 0.2f);
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 }

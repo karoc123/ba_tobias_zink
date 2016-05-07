@@ -48,6 +48,8 @@ public class Loader {
 	 * 
 	 * @param positions
 	 *            array of vertices
+	 * @param length
+	 * 			  length of the float buffer
 	 * @return RawModel with all arrays
 	 */
 	public RawModel loadToVAO(FloatBuffer positions, int length) {
@@ -81,7 +83,6 @@ public class Loader {
 	
 	/**
 	 * Deletes all loaded resources
-	 * 
 	 */
 	public void cleanUp(){
 		for(int vao:vaos){
@@ -137,6 +138,9 @@ public class Loader {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	
+	/**
+	 * Unbinds VAO
+	 */
 	private void ubindVAO(){
 		GL30.glBindVertexArray(0);
 	}

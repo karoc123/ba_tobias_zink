@@ -106,7 +106,7 @@ public class WorldData {
 	}
 	
 	/**
-	 * Creates a RawModel(?) of a complete Mesh from one Biome
+	 * Creates a RawModel(?) of a complete mesh from one biome
 	 * @return
 	 */
 	public RawModel createMesh(){
@@ -122,6 +122,7 @@ public class WorldData {
 	    }
 		
 		vertexPositionData.flip();
-		return loader.loadToVAO(vertexPositionData, length);
+		rawModel = loader.loadToVAO(vertexPositionData, length);
+		return rawModel;
 	}
 }

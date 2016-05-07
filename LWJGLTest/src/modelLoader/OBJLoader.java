@@ -15,6 +15,11 @@ public class OBJLoader {
     
     private static final String RES_LOC = "res/";
  
+    /**
+     * Loads a .obj file from /res folder
+     * @param objFileName Name of .obj file
+     * @return ModelData of the .obj file
+     */
     public static ModelData loadOBJ(String objFileName) {
         FileReader isr = null;
         File objFile = new File(RES_LOC + objFileName + ".obj");

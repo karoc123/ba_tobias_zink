@@ -94,32 +94,32 @@ public class Game {
 		glEnable(GL_DEPTH_TEST);
 		renderer = new MasterRenderer(world);
 		
-		// Load 3d Models
-		ModelData modelData = OBJLoader.loadOBJ("cube");
-		model = loader.loadToVAO(modelData.getVertices(), 
-				modelData.getTextureCoords(), 
-				modelData.getNormals(), 
-				modelData.getIndices());
-		
-		// Load Textures and Create Models with them
-		ModelTexture texture;
-		texture = new ModelTexture(loader.loadTexture("grass"));
-		TexturedModel texMod1 = new TexturedModel(model, texture);
-		texture = new ModelTexture(loader.loadTexture("stone"));
-		TexturedModel texMod2 = new TexturedModel(model, texture);
-		
-		entity = new Entity(texMod2, new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
-
+//		// Load 3d Models
+//		ModelData modelData = OBJLoader.loadOBJ("cube");
+//		model = loader.loadToVAO(modelData.getVertices(), 
+//				modelData.getTextureCoords(), 
+//				modelData.getNormals(), 
+//				modelData.getIndices());
+//		
+//		// Load Textures and Create Models with them
+//		ModelTexture texture;
+//		texture = new ModelTexture(loader.loadTexture("grass"));
+//		TexturedModel texMod1 = new TexturedModel(model, texture);
+//		texture = new ModelTexture(loader.loadTexture("stone"));
+//		TexturedModel texMod2 = new TexturedModel(model, texture);
+//		
+//		entity = new Entity(texMod2, new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
+//
 		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
 		
 		// Create World
 		world = new WorldData(35, loader);
 
 
-		// TEMP
-		texture = new ModelTexture(loader.loadTexture("grass"));
-		entity = new Entity(new TexturedModel(world.createMesh(), texture), new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
-		entitys.add(entity);
+//		// TEMP
+//		texture = new ModelTexture(loader.loadTexture("grass"));
+//		entity = new Entity(new TexturedModel(world.createMesh(), texture), new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
+//		entitys.add(entity);
 		
 //		for(int i = 0; i < 0; i++){
 //			for(int k = 0; k< 0; k++){
@@ -157,7 +157,7 @@ public class Game {
 	 *            time since last call
 	 */
 	public void render(float delta) {
-		entity.increaseRotation(0, 0, 0);
+		//entity.increaseRotation(0, 0, 0);
 		
 		// DEBUGSTUFF
 		//camera.move(0.002f, 0, -0.002f, 0.02f, -0.05f, 0);
