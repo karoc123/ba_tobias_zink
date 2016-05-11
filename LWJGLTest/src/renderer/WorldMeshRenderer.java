@@ -1,6 +1,6 @@
 package renderer;
 
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.*;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
@@ -27,13 +27,12 @@ public class WorldMeshRenderer {
 	}
 
 	private void init() {
-		
 	}
 
 	public void render(WorldData worldData) {
 		GL30.glBindVertexArray(worldData.getRawModel().getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, worldData.getRawModel().getVertexCount());
+		GL20.glEnableVertexAttribArray(0);		
+		GL11.glDrawArrays(GL11.GL_LINES, 0, worldData.getRawModel().getVertexCount());
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 	}

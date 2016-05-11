@@ -1,12 +1,10 @@
-package World;
+package Temp_Test;
 
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15;
 
-import models.RawModel;
-import renderer.Loader;
 
 /**
  * Manages the world array
@@ -19,34 +17,29 @@ public class WorldData {
 	
 	
 	private Loader loader;
-	private RawModel rawModel;
-	
-	// 
-	private static int xOffset = 20;
-	private static int zOffset = 20;
+	private Temp_Test.RawModel rawModel;
 	
 	// Buffer for render process
 	public FloatBuffer vertexPositionData;
 	
-	BlockType[][][] world;
+	Type[][][] world;
 
 	public WorldData (int worldSize, Loader loader){
 		this.loader = loader;
 		this.worldSize = worldSize;
 		generateWorld();
-		createMesh();
 	}
 	
 	/**
 	 * Generates World Array on world creation
 	 */
 	private void generateWorld(){
-		this.world = new BlockType[worldSize][worldSize][worldSize];
+		this.world = new Type[worldSize][worldSize][worldSize];
 		
 		for(int i = 0; i < worldSize; i++){
 			for(int k = 0; k< worldSize; k++){
 				for(int j = 0; j< worldSize; j++){
-					world[i][j][k] = BlockType.Grass;
+					world[i][j][k] = Type.Grass;
 				}				
 			}
 		}
@@ -56,7 +49,7 @@ public class WorldData {
 	 * Gets the RawModel of the World
 	 * @return RawModel of the World
 	 */
-	public RawModel getRawModel() {
+	public Temp_Test.RawModel getRawModel() {
 		return rawModel;
 	}
 
@@ -68,9 +61,7 @@ public class WorldData {
 	 * @param tz
 	 */
 	public void putVertices(float tx, float ty, float tz) {
-	    float l_length = 1.0f;
-	    float l_height = 1.0f;
-	    float l_width = 1.0f;
+	    float length = 1.0f;
 	    vertexPositionData.put(new float[]{
 	    		  // Front face
 	    		  -1.0f, -1.0f,  1.0f,
@@ -114,7 +105,7 @@ public class WorldData {
 	 * Creates a RawModel(?) of a complete mesh
 	 * @return
 	 */
-	public RawModel createMesh(){
+	public float[] createMesh(){
 		vertexPositionData = BufferUtils.createFloatBuffer((24*3)*worldSize*worldSize*worldSize);
 		int length = 72*worldSize*worldSize*worldSize;
 		
@@ -127,7 +118,15 @@ public class WorldData {
 	    }
 		
 		vertexPositionData.flip();
-		rawModel = loader.loadToVAO(vertexPositionData, length);
-		return rawModel;
+		return toFloatArray(vertexPositionData);
 	}
+	
+	private static float[] toFloatArray(FloatBuffer bytes) {
+
+        float[] floatArray = new float[bytes.limit()];
+        bytes.get(floatArray);
+
+
+        return floatArray;
+    }
 }

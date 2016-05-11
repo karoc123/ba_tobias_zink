@@ -1,6 +1,6 @@
 package World;
 
-public enum Biome {
+public enum BlockType {
 
 	Nothing,
 	Grass,
