@@ -58,8 +58,8 @@ public class MasterRenderer {
 		shader.loadViewMatrix(camera);
 		
 		// render process
-		//entityRenderer.render(entities);
-		//worldRenderer.render(worldData);
+//		entityRenderer.render(entities);
+//		worldRenderer.render(worldData);
 		worldMeshRenderer.render(worldData);
 		
 		
@@ -90,12 +90,12 @@ public class MasterRenderer {
 	public void prepare(){
 		// enable z-index testing
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		
+
 		// clear the screen and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		// make new background 
-		GL11.glClearColor(0, 205/255.0f, 255/255.0f, 1);
+
+		// make new background
+		GL11.glClearColor(0, 205 / 255.0f, 255 / 255.0f, 1);
 	}
 	
 	/**

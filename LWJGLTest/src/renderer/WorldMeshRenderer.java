@@ -30,9 +30,18 @@ public class WorldMeshRenderer {
 	}
 
 	public void render(WorldData worldData) {
-		GL30.glBindVertexArray(worldData.getRawModel().getVaoID());
-		GL20.glEnableVertexAttribArray(0);		
-		GL11.glDrawArrays(GL11.GL_LINES, 0, worldData.getRawModel().getVertexCount());
+//		GL30.glBindVertexArray(worldData.vID);
+		
+//		GL20.glEnableVertexAttribArray(0);		
+//		GL11.glDrawArrays(GL11.GL_LINES, 0, worldData.getVerticesCount());
+//		GL20.glDisableVertexAttribArray(0);
+//		GL30.glBindVertexArray(0);
+		
+		GL30.glBindVertexArray(worldData.vaoID);
+		GL20.glEnableVertexAttribArray(0);
+	    
+	    GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, worldData.getVerticesCount());
+	    
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 	}

@@ -102,7 +102,7 @@ public class Game {
 //				modelData.getIndices());
 //		
 //		// Load Textures and Create Models with them
-//		ModelTexture texture;
+		ModelTexture texture;
 //		texture = new ModelTexture(loader.loadTexture("grass"));
 //		TexturedModel texMod1 = new TexturedModel(model, texture);
 //		texture = new ModelTexture(loader.loadTexture("stone"));
@@ -113,12 +113,12 @@ public class Game {
 		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
 		
 		// Create World
-		world = new WorldData(35, loader);
+		world = new WorldData(5, loader);
+		//model = loader.loadToVAO(world.createVertices(), world.createVertices(), world.createVertices(), new int[] { 1 });
 
-
-//		// TEMP
+		// TEMP
 //		texture = new ModelTexture(loader.loadTexture("grass"));
-//		entity = new Entity(new TexturedModel(world.createMesh(), texture), new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
+//		entity = new Entity(new TexturedModel(model, texture), new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
 //		entitys.add(entity);
 		
 //		for(int i = 0; i < 0; i++){

@@ -64,40 +64,40 @@ public class WorldData {
 	    float length = 1.0f;
 	    vertexPositionData.put(new float[]{
 	    		  // Front face
-	    		  -1.0f, -1.0f,  1.0f,
-	    		   1.0f, -1.0f,  1.0f,
-	    		   1.0f,  1.0f,  1.0f,
-	    		  -1.0f,  1.0f,  1.0f,
+	    		  -0.1f + tx, -0.1f + ty,  0.1f + tz,
+	    		   0.1f + tx, -0.1f + ty,  0.1f + tz,
+	    		   0.1f + tx,  0.1f + ty,  0.1f + tz,
+	    		  -0.1f + tx,  0.1f + ty,  0.1f + tz,
 	    		  
 	    		  // Back face
-	    		  -1.0f, -1.0f, -1.0f,
-	    		  -1.0f,  1.0f, -1.0f,
-	    		   1.0f,  1.0f, -1.0f,
-	    		   1.0f, -1.0f, -1.0f,
+	    		  -0.1f + tx, -0.1f + ty, -0.1f + tz,
+	    		  -0.1f + tx,  0.1f + ty, -0.1f + tz,
+	    		   0.1f + tx,  0.1f + ty, -0.1f + tz,
+	    		   0.1f + tx, -0.1f + ty, -0.1f + tz,
 	    		  
 	    		  // Top face
-	    		  -1.0f,  1.0f, -1.0f,
-	    		  -1.0f,  1.0f,  1.0f,
-	    		   1.0f,  1.0f,  1.0f,
-	    		   1.0f,  1.0f, -1.0f,
+	    		  -0.1f + tx,  0.1f + ty, -0.1f + tz,
+	    		  -0.1f + tx,  0.1f + ty,  0.1f + tz,
+	    		   0.1f + tx,  0.1f + ty,  0.1f + tz,
+	    		   0.1f + tx,  0.1f + ty, -0.1f + tz,
 	    		  
 	    		  // Bottom face
-	    		  -1.0f, -1.0f, -1.0f,
-	    		   1.0f, -1.0f, -1.0f,
-	    		   1.0f, -1.0f,  1.0f,
-	    		  -1.0f, -1.0f,  1.0f,
+	    		  -0.1f + tx, -0.1f + ty, -0.1f + tz,
+	    		   0.1f + tx, -0.1f + ty, -0.1f + tz,
+	    		   0.1f + tx, -0.1f + ty,  0.1f + tz,
+	    		  -0.1f + tx, -0.1f + ty,  0.1f + tz,
 	    		  
 	    		  // Right face
-	    		   1.0f, -1.0f, -1.0f,
-	    		   1.0f,  1.0f, -1.0f,
-	    		   1.0f,  1.0f,  1.0f,
-	    		   1.0f, -1.0f,  1.0f,
+	    		   0.1f + tx, -0.1f + ty, -0.1f + tz,
+	    		   0.1f + tx,  0.1f + ty, -0.1f + tz,
+	    		   0.1f + tx,  0.1f + ty,  0.1f + tz,
+	    		   0.1f + tx, -0.1f + ty,  0.1f + tz,
 	    		  
 	    		  // Left face
-	    		  -1.0f, -1.0f, -1.0f,
-	    		  -1.0f, -1.0f,  1.0f,
-	    		  -1.0f,  1.0f,  1.0f,
-	    		  -1.0f,  1.0f, -1.0f
+	    		  -0.1f + tx, -0.1f + ty, -0.1f + tz,
+	    		  -0.1f + tx, -0.1f + ty,  0.1f + tz,
+	    		  -0.1f + tx,  0.1f + ty,  0.1f + tz,
+	    		  -0.1f + tx,  0.1f + ty, -0.1f + tz
 	    });
 	}
 	
@@ -112,7 +112,7 @@ public class WorldData {
 		for (int x = 0; x < worldSize; x++) {
 	        for (int y = 0; y < worldSize; y++) {
 	            for (int z = 0; z < worldSize; z++) {
-	                    putVertices(x, y, z);
+	                    putVertices(x, y, -z);
 	            }
 	        }
 	    }
