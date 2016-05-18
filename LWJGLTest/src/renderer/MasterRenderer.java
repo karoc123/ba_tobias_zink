@@ -58,8 +58,8 @@ public class MasterRenderer {
 		shader.loadViewMatrix(camera);
 		
 		// render process
-//		entityRenderer.render(entities);
-//		worldRenderer.render(worldData);
+		entityRenderer.render(entities);
+		worldRenderer.render(worldData);
 		worldMeshRenderer.render(worldData);
 		
 		

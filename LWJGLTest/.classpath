@@ -5,7 +5,7 @@
 	<classpathentry kind="lib" path="lib/jar/lwjgl_util.jar"/>
 	<classpathentry kind="lib" path="lib/jar/lwjgl.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/Users/Karoc/Dropbox/workspace_pluto/LWJGL_Test/LWJGLTest/lib/doc/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/LWJGLTest/lib/doc/javadoc.zip!/"/>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="LWJGLTest/lib/native"/>
 		</attributes>
 	</classpathentry>

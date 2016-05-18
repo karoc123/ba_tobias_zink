@@ -94,22 +94,22 @@ public class Game {
 		glEnable(GL_DEPTH_TEST);
 		renderer = new MasterRenderer(world);
 		
-//		// Load 3d Models
-//		ModelData modelData = OBJLoader.loadOBJ("cube");
-//		model = loader.loadToVAO(modelData.getVertices(), 
-//				modelData.getTextureCoords(), 
-//				modelData.getNormals(), 
-//				modelData.getIndices());
-//		
-//		// Load Textures and Create Models with them
+		// Load 3d Models
+		ModelData modelData = OBJLoader.loadOBJ("cube");
+		model = loader.loadToVAO(modelData.getVertices(), 
+				modelData.getTextureCoords(), 
+				modelData.getNormals(), 
+				modelData.getIndices());
+		
+		// Load Textures and Create Models with them
 		ModelTexture texture;
-//		texture = new ModelTexture(loader.loadTexture("grass"));
-//		TexturedModel texMod1 = new TexturedModel(model, texture);
-//		texture = new ModelTexture(loader.loadTexture("stone"));
-//		TexturedModel texMod2 = new TexturedModel(model, texture);
-//		
-//		entity = new Entity(texMod2, new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
-//
+		texture = new ModelTexture(loader.loadTexture("grass"));
+		TexturedModel texMod1 = new TexturedModel(model, texture);
+		texture = new ModelTexture(loader.loadTexture("stone"));
+		TexturedModel texMod2 = new TexturedModel(model, texture);
+		
+		entity = new Entity(texMod2, new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
+
 		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
 		
 		// Create World
@@ -117,19 +117,19 @@ public class Game {
 		//model = loader.loadToVAO(world.createVertices(), world.createVertices(), world.createVertices(), new int[] { 1 });
 
 		// TEMP
-//		texture = new ModelTexture(loader.loadTexture("grass"));
-//		entity = new Entity(new TexturedModel(model, texture), new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
-//		entitys.add(entity);
+		texture = new ModelTexture(loader.loadTexture("grass"));
+		entity = new Entity(new TexturedModel(model, texture), new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
+		entitys.add(entity);
 		
-//		for(int i = 0; i < 0; i++){
-//			for(int k = 0; k< 0; k++){
-//				for(int j = 0; j< 0; j++){
-//					Entity entity = new Entity(texMod1, new Vector3f(0.20f*i-0.9f,-0.6f-0.2f*j,-1.8f-0.2f*k),0,0,0,0.2f);
-//					entitys.add(entity);
-//				}				
-//			}
-//		}
-		
+		for(int i = 0; i < 0; i++){
+			for(int k = 0; k< 0; k++){
+				for(int j = 0; j< 0; j++){
+					Entity entity = new Entity(texMod1, new Vector3f(0.20f*i-0.9f,-0.6f-0.2f*j,-1.8f-0.2f*k),0,0,0,0.2f);
+					entitys.add(entity);
+				}				
+			}
+		}
+//		
 //		for(int i = 0; i < 1; i++){
 //			for(int k = 0; k< 15; k++){
 //				Entity entity = new Entity(texMod2, new Vector3f(0.4f*i-0.9f, -0.4f, -1.8f-0.20f*k),0,0,0,0.2f);
