@@ -113,7 +113,7 @@ public class Game {
 		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
 		
 		// Create World
-		world = new WorldData(5, loader);
+		world = new WorldData(1);
 		//model = loader.loadToVAO(world.createVertices(), world.createVertices(), world.createVertices(), new int[] { 1 });
 
 		// TEMP
@@ -179,7 +179,7 @@ public class Game {
 	public void dispose() {
 		loader.cleanUp();
 		renderer.cleanUp();
-		//shader.cleanUp();
+		world.cleanUp();
 	}
 
 	/**

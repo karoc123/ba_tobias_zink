@@ -30,6 +30,7 @@ public class WorldMeshRenderer {
 	}
 
 	public void render(WorldData worldData) {
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 //		GL30.glBindVertexArray(worldData.vID);
 		
 //		GL20.glEnableVertexAttribArray(0);		
@@ -44,6 +45,6 @@ public class WorldMeshRenderer {
 	    
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 	}
-
 }
