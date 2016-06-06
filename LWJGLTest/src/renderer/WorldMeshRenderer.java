@@ -41,8 +41,9 @@ public class WorldMeshRenderer {
 		GL30.glBindVertexArray(worldData.vaoID);
 		GL20.glEnableVertexAttribArray(0);
 	    
-	    GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, worldData.getVerticesCount());
-	    
+	    //GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, worldData.getVerticesCount());
+		GL11.glDrawElements(GL11.GL_TRIANGLES, worldData.getVerticesCount(), GL11.GL_UNSIGNED_INT, 0);
+		
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);

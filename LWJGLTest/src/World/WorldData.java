@@ -22,7 +22,7 @@ public class WorldData {
 	public float cubeSize = 2.0f/2;
 	
 	// Rendering Variables
-	public int cID, vaoID, vboID;
+	public int cID, vaoID;
 	
 	// Buffer for render process
 	public FloatBuffer vertexPositionData, colorPositionData;
@@ -39,12 +39,14 @@ public class WorldData {
 	public WorldData (int worldSize){
 		this.worldSize = worldSize;
 		generateWorld();
+		//readChunkFromFile();
 		createVerticesAsBuffer();
 		initMesh();
 	}
 	
 	private void storeDataInAttributeList(int attributeNumber, FloatBuffer buffer){
-		vboID = GL15.glGenBuffers();
+		int vboID = GL15.glGenBuffers();
+		vbos.add(vboID); //save buffers to delete after
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(attributeNumber, 3, GL11.GL_FLOAT, false, 0, 0);
@@ -116,6 +118,30 @@ public class WorldData {
 			}
 		}
 	}
+	
+	/**
+	 * Reads chunk from a chunk file
+	 */
+	private void readChunkFromFile(){
+		world[0][0][1] = BlockType.Grass;
+		world[0][0][2] = BlockType.Grass;
+		world[0][0][3] = BlockType.Grass;
+		world[0][0][4] = BlockType.Grass;
+		world[0][0][5] = BlockType.Grass;
+		world[0][0][6] = BlockType.Grass;
+		world[0][0][7] = BlockType.Grass;
+		world[0][0][8] = BlockType.Grass;
+		world[0][0][9] = BlockType.Grass;
+		world[1][0][0] = BlockType.Grass;
+		world[2][0][0] = BlockType.Grass;
+		world[3][0][0] = BlockType.Grass;
+		world[4][0][0] = BlockType.Grass;
+		world[5][0][0] = BlockType.Grass;
+		world[6][0][0] = BlockType.Grass;
+		world[7][0][0] = BlockType.Grass;
+		world[8][0][0] = BlockType.Grass;
+		world[9][0][0] = BlockType.Grass;
+	}
 
 	/**
 	 * Creates cube data and puts it into buffers for one mesh
@@ -123,8 +149,9 @@ public class WorldData {
 	 * @param ty
 	 * @param tz
 	 * @param offset number of indices
+	 * @return number of indices added
 	 */
-	public void putVertices(float tx, float ty, float tz, int offset) {
+	public int putVertices(float tx, float ty, float tz, int offset) {
 	    vertexPositionData.put(new float[]{			  
 	    		// Back face
 				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//0
@@ -165,17 +192,23 @@ public class WorldData {
 	    indicesData.put(new int[]{
 				0+offset,1+offset,3+offset,	// Back face
 				3+offset,1+offset,2+offset,	// Back face
+				
 				4+offset,5+offset,7+offset, // Front face
 				7+offset,5+offset,6+offset, // Front face
+				
 				8+offset,9+offset,11+offset, // Right face
 				11+offset,9+offset,10+offset, // Right face
+				
 				12+offset,13+offset,15+offset, // Left face
 				15+offset,13+offset,14+offset, // Left face
+				
 				16+offset,17+offset,19+offset, // Top face
 				19+offset,17+offset,18+offset, // Top face
+				
 				20+offset,21+offset,23+offset, // Bottom face
 				23+offset,21+offset,22+offset // Bottom face
 	    });
+	    return 24;
 	}
 	
 	public int getVerticesCount(){
@@ -193,7 +226,10 @@ public class WorldData {
 		for (int x = 0; x < worldSize; x++) {
 	        for (int y = 0; y < worldSize; y++) {
 	            for (int z = 0; z < worldSize; z++) {
-	                    putVertices(x*cubeSize, y*cubeSize, -z*cubeSize, i++*24);
+	            	if(world[x][y][z] == BlockType.Grass)
+	            	{
+	                    i += putVertices(x*cubeSize, y*cubeSize, -z*cubeSize, i);
+	            	}
 	            }
 	        }
 	    }

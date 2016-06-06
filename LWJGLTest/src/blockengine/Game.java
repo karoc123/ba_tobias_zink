@@ -1,19 +1,21 @@
 package blockengine;
 
+import static helper.Log.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
-import static helper.Log.*;
 
 import java.util.ArrayList;
 
 import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.util.vector.Vector3f;
 
 import Input.Keyboard;
 import Input.KeyboardHandler;
+import Input.MouseHandler;
 import World.WorldData;
 import entities.Camera;
 import entities.Entity;
@@ -30,12 +32,13 @@ public class Game {
 	private long windowID;
 	private Configuration config = new Configuration();
 	private GLFWKeyCallback keyCallback;
+	private MouseHandler mouseCallback;
 	private Loader loader;
 	private MasterRenderer renderer;
 	private RawModel model;
 	private Entity entity;
 	private ArrayList<Entity> entitys = new ArrayList<Entity>();
-	private Camera camera;
+	private Camera camera = new Camera();
 	private Light light;
 	private WorldData world;
     int fps;
@@ -76,9 +79,6 @@ public class Game {
 
 		glfwSwapInterval(1);
 		glfwShowWindow(windowID);
-		
-		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(windowID, keyCallback = new KeyboardHandler());
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class Game {
 		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
 		
 		// Create World
-		world = new WorldData(1);
+		world = new WorldData(5);
 		//model = loader.loadToVAO(world.createVertices(), world.createVertices(), world.createVertices(), new int[] { 1 });
 
 		// TEMP
@@ -129,15 +129,6 @@ public class Game {
 				}				
 			}
 		}
-//		
-//		for(int i = 0; i < 1; i++){
-//			for(int k = 0; k< 15; k++){
-//				Entity entity = new Entity(texMod2, new Vector3f(0.4f*i-0.9f, -0.4f, -1.8f-0.20f*k),0,0,0,0.2f);
-//				entitys.add(entity);				
-//			}
-//		}
-
-		camera = new Camera();
 	}
 
 	/**
@@ -147,6 +138,8 @@ public class Game {
 	 *            time since last call
 	 */
 	public void update(float delta) {
+		
+		//process input: keyboard
 		Keyboard.HandleInput(delta, camera, windowID);
 	}
 
@@ -193,12 +186,20 @@ public class Game {
 		// Initialize the Game
 		init();
 
+		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
+//		glfwSetInputMode(windowID, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // to hide and lock the cursor
+        glfwSetKeyCallback(windowID, keyCallback = new KeyboardHandler());
+        glfwSetCursorPosCallback(windowID, mouseCallback = new MouseHandler(camera, config));
+        
 		// Loop continuously and render and update
 		while (glfwWindowShouldClose(windowID) != GL_TRUE) {
 			// Get the time
 			now = (float) glfwGetTime();
 			delta = now - last;
 			last = now;
+			
+			// Reset mouse position
+			glfwSetCursorPos(windowID, Configuration.getWidth()/2, Configuration.getWidth()/2);
 
 			// Update and render
 			update(delta);
