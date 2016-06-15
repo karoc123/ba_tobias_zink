@@ -19,7 +19,8 @@ public class WorldData {
 	
 	//cube size of the world
 	public int worldSize;
-	public float cubeSize = 2.0f/2;
+	private float cubeSize = 2.0f/2;
+	private int numberOfVertices = 0;
 	
 	// Rendering Variables
 	public int cID, vaoID;
@@ -149,7 +150,7 @@ public class WorldData {
 	 * @param ty
 	 * @param tz
 	 * @param offset number of indices
-	 * @return number of indices added
+	 * @return number of vertices added
 	 */
 	public int putVertices(float tx, float ty, float tz, int offset) {
 	    vertexPositionData.put(new float[]{			  
@@ -211,12 +212,16 @@ public class WorldData {
 	    return 24;
 	}
 	
+	/**
+	 * Number of vertices in the mesh
+	 * @return
+	 */
 	public int getVerticesCount(){
-		return (24*3)*worldSize*worldSize*worldSize;
+		return numberOfVertices;
 	}
 	
 	/**
-	 * Creates a vertices and indices of a complete mesh
+	 * Creates vertices and indices for a mesh
 	 * @return
 	 */
 	public FloatBuffer createVerticesAsBuffer(){
@@ -233,7 +238,7 @@ public class WorldData {
 	            }
 	        }
 	    }
-		
+		numberOfVertices = i;
 		vertexPositionData.flip();
 		indicesData.flip();
 		return vertexPositionData;

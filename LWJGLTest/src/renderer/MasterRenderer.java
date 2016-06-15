@@ -26,7 +26,6 @@ public class MasterRenderer {
 	
 	private StaticShader shader;
 	private EntityRenderer entityRenderer;
-	private WorldRenderer worldRenderer;
 	private WorldMeshRenderer worldMeshRenderer;
 	private Map<TexturedModel,List<Entity>> entities;
 	private Matrix4f projectionMatrix;
@@ -36,7 +35,6 @@ public class MasterRenderer {
 		createProjectionMatrix();
 		this.shader = new StaticShader();
 		this.entityRenderer = new EntityRenderer(shader, projectionMatrix);
-		this.worldRenderer = new WorldRenderer(shader, projectionMatrix);
 		this.worldMeshRenderer = new WorldMeshRenderer(shader, projectionMatrix, worldData);
 		entities = new HashMap<TexturedModel,List<Entity>>();
 		
@@ -59,7 +57,6 @@ public class MasterRenderer {
 		
 		// render process
 		entityRenderer.render(entities);
-//		worldRenderer.render(worldData);
 		worldMeshRenderer.render(worldData);
 		
 		

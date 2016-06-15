@@ -12,6 +12,8 @@ public class Configuration {
 	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000;
 	public static final boolean FULLSCREEN = false;
+	private static final int WORLD_SIZE = 2;
+	public static final int CHUNK_SIZE = 16;
 	
 	/**
 	 * Hight of the window
@@ -48,6 +50,10 @@ public class Configuration {
 		Configuration.Height = 1080;
 		Configuration.Width = 1920;
 		if(DEBUG) Log.set(2);
+	}
+
+	public static int getWorldSize() {
+		return WORLD_SIZE;
 	}
 
 }

@@ -113,9 +113,8 @@ public class Game {
 		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
 		
 		// Create World
-		world = new WorldData(5);
-		//model = loader.loadToVAO(world.createVertices(), world.createVertices(), world.createVertices(), new int[] { 1 });
-
+		world = new WorldData(Configuration.getWorldSize());
+		
 		// TEMP
 		texture = new ModelTexture(loader.loadTexture("grass"));
 		entity = new Entity(new TexturedModel(model, texture), new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
@@ -150,12 +149,6 @@ public class Game {
 	 *            time since last call
 	 */
 	public void render(float delta) {
-		//entity.increaseRotation(0, 0, 0);
-		
-		// DEBUGSTUFF
-		//camera.move(0.002f, 0, -0.002f, 0.02f, -0.05f, 0);
-		//light.setPosition(new Vector3f(light.getPosition().x-0.2f, light.getPosition().y-3.2f, 0));
-		
 		// Add every entity in the renderer
 		for (Entity entity : entitys) {
 			renderer.processEntity(entity);
