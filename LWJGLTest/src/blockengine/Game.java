@@ -94,14 +94,14 @@ public class Game {
 		glEnable(GL_DEPTH_TEST);
 		renderer = new MasterRenderer(world);
 		
-		// Load 3d Models
+		// Load 3d models
 		ModelData modelData = OBJLoader.loadOBJ("cube");
 		model = loader.loadToVAO(modelData.getVertices(), 
 				modelData.getTextureCoords(), 
 				modelData.getNormals(), 
 				modelData.getIndices());
 		
-		// Load Textures and Create Models with them
+		// Load textures and create models with them
 		ModelTexture texture;
 		texture = new ModelTexture(loader.loadTexture("grass"));
 		TexturedModel texMod1 = new TexturedModel(model, texture);

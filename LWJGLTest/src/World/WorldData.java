@@ -120,29 +120,29 @@ public class WorldData {
 		}
 	}
 	
-	/**
-	 * Reads chunk from a chunk file
-	 */
-	private void readChunkFromFile(){
-		world[0][0][1] = BlockType.Grass;
-		world[0][0][2] = BlockType.Grass;
-		world[0][0][3] = BlockType.Grass;
-		world[0][0][4] = BlockType.Grass;
-		world[0][0][5] = BlockType.Grass;
-		world[0][0][6] = BlockType.Grass;
-		world[0][0][7] = BlockType.Grass;
-		world[0][0][8] = BlockType.Grass;
-		world[0][0][9] = BlockType.Grass;
-		world[1][0][0] = BlockType.Grass;
-		world[2][0][0] = BlockType.Grass;
-		world[3][0][0] = BlockType.Grass;
-		world[4][0][0] = BlockType.Grass;
-		world[5][0][0] = BlockType.Grass;
-		world[6][0][0] = BlockType.Grass;
-		world[7][0][0] = BlockType.Grass;
-		world[8][0][0] = BlockType.Grass;
-		world[9][0][0] = BlockType.Grass;
-	}
+//	/**
+//	 * Reads chunk from a chunk file
+//	 */
+//	private void readChunkFromFile(){
+//		world[0][0][1] = BlockType.Grass;
+//		world[0][0][2] = BlockType.Grass;
+//		world[0][0][3] = BlockType.Grass;
+//		world[0][0][4] = BlockType.Grass;
+//		world[0][0][5] = BlockType.Grass;
+//		world[0][0][6] = BlockType.Grass;
+//		world[0][0][7] = BlockType.Grass;
+//		world[0][0][8] = BlockType.Grass;
+//		world[0][0][9] = BlockType.Grass;
+//		world[1][0][0] = BlockType.Grass;
+//		world[2][0][0] = BlockType.Grass;
+//		world[3][0][0] = BlockType.Grass;
+//		world[4][0][0] = BlockType.Grass;
+//		world[5][0][0] = BlockType.Grass;
+//		world[6][0][0] = BlockType.Grass;
+//		world[7][0][0] = BlockType.Grass;
+//		world[8][0][0] = BlockType.Grass;
+//		world[9][0][0] = BlockType.Grass;
+//	}
 
 	/**
 	 * Creates cube data and puts it into buffers for one mesh
@@ -221,6 +221,46 @@ public class WorldData {
 	}
 	
 	/**
+	 * If a cube has "air" on one side, it is visible
+	 * TODO: also check other chunks for border cubes
+	 * @return
+	 */
+	private boolean checkIfCubeIsVisible(int x, int y, int z){
+		
+		//TODO check for other chunks
+		if(x == worldSize-1 || x == 0 || y == worldSize-1 || y == 0 || z == worldSize-1 || z == 0)
+		{
+			return true;
+		}
+		
+		if(x < worldSize-1 && world[x+1][y][z] == BlockType.Nothing)
+		{
+			return true;
+		}
+		if(x > 0 && world[x-1][y][z] == BlockType.Nothing)
+		{
+			return true;
+		}
+		if(y < worldSize-1 && world[x][y+1][z] == BlockType.Nothing)
+		{
+			return true;
+		}
+		if(y > 0 && world[x][y-1][z] == BlockType.Nothing)
+		{
+			return true;
+		}
+		if(z < worldSize-1 && world[x][y][z+1] == BlockType.Nothing)
+		{
+			return true;
+		}
+		if(z > 0 && world[x][y][z-1] == BlockType.Nothing)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * Creates vertices and indices for a mesh
 	 * @return
 	 */
@@ -231,7 +271,7 @@ public class WorldData {
 		for (int x = 0; x < worldSize; x++) {
 	        for (int y = 0; y < worldSize; y++) {
 	            for (int z = 0; z < worldSize; z++) {
-	            	if(world[x][y][z] == BlockType.Grass)
+	            	if(world[x][y][z] == BlockType.Grass && checkIfCubeIsVisible(x, y, z))
 	            	{
 	                    i += putVertices(x*cubeSize, y*cubeSize, -z*cubeSize, i);
 	            	}
