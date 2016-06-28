@@ -192,7 +192,7 @@ public class Game {
 			last = now;
 			
 			// Reset mouse position
-			glfwSetCursorPos(windowID, Configuration.getWidth()/2, Configuration.getWidth()/2);
+//			glfwSetCursorPos(windowID, Configuration.getWidth()/2, Configuration.getWidth()/2);
 
 			// Update and render
 			update(delta);

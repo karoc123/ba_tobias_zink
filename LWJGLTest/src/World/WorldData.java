@@ -19,11 +19,12 @@ public class WorldData {
 	
 	//cube size of the world
 	public int worldSize;
-	private float cubeSize = 2.0f/2;
+	private float cubeSize = 4.0f/2;
 	private int numberOfVertices = 0;
+	private int numberOfCubes = 0;
 	
 	// Rendering Variables
-	public int cID, vaoID;
+	public int cID, vaoID, vboID;
 	
 	// Buffer for render process
 	public FloatBuffer vertexPositionData, colorPositionData;
@@ -46,7 +47,7 @@ public class WorldData {
 	}
 	
 	private void storeDataInAttributeList(int attributeNumber, FloatBuffer buffer){
-		int vboID = GL15.glGenBuffers();
+		vboID = GL15.glGenBuffers();
 		vbos.add(vboID); //save buffers to delete after
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
@@ -153,63 +154,44 @@ public class WorldData {
 	 * @return number of vertices added
 	 */
 	public int putVertices(float tx, float ty, float tz, int offset) {
+		// create vertices
 	    vertexPositionData.put(new float[]{			  
 	    		// Back face
-				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//0
-				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//1
-				cubeSize  + tx,-cubeSize + ty,-cubeSize + tz,	//2
-				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//3
+				0 + tx,cubeSize + ty,0 + tz,			//0
+				0 + tx,0 + ty,0 + tz,					//1
+				cubeSize  + tx,0 + ty,0 + tz,			//2
+				cubeSize + tx,cubeSize + ty,0 + tz,		//3
 				
 				// Front face
-				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//4
-				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//5
-				cubeSize + tx,-cubeSize + ty,cubeSize + tz,		//6
+				0 + tx,cubeSize + ty,cubeSize + tz,				//4
+				0 + tx,0 + ty,cubeSize + tz,					//5
+				cubeSize + tx,0 + ty,cubeSize + tz,				//6
 				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//7
-				
-				// Right face
-				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//8
-				cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//9
-				cubeSize + tx,-cubeSize + ty,cubeSize + tz,		//10
-				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//11
-				
-				// Left face
-				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//12
-				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//13
-				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//14
-				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//15
-				
-				// Top face
-				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//16
-				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//17
-				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//18
-				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//19
-				
-				// Bottom face
-				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//20
-				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//21
-				cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//22
-				cubeSize + tx,-cubeSize + ty,cubeSize + tz		//23
 	    });
+	    
+	    // create triangles with vertices
 	    indicesData.put(new int[]{
-				0+offset,1+offset,3+offset,	// Back face
-				3+offset,1+offset,2+offset,	// Back face
 				
-				4+offset,5+offset,7+offset, // Front face
-				7+offset,5+offset,6+offset, // Front face
+				7+offset,4+offset,0+offset, // Top face
+				3+offset,7+offset,0+offset, // Top face
 				
-				8+offset,9+offset,11+offset, // Right face
-				11+offset,9+offset,10+offset, // Right face
+				2+offset,5+offset,1+offset, // Bottom face
+				2+offset,6+offset,2+offset, // Bottom face
 				
-				12+offset,13+offset,15+offset, // Left face
-				15+offset,13+offset,14+offset, // Left face
+				0+offset,1+offset,3+offset,	// Front face
+				3+offset,1+offset,2+offset,	// Front face
 				
-				16+offset,17+offset,19+offset, // Top face
-				19+offset,17+offset,18+offset, // Top face
+				7+offset,5+offset,4+offset, // Back face
+				6+offset,5+offset,7+offset, // Back face
 				
-				20+offset,21+offset,23+offset, // Bottom face
-				23+offset,21+offset,22+offset // Bottom face
+				3+offset,7+offset,6+offset, // Right face
+				6+offset,2+offset,3+offset, // Right face
+				
+				0+offset,4+offset,1+offset, // Left face
+				1+offset,4+offset,5+offset // Left face
+
 	    });
-	    return 24;
+	    return 8;
 	}
 	
 	/**
@@ -221,7 +203,15 @@ public class WorldData {
 	}
 	
 	/**
-	 * If a cube has "air" on one side, it is visible
+	 * Number of cubes in the mesh
+	 * @return
+	 */
+	public int getNumberOfCubes(){
+		return numberOfCubes;
+	}
+	
+	/**
+	 * If a cube has "air" on one of the sides, it is visible
 	 * TODO: also check other chunks for border cubes
 	 * @return
 	 */
@@ -265,12 +255,14 @@ public class WorldData {
 	 * @return
 	 */
 	public FloatBuffer createVerticesAsBuffer(){
-		vertexPositionData = BufferUtils.createFloatBuffer((24*3)*worldSize*worldSize*worldSize);
+		vertexPositionData = BufferUtils.createFloatBuffer((8*3)*worldSize*worldSize*worldSize);
 		indicesData = BufferUtils.createIntBuffer(worldSize*worldSize*worldSize*36);
+		numberOfCubes = 0;
 		int i = 0;
 		for (int x = 0; x < worldSize; x++) {
 	        for (int y = 0; y < worldSize; y++) {
 	            for (int z = 0; z < worldSize; z++) {
+	            	numberOfCubes++;
 	            	if(world[x][y][z] == BlockType.Grass && checkIfCubeIsVisible(x, y, z))
 	            	{
 	                    i += putVertices(x*cubeSize, y*cubeSize, -z*cubeSize, i);

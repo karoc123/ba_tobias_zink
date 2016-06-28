@@ -36,14 +36,16 @@ public class WorldMeshRenderer {
 	 * @param worldData
 	 */
 	public void render(WorldData worldData) {
-		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_POINT);
+//		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_POINT);
 		GL11.glPointSize(5.0f);
-//		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
 		
 		GL30.glBindVertexArray(worldData.vaoID);
 		GL20.glEnableVertexAttribArray(0);
+		
+//		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, worldData.vboID);
 	    
-		GL11.glDrawElements(GL11.GL_TRIANGLES, worldData.getVerticesCount()*3, GL11.GL_UNSIGNED_INT, 0);
+		GL11.glDrawElements(GL11.GL_TRIANGLES, 36*worldData.getNumberOfCubes(), GL11.GL_UNSIGNED_INT, 0);
 		
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
