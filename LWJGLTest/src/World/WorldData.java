@@ -11,6 +11,9 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import renderer.Loader;
+import textures.ModelTexture;
+
 /**
  * Manages the world array
  *
@@ -24,10 +27,11 @@ public class WorldData {
 	private int numberOfCubes = 0;
 	
 	// Rendering Variables
-	public int cID, vaoID, vboID;
+	public int vaoID, vboID;
+	public int vertexPosDataVboID, textureCoordsDataVboID, indicesDataVboID;
 	
 	// Buffer for render process
-	public FloatBuffer vertexPositionData, colorPositionData;
+	public FloatBuffer vertexPositionData, colorPositionData, textureCoords;
 	public IntBuffer indicesData;
 	
 	// List of Buffers
@@ -37,22 +41,70 @@ public class WorldData {
 	
 	// World array
 	BlockType[][][] world;
+	
+	// instance of loader
+	Loader loader;
+	public ModelTexture texture;
 
-	public WorldData (int worldSize){
+	public WorldData (int worldSize, Loader loader, ModelTexture texture){
 		this.worldSize = worldSize;
+		this.loader = loader;
+		this.texture = texture;
 		generateWorld();
 		//readChunkFromFile();
+		
+		// Create Buffers
+		vertexPositionData = BufferUtils.createFloatBuffer((8*3)*worldSize*worldSize*worldSize);
+		textureCoords = BufferUtils.createFloatBuffer((32)*worldSize*worldSize*worldSize);
+		indicesData = BufferUtils.createIntBuffer(worldSize*worldSize*worldSize*36);
+		
 		createVerticesAsBuffer();
 		initMesh();
 	}
 	
-	private void storeDataInAttributeList(int attributeNumber, FloatBuffer buffer){
-		vboID = GL15.glGenBuffers();
+	/**
+	 * Change the type of a specific block
+	 * @param x position
+	 * @param y position
+	 * @param z position
+	 * @param block type
+	 */
+	public void changeBlock (int x, int y, int z, BlockType block){
+		world[x][y][z] = block;
+		System.out.println(x + " " + y + " "+ z +"");
+	}
+	
+	/**
+	 * Recreates the whole mesh, after updates to the world
+	 */
+	public void recreateMesh(){
+		createVerticesAsBuffer();
+		updateMesh();
+	}
+	
+//	private void storeDataInAttributeList(int attributeNumber, FloatBuffer buffer){
+//		vboID = GL15.glGenBuffers();
+//		vbos.add(vboID); //save buffers to delete after
+//		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+//		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+//		GL20.glVertexAttribPointer(attributeNumber, 3, GL11.GL_FLOAT, false, 0, 0);
+//		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+//	}
+
+	/**
+	 * stores data in glBufferData
+	 * @param attributeNumber
+	 * @param coordinateSize
+	 * @param data
+	 */
+	private int storeDataInAttributeList(int attributeNumber, int coordinateSize, FloatBuffer buffer){
+		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID); //save buffers to delete after
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(attributeNumber, 3, GL11.GL_FLOAT, false, 0, 0);
+		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		return vboID;
 	}
 	
 	private int createVAO(){
@@ -62,10 +114,29 @@ public class WorldData {
 		return vaoID;
 	}
 	
+	/**
+	 * Loads updated buffers onto gl
+	 */
+	private void updateMesh(){
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);
+		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesData, GL15.GL_DYNAMIC_DRAW);
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertexPosDataVboID);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexPositionData, GL15.GL_DYNAMIC_DRAW);
+		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, textureCoordsDataVboID);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textureCoords, GL15.GL_DYNAMIC_DRAW);
+		GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 0, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
 	private void initMesh() {
 		vaoID = createVAO();
-		storeIndicesDataInVBO();
-		storeDataInAttributeList(0, vertexPositionData);
+		indicesDataVboID = storeIndicesDataInVBO();
+		vertexPosDataVboID = storeDataInAttributeList(0, 3, vertexPositionData);
+		textureCoordsDataVboID = storeDataInAttributeList(1, 2, textureCoords);
 		
 		ubindVAO();
 //		vID = glGenBuffers();
@@ -80,11 +151,12 @@ public class WorldData {
 		
 	}
 
-	private void storeIndicesDataInVBO() {
+	private int storeIndicesDataInVBO() {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID); //save buffers to delete after
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesData, GL15.GL_STATIC_DRAW);
+		return vboID;
 	}
 
 	/**
@@ -119,6 +191,8 @@ public class WorldData {
 				}				
 			}
 		}
+		
+//		world[4][4][4] = BlockType.Nothing;
 	}
 	
 //	/**
@@ -145,6 +219,130 @@ public class WorldData {
 //		world[9][0][0] = BlockType.Grass;
 //	}
 
+//	/**
+//	 * Creates cube data and puts it into buffers for one mesh
+//	 * @param tx
+//	 * @param ty
+//	 * @param tz
+//	 * @param offset number of indices
+//	 * @return number of vertices added
+//	 */
+//	public int putVertices(float tx, float ty, float tz, int offset) {
+//		// create vertices
+//	    vertexPositionData.put(new float[]{			  
+//	    		// Back face
+//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//0
+//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//1
+//				cubeSize  + tx,-cubeSize + ty,-cubeSize + tz,	//2
+//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//3
+//				
+//				// Front face
+//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//4
+//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//5
+//				cubeSize + tx,-cubeSize + ty,cubeSize + tz,		//6
+//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//7
+//				
+//				// Right face
+//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//8
+//				cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//9
+//				cubeSize + tx,-cubeSize + ty,cubeSize + tz,		//10
+//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//11
+//				
+//				// Left face
+//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//12
+//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//13
+//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//14
+//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//15
+//				
+//				// Top face
+//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//16
+//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//17
+//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//18
+//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//19
+//				
+//				// Bottom face
+//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//20
+//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//21
+//				cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//22
+//				cubeSize + tx,-cubeSize + ty,cubeSize + tz		//23
+//	    });
+//	    
+//	    // create triangles with vertices
+//	    indicesData.put(new int[]{
+//				0+offset,1+offset,3+offset,	// Back face
+//				3+offset,1+offset,2+offset,	// Back face
+//				
+//				4+offset,5+offset,7+offset, // Front face
+//				7+offset,5+offset,6+offset, // Front face
+//				
+//				8+offset,9+offset,11+offset, // Right face
+//				11+offset,9+offset,10+offset, // Right face
+//				
+//				12+offset,13+offset,15+offset, // Left face
+//				15+offset,13+offset,14+offset, // Left face
+//				
+//				16+offset,17+offset,19+offset, // Top face
+//				19+offset,17+offset,18+offset, // Top face
+//				
+//				20+offset,21+offset,23+offset, // Bottom face
+//				23+offset,21+offset,22+offset // Bottom face
+//	    });
+//	    return 24;
+//	}
+
+//	/**
+//	 * Creates cube data and puts it into buffers for one mesh
+//	 * @param tx
+//	 * @param ty
+//	 * @param tz
+//	 * @param offset number of indices
+//	 * @return number of vertices added
+//	 */
+//	public int putVertices(float tx, float ty, float tz, int offset) {
+//		// create vertices
+//	    vertexPositionData.put(new float[]{			  
+//	    		// Back face
+//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//0
+//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//1
+//				cubeSize  + tx,-cubeSize + ty,-cubeSize + tz,	//2
+//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//3
+//				
+//				// Front face
+//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//4
+//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//5
+//				cubeSize + tx,-cubeSize + ty,cubeSize + tz,		//6
+//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//7
+//				
+//				// Right face
+//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//8
+//				cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//9
+//				cubeSize + tx,-cubeSize + ty,cubeSize + tz,		//10
+//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//11
+//				
+//				// Left face
+//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//12
+//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//13
+//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//14
+//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//15
+//				
+//				// Top face
+//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//16
+//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//17
+//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//18
+//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//19
+//				
+//				// Bottom face
+//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//20
+//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//21
+//				cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//22
+//				cubeSize + tx,-cubeSize + ty,cubeSize + tz		//23
+//	    });
+//	    return 24;
+//	}
+	
+	/**
+	 * indices
+	 */
 	/**
 	 * Creates cube data and puts it into buffers for one mesh
 	 * @param tx
@@ -175,8 +373,8 @@ public class WorldData {
 				7+offset,4+offset,0+offset, // Top face
 				3+offset,7+offset,0+offset, // Top face
 				
-				2+offset,5+offset,1+offset, // Bottom face
-				2+offset,6+offset,2+offset, // Bottom face
+				1+offset,2+offset,5+offset, // Bottom face
+				5+offset,6+offset,2+offset, // Bottom face
 				
 				0+offset,1+offset,3+offset,	// Front face
 				3+offset,1+offset,2+offset,	// Front face
@@ -191,6 +389,15 @@ public class WorldData {
 				1+offset,4+offset,5+offset // Left face
 
 	    });
+	    
+	    // create texture coordinates
+	    textureCoords.put(new float[]{
+	    		0, 0,
+	    		1, 0,
+	    		1, 1,
+	    		0, 1
+	    });
+	    
 	    return 8;
 	}
 	
@@ -216,7 +423,6 @@ public class WorldData {
 	 * @return
 	 */
 	private boolean checkIfCubeIsVisible(int x, int y, int z){
-		
 		//TODO check for other chunks
 		if(x == worldSize-1 || x == 0 || y == worldSize-1 || y == 0 || z == worldSize-1 || z == 0)
 		{
@@ -255,8 +461,9 @@ public class WorldData {
 	 * @return
 	 */
 	public FloatBuffer createVerticesAsBuffer(){
-		vertexPositionData = BufferUtils.createFloatBuffer((8*3)*worldSize*worldSize*worldSize);
-		indicesData = BufferUtils.createIntBuffer(worldSize*worldSize*worldSize*36);
+		vertexPositionData.clear();
+		textureCoords.clear();
+		indicesData.clear();
 		numberOfCubes = 0;
 		int i = 0;
 		for (int x = 0; x < worldSize; x++) {
@@ -273,6 +480,7 @@ public class WorldData {
 		numberOfVertices = i;
 		vertexPositionData.flip();
 		indicesData.flip();
+		textureCoords.flip();
 		return vertexPositionData;
 	}
 }

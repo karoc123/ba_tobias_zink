@@ -1,12 +1,11 @@
 package renderer;
 
 import org.lwjgl.opengl.*;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import World.WorldData;
+import blockengine.Configuration;
 import helper.Maths;
 import shaders.StaticShader;
 
@@ -38,10 +37,17 @@ public class WorldMeshRenderer {
 	public void render(WorldData worldData) {
 //		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_POINT);
 		GL11.glPointSize(5.0f);
-		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
+		if(Configuration.showWireframe){
+			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );		
+		}
 		
 		GL30.glBindVertexArray(worldData.vaoID);
 		GL20.glEnableVertexAttribArray(0);
+		
+		//texture stuff
+		GL20.glEnableVertexAttribArray(1);
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, worldData.texture.getID());
 		
 //		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, worldData.vboID);
 	    
@@ -51,4 +57,10 @@ public class WorldMeshRenderer {
 		GL30.glBindVertexArray(0);
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 	}
+	
+//	GL20.glEnableVertexAttribArray(0);
+//	GL20.glEnableVertexAttribArray(1);
+//	GL20.glEnableVertexAttribArray(2);
+//	GL13.glActiveTexture(GL13.GL_TEXTURE0);
+//	GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 }

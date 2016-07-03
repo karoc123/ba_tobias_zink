@@ -6,9 +6,9 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.util.vector.Vector3f;
@@ -16,6 +16,7 @@ import org.lwjgl.util.vector.Vector3f;
 import Input.Keyboard;
 import Input.KeyboardHandler;
 import Input.MouseHandler;
+import World.BlockType;
 import World.WorldData;
 import entities.Camera;
 import entities.Entity;
@@ -42,8 +43,10 @@ public class Game {
 	private Light light;
 	private WorldData world;
     int fps;
+    float temp = 0;
     long lastFPS;
-
+	private Random rand = new Random();
+	
 	public Game() {
 		System.out.println("LWJGL " + Version.getVersion() + "!");
 		loader = new Loader();
@@ -113,7 +116,7 @@ public class Game {
 		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
 		
 		// Create World
-		world = new WorldData(Configuration.getWorldSize());
+		world = new WorldData(Configuration.getWorldSize(), loader, texture);
 		
 		// TEMP
 		texture = new ModelTexture(loader.loadTexture("grass"));
@@ -140,6 +143,16 @@ public class Game {
 		
 		//process input: keyboard
 		Keyboard.HandleInput(delta, camera, windowID);
+		
+		//Temp
+		if(Configuration.runDemo){
+			temp += delta;
+			if(true){
+				world.changeBlock(rand.nextInt(world.worldSize), rand.nextInt(world.worldSize), rand.nextInt(world.worldSize), BlockType.Nothing);
+				world.recreateMesh();	
+				temp = 0;
+			}			
+		}
 	}
 
 	/**

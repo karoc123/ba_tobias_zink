@@ -1,6 +1,9 @@
 package Input;
 
 import static org.lwjgl.glfw.GLFW.*;
+
+import blockengine.Configuration;
+
 import static helper.Log.*;
 
 import entities.Camera;
@@ -14,6 +17,18 @@ public class Keyboard {
 	 * @param window window to catch keyboard input
 	 */
 	public static void HandleInput(float delta, Camera camera, long window) {
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_F1))
+    	{
+    		debug("F1 Key Pressed");
+    		Configuration.showWireframe = !Configuration.showWireframe;
+    	}
+
+		if(KeyboardHandler.isKeyDown(GLFW_KEY_F2))
+    	{
+    		Configuration.runDemo = !Configuration.runDemo;
+    		System.out.println("Demo: " + Configuration.runDemo);
+    	}
+		
 		if(KeyboardHandler.isKeyDown(GLFW_KEY_SPACE))
     	{
     		debug("Space Key Pressed");
