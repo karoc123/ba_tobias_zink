@@ -54,8 +54,8 @@ public class WorldData {
 		//readChunkFromFile();
 		
 		// Create Buffers
-		vertexPositionData = BufferUtils.createFloatBuffer((8*3)*worldSize*worldSize*worldSize);
-		textureCoords = BufferUtils.createFloatBuffer((32)*worldSize*worldSize*worldSize);
+		vertexPositionData = BufferUtils.createFloatBuffer((24*3)*worldSize*worldSize*worldSize);
+		textureCoords = BufferUtils.createFloatBuffer((48)*worldSize*worldSize*worldSize);
 		indicesData = BufferUtils.createIntBuffer(worldSize*worldSize*worldSize*36);
 		
 		createVerticesAsBuffer();
@@ -219,126 +219,188 @@ public class WorldData {
 //		world[9][0][0] = BlockType.Grass;
 //	}
 
-//	/**
-//	 * Creates cube data and puts it into buffers for one mesh
-//	 * @param tx
-//	 * @param ty
-//	 * @param tz
-//	 * @param offset number of indices
-//	 * @return number of vertices added
-//	 */
-//	public int putVertices(float tx, float ty, float tz, int offset) {
-//		// create vertices
-//	    vertexPositionData.put(new float[]{			  
-//	    		// Back face
-//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//0
-//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//1
-//				cubeSize  + tx,-cubeSize + ty,-cubeSize + tz,	//2
-//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//3
-//				
-//				// Front face
-//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//4
-//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//5
-//				cubeSize + tx,-cubeSize + ty,cubeSize + tz,		//6
-//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//7
-//				
-//				// Right face
-//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//8
-//				cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//9
-//				cubeSize + tx,-cubeSize + ty,cubeSize + tz,		//10
-//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//11
-//				
-//				// Left face
-//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//12
-//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//13
-//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//14
-//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//15
-//				
-//				// Top face
-//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//16
-//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//17
-//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//18
-//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//19
-//				
-//				// Bottom face
-//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//20
-//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//21
-//				cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//22
-//				cubeSize + tx,-cubeSize + ty,cubeSize + tz		//23
-//	    });
-//	    
-//	    // create triangles with vertices
-//	    indicesData.put(new int[]{
-//				0+offset,1+offset,3+offset,	// Back face
-//				3+offset,1+offset,2+offset,	// Back face
-//				
-//				4+offset,5+offset,7+offset, // Front face
-//				7+offset,5+offset,6+offset, // Front face
-//				
-//				8+offset,9+offset,11+offset, // Right face
-//				11+offset,9+offset,10+offset, // Right face
-//				
-//				12+offset,13+offset,15+offset, // Left face
-//				15+offset,13+offset,14+offset, // Left face
-//				
-//				16+offset,17+offset,19+offset, // Top face
-//				19+offset,17+offset,18+offset, // Top face
-//				
-//				20+offset,21+offset,23+offset, // Bottom face
-//				23+offset,21+offset,22+offset // Bottom face
-//	    });
-//	    return 24;
-//	}
+	/**
+	 * Creates cube data and puts it into buffers for one mesh
+	 * @param tx
+	 * @param ty
+	 * @param tz
+	 * @param offset number of indices
+	 * @return number of vertices added
+	 */
+	public int putVertices(float tx, float ty, float tz, int offset) {
+		// create vertices
+	    vertexPositionData.put(new float[]{			  
+				// Back face
+				0 + tx,cubeSize + ty,0 + tz,	//0
+				0 + tx,0 + ty,0 + tz,			//1
+				cubeSize  + tx,0 + ty,0 + tz,	//2
+				cubeSize + tx,cubeSize + ty,0 + tz,		//3
+				
+				// Front face
+				0 + tx,cubeSize + ty,cubeSize + tz,		//4
+				0 + tx,0 + ty,cubeSize + tz,	//5
+				cubeSize + tx,0 + ty,cubeSize + tz,		//6
+				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//7
+				
+				// Right face
+				cubeSize + tx,cubeSize + ty,0 + tz,		//8
+				cubeSize + tx,0 + ty,0 + tz,	//9
+				cubeSize + tx,0 + ty,cubeSize + tz,		//10
+				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//11
+				
+				// Left face
+				0 + tx,cubeSize + ty,0 + tz,	//12
+				0 + tx,0 + ty,0 + tz,	//13
+				0 + tx,0 + ty,cubeSize + tz,	//14
+				0 + tx,cubeSize + ty,cubeSize + tz,		//15
+				
+				// Top face
+				0 + tx,cubeSize + ty,cubeSize + tz,		//16
+				0 + tx,cubeSize + ty,0 + tz,	//17
+				cubeSize + tx,cubeSize + ty,0 + tz,		//18
+				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//19
+				
+				// Bottom face
+				0 + tx,0 + ty,cubeSize + tz,	//20
+				0 + tx,0 + ty,0 + tz,	//21
+				cubeSize + tx,0 + ty,0 + tz,	//22
+				cubeSize + tx,0 + ty,cubeSize + tz		//23
+	    });
+	    
+	    // create triangles with vertices
+	    indicesData.put(new int[]{
+				0+offset,1+offset,3+offset,	// Back face
+				3+offset,1+offset,2+offset,	// Back face
+				
+				4+offset,5+offset,7+offset, // Front face
+				7+offset,5+offset,6+offset, // Front face
+				
+				8+offset,9+offset,11+offset, // Right face
+				11+offset,9+offset,10+offset, // Right face
+				
+				12+offset,13+offset,15+offset, // Left face
+				15+offset,13+offset,14+offset, // Left face
+				
+				16+offset,17+offset,19+offset, // Top face
+				19+offset,17+offset,18+offset, // Top face
+				
+				20+offset,21+offset,23+offset, // Bottom face
+				23+offset,21+offset,22+offset // Bottom face
+	    });
+	    // create texture coordinates
+	    textureCoords.put(new float[]{
+	    		0, 0,
+	    		1, 0,
+	    		1, 1,
+	    		0, 1,
 
-//	/**
-//	 * Creates cube data and puts it into buffers for one mesh
-//	 * @param tx
-//	 * @param ty
-//	 * @param tz
-//	 * @param offset number of indices
-//	 * @return number of vertices added
-//	 */
-//	public int putVertices(float tx, float ty, float tz, int offset) {
-//		// create vertices
-//	    vertexPositionData.put(new float[]{			  
-//	    		// Back face
-//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//0
-//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//1
-//				cubeSize  + tx,-cubeSize + ty,-cubeSize + tz,	//2
-//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//3
-//				
-//				// Front face
-//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//4
-//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//5
-//				cubeSize + tx,-cubeSize + ty,cubeSize + tz,		//6
-//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//7
-//				
-//				// Right face
-//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//8
-//				cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//9
-//				cubeSize + tx,-cubeSize + ty,cubeSize + tz,		//10
-//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//11
-//				
-//				// Left face
-//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//12
-//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//13
-//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//14
-//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//15
-//				
-//				// Top face
-//				-cubeSize + tx,cubeSize + ty,cubeSize + tz,		//16
-//				-cubeSize + tx,cubeSize + ty,-cubeSize + tz,	//17
-//				cubeSize + tx,cubeSize + ty,-cubeSize + tz,		//18
-//				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//19
-//				
-//				// Bottom face
-//				-cubeSize + tx,-cubeSize + ty,cubeSize + tz,	//20
-//				-cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//21
-//				cubeSize + tx,-cubeSize + ty,-cubeSize + tz,	//22
-//				cubeSize + tx,-cubeSize + ty,cubeSize + tz		//23
-//	    });
-//	    return 24;
-//	}
+	    		0, 0,
+	    		1, 0,
+	    		1, 1,
+	    		0, 1,
+	    		
+	    		0, 0,
+	    		1, 0,
+	    		1, 1,
+	    		0, 1,
+	    		
+	    		0, 0,
+	    		1, 0,
+	    		1, 1,
+	    		0, 1,
+	    		
+	    		0, 0,
+	    		1, 0,
+	    		1, 1,
+	    		0, 1,
+	    		
+	    		0, 0,
+	    		1, 0,
+	    		1, 1,
+	    		0, 1
+	    });
+	    return 24;
+	}
+
+	/**
+	 * Creates cube data and puts it into buffers for one mesh
+	 * @param tx
+	 * @param ty
+	 * @param tz
+	 * @param offset number of indices
+	 * @return number of vertices added
+	 */
+	public int putVertices2(float tx, float ty, float tz, int offset) {
+		// create vertices
+		vertexPositionData.put(new float[]{
+			// Back face
+			0 + tx,cubeSize + ty,0 + tz,	//0
+			0 + tx,0 + ty,0 + tz,			//1
+			cubeSize  + tx,0 + ty,0 + tz,	//2
+			cubeSize + tx,cubeSize + ty,0 + tz,		//3
+			
+			// Front face
+			0 + tx,cubeSize + ty,cubeSize + tz,		//4
+			0 + tx,0 + ty,cubeSize + tz,	//5
+			cubeSize + tx,0 + ty,cubeSize + tz,		//6
+			cubeSize + tx,cubeSize + ty,cubeSize + tz,		//7
+			
+			// Right face
+			cubeSize + tx,cubeSize + ty,0 + tz,		//8
+			cubeSize + tx,0 + ty,0 + tz,	//9
+			cubeSize + tx,0 + ty,cubeSize + tz,		//10
+			cubeSize + tx,cubeSize + ty,cubeSize + tz,		//11
+			
+			// Left face
+			0 + tx,cubeSize + ty,0 + tz,	//12
+			0 + tx,0 + ty,0 + tz,	//13
+			0 + tx,0 + ty,cubeSize + tz,	//14
+			0 + tx,cubeSize + ty,cubeSize + tz,		//15
+			
+			// Top face
+			0 + tx,cubeSize + ty,cubeSize + tz,		//16
+			0 + tx,cubeSize + ty,0 + tz,	//17
+			cubeSize + tx,cubeSize + ty,0 + tz,		//18
+			cubeSize + tx,cubeSize + ty,cubeSize + tz,		//19
+			
+			// Bottom face
+			0 + tx,0 + ty,cubeSize + tz,	//20
+			0 + tx,0 + ty,0 + tz,	//21
+			cubeSize + tx,0 + ty,0 + tz,	//22
+			cubeSize + tx,0 + ty,cubeSize + tz		//23
+	    });
+	    // create triangles with vertices
+	    indicesData.put(new int[]{
+				
+				7+offset,4+offset,0+offset, // Top face
+				3+offset,7+offset,0+offset, // Top face
+				
+				1+offset,2+offset,5+offset, // Bottom face
+				5+offset,6+offset,2+offset, // Bottom face
+				
+				0+offset,1+offset,3+offset,	// Front face
+				3+offset,1+offset,2+offset,	// Front face
+				
+				7+offset,5+offset,4+offset, // Back face
+				6+offset,5+offset,7+offset, // Back face
+				
+				3+offset,7+offset,6+offset, // Right face
+				6+offset,2+offset,3+offset, // Right face
+				
+				0+offset,4+offset,1+offset, // Left face
+				1+offset,4+offset,5+offset // Left face
+
+	    });
+	    
+	    // create texture coordinates
+	    textureCoords.put(new float[]{
+	    		0, 0,
+	    		1, 0,
+	    		1, 1,
+	    		0, 1
+	    });
+	    return 24;
+	}
 	
 	/**
 	 * indices
@@ -351,7 +413,7 @@ public class WorldData {
 	 * @param offset number of indices
 	 * @return number of vertices added
 	 */
-	public int putVertices(float tx, float ty, float tz, int offset) {
+	public int putVertices3(float tx, float ty, float tz, int offset) {
 		// create vertices
 	    vertexPositionData.put(new float[]{			  
 	    		// Back face

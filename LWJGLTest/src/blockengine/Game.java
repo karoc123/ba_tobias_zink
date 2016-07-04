@@ -147,7 +147,7 @@ public class Game {
 		//Temp
 		if(Configuration.runDemo){
 			temp += delta;
-			if(true){
+			if(temp > 1){
 				world.changeBlock(rand.nextInt(world.worldSize), rand.nextInt(world.worldSize), rand.nextInt(world.worldSize), BlockType.Nothing);
 				world.recreateMesh();	
 				temp = 0;

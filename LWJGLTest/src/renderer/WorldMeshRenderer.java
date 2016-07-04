@@ -57,10 +57,4 @@ public class WorldMeshRenderer {
 		GL30.glBindVertexArray(0);
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 	}
-	
-//	GL20.glEnableVertexAttribArray(0);
-//	GL20.glEnableVertexAttribArray(1);
-//	GL20.glEnableVertexAttribArray(2);
-//	GL13.glActiveTexture(GL13.GL_TEXTURE0);
-//	GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 }
