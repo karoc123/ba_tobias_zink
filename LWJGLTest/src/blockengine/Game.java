@@ -53,7 +53,7 @@ public class Game {
 		
 		config.loadConfiguration();
 
-		if (glfwInit() != GL_TRUE) {
+		if (glfwInit() != true) {
 			System.err.println("Error initializing GLFW");
 			System.exit(1);
 		}
@@ -198,7 +198,7 @@ public class Game {
         glfwSetCursorPosCallback(windowID, mouseCallback = new MouseHandler(camera, config));
         
 		// Loop continuously and render and update
-		while (glfwWindowShouldClose(windowID) != GL_TRUE) {
+		while (glfwWindowShouldClose(windowID) != true) {
 			// Get the time
 			now = (float) glfwGetTime();
 			delta = now - last;

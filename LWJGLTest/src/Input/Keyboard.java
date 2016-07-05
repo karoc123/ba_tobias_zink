@@ -92,7 +92,7 @@ public class Keyboard {
     	if(KeyboardHandler.isKeyDown(GLFW_KEY_ESCAPE))
     	{
     		debug("ESCAPE Key Pressed");
-    		glfwSetWindowShouldClose(window, 1);
+    		glfwSetWindowShouldClose(window, true);
     	}
     	
     	
