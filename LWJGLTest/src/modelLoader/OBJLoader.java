@@ -11,6 +11,9 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * Loads a .obj file from /res folder
+ */
 public class OBJLoader {
     
     private static final String RES_LOC = "res/";

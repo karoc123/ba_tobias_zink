@@ -29,14 +29,26 @@ public class Light {
 		return position;
 	}
 
+	/**
+	 * Set position (Vector3f) of the light
+	 * @param position
+	 */
 	public void setPosition(Vector3f position) {
 		this.position = position;
 	}
 
+	/**
+	 * Get colour of the light
+	 * @return
+	 */
 	public Vector3f getColour() {
 		return colour;
 	}
 
+	/**
+	 * Set colour of the light (Vector3f)
+	 * @param colour
+	 */
 	public void setColour(Vector3f colour) {
 		this.colour = colour;
 	}

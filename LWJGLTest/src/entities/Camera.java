@@ -83,14 +83,26 @@ public class Camera {
 		return position;
 	}
 
+	/**
+	 * Up / right of the camera
+	 * @return how much the camera is turned up or down
+	 */
 	public float getPitch() {
 		return pitch;
 	}
 
+	/**
+	 * Left / right of the camera
+	 * @return how much the camera is turned left or right
+	 */
 	public float getYaw() {
 		return yaw;
 	}
 
+	/**
+	 * Roll of the camera (not usefull in minecraft like game?)
+	 * @return
+	 */
 	public float getRoll() {
 		return roll;
 	}

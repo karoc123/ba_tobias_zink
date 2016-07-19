@@ -108,7 +108,7 @@ public class Game {
 		ModelTexture texture;
 		texture = new ModelTexture(loader.loadTexture("grass"));
 		TexturedModel texMod1 = new TexturedModel(model, texture);
-		texture = new ModelTexture(loader.loadTexture("stone"));
+		texture = new ModelTexture(loader.loadTexture("grass_single"));
 		TexturedModel texMod2 = new TexturedModel(model, texture);
 		
 		entity = new Entity(texMod2, new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
@@ -147,8 +147,12 @@ public class Game {
 		//Temp
 		if(Configuration.runDemo){
 			temp += delta;
-			if(temp > 1){
-				world.changeBlock(rand.nextInt(world.worldSize), rand.nextInt(world.worldSize), rand.nextInt(world.worldSize), BlockType.Nothing);
+			if(temp > 2){
+				if(rand.nextBoolean()){
+					world.changeBlock(rand.nextInt(world.worldSize), rand.nextInt(world.worldSize), rand.nextInt(world.worldSize), BlockType.Nothing);					
+				} else {
+					world.changeBlock(rand.nextInt(world.worldSize), rand.nextInt(world.worldSize), rand.nextInt(world.worldSize), BlockType.Grass);					
+				}
 				world.recreateMesh();	
 				temp = 0;
 			}			
@@ -193,7 +197,7 @@ public class Game {
 		init();
 
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
-//		glfwSetInputMode(windowID, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // to hide and lock the cursor
+		glfwSetInputMode(windowID, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // to hide and lock the cursor
         glfwSetKeyCallback(windowID, keyCallback = new KeyboardHandler());
         glfwSetCursorPosCallback(windowID, mouseCallback = new MouseHandler(camera, config));
         
@@ -205,7 +209,7 @@ public class Game {
 			last = now;
 			
 			// Reset mouse position
-//			glfwSetCursorPos(windowID, Configuration.getWidth()/2, Configuration.getWidth()/2);
+			glfwSetCursorPos(windowID, Configuration.getWidth()/2, Configuration.getWidth()/2);
 
 			// Update and render
 			update(delta);

@@ -71,7 +71,7 @@ public class WorldData {
 	 */
 	public void changeBlock (int x, int y, int z, BlockType block){
 		world[x][y][z] = block;
-		System.out.println(x + " " + y + " "+ z +"");
+		System.out.println(x + " " + y + " "+ z +" now " + block.toString());
 	}
 	
 	/**
@@ -185,7 +185,7 @@ public class WorldData {
 		this.world = new BlockType[worldSize][worldSize][worldSize];
 		
 		for(int i = 0; i < worldSize; i++){
-			for(int k = 0; k< worldSize; k++){
+			for(int k = 0; k< 1; k++){
 				for(int j = 0; j< worldSize; j++){
 					world[i][k][j] = BlockType.Grass;
 				}				
@@ -395,9 +395,9 @@ public class WorldData {
 	    // create texture coordinates
 	    textureCoords.put(new float[]{
 	    		0, 0,
-	    		1, 0,
-	    		1, 1,
-	    		0, 1
+	    		0.25f, 0,
+	    		0.25f, 0.25f,
+	    		0, 0.25f
 	    });
 	    return 24;
 	}

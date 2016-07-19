@@ -8,6 +8,9 @@ import static helper.Log.*;
 
 import entities.Camera;
 
+/**
+ * All Keyboard input handles
+ */
 public class Keyboard {
 
 	/**

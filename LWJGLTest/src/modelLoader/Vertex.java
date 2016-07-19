@@ -3,7 +3,7 @@ package modelLoader;
 import org.lwjgl.util.vector.Vector3f;
 
 /***
- * Represents an complete vertex
+ * Represents a complete vertex
  */
 public class Vertex {
      
@@ -15,7 +15,7 @@ public class Vertex {
     private Vertex duplicateVertex = null;
     private int index;
     private float length;
-     
+    
     public Vertex(int index,Vector3f position){
         this.index = index;
         this.position = position;

@@ -31,7 +31,7 @@ public class WorldMeshRenderer {
 	}
 
 	/**
-	 * Renders a lot of chunks
+	 * Renders a lot of chunks (at the moment only one: the world)
 	 * @param worldData
 	 */
 	public void render(WorldData worldData) {
@@ -48,8 +48,6 @@ public class WorldMeshRenderer {
 		GL20.glEnableVertexAttribArray(1);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, worldData.texture.getID());
-		
-//		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, worldData.vboID);
 	    
 		GL11.glDrawElements(GL11.GL_TRIANGLES, 36*worldData.getNumberOfCubes(), GL11.GL_UNSIGNED_INT, 0);
 		

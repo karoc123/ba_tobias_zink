@@ -3,6 +3,10 @@ package Input;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * The GLFWKeyCallback class is an abstract method that
+ * can't be instantiated by itself and must instead be extended
+ */
 public class KeyboardHandler extends GLFWKeyCallback{
 
 	public static boolean[] keys = new boolean[65536];

@@ -12,10 +12,10 @@ public class Configuration {
 	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000;
 	public static final boolean FULLSCREEN = false;
-	private static final int WORLD_SIZE = 5;
+	private static final int WORLD_SIZE = 10;
 	public static final int CHUNK_SIZE = 16;
 	public static boolean showWireframe = false;
-	public static boolean runDemo = false;
+	public static boolean runDemo = true;
 	
 	/**
 	 * Hight of the window
@@ -25,6 +25,10 @@ public class Configuration {
 		return Height;
 	}
 
+	/**
+	 * Set hight of the window
+	 * @return Default: 1080
+	 */
 	public static void setHeight(int height) {
 		Height = height;
 	}
@@ -37,6 +41,10 @@ public class Configuration {
 		return Width;
 	}
 
+	/**
+	 * Set width of the window
+	 * Default: 1920
+	 */	
 	public static void setWidth(int width) {
 		Width = width;
 	}
@@ -54,6 +62,10 @@ public class Configuration {
 		if(DEBUG) Log.set(2);
 	}
 
+	/**
+	 * Get size of the world
+	 * @return Default: 16
+	 */
 	public static int getWorldSize() {
 		return WORLD_SIZE;
 	}

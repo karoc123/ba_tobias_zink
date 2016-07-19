@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" author="true" classpath="lib/jar/lwjgl.jar;lib/jar/PNGDecoder.jar;lib/jar/lwjgl_util.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="modelLoader,renderer,entities,Input,models,World,helper,textures,blockengine,shaders" source="1.8" sourcepath="src" splitindex="true" use="true" version="true"/>
+    </target>
+</project>
