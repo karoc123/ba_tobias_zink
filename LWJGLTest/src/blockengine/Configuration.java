@@ -2,6 +2,10 @@ package blockengine;
 
 import helper.Log;
 
+/**
+ * An instance of Configuration allows the framework to specify properties
+ * 
+ */
 public class Configuration {
 	
 	private static int Height;
@@ -15,7 +19,7 @@ public class Configuration {
 	private static final int WORLD_SIZE = 10;
 	public static final int CHUNK_SIZE = 16;
 	public static boolean showWireframe = false;
-	public static boolean runDemo = true;
+	public static boolean runDemo = false;
 	
 	/**
 	 * Hight of the window

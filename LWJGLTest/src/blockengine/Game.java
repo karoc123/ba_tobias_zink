@@ -29,6 +29,10 @@ import renderer.Loader;
 import renderer.MasterRenderer;
 import textures.ModelTexture;
 
+/**
+ * This class defines the game loop and holds instances of every class
+ *
+ */
 public class Game {
 	private long windowID;
 	private Configuration config = new Configuration();
@@ -42,13 +46,15 @@ public class Game {
 	private Camera camera = new Camera();
 	private Light light;
 	private WorldData world;
-    int fps;
-    float temp = 0;
-    long lastFPS;
+	private int fps;
+    private long lastFPS;
 	private Random rand = new Random();
+	
+    float temp = 0;
 	
 	public Game() {
 		System.out.println("LWJGL " + Version.getVersion() + "!");
+		
 		loader = new Loader();
 		
 		config.loadConfiguration();

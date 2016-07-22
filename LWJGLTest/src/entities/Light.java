@@ -4,8 +4,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Represents a light
- * @author Karoc
- *
  */
 public class Light {
 	
