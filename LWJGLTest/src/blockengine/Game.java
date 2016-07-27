@@ -31,7 +31,7 @@ import textures.ModelTexture;
 
 /**
  * This class defines the game loop and holds instances of every class
- *
+ * Start the window with start()
  */
 public class Game {
 	private long windowID;

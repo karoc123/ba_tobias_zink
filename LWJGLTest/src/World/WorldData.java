@@ -161,6 +161,7 @@ public class WorldData {
 
 	/**
 	 * Deletes all loaded resources
+	 * call after the world is no longer needed
 	 */
 	public void cleanUp(){
 		for(int vao:vaos){
@@ -191,8 +192,6 @@ public class WorldData {
 				}				
 			}
 		}
-		
-//		world[4][4][4] = BlockType.Nothing;
 	}
 	
 //	/**
@@ -293,11 +292,6 @@ public class WorldData {
 	    		1, 0,
 	    		1, 1,
 	    		0, 1,
-
-	    		0, 0,
-	    		1, 0,
-	    		1, 1,
-	    		0, 1,
 	    		
 	    		0, 0,
 	    		1, 0,
@@ -313,6 +307,11 @@ public class WorldData {
 	    		1, 0,
 	    		1, 1,
 	    		0, 1,
+	    		
+	    		0.3f, 0.3f,
+	    		0.5f, 0.3f,
+	    		0.5f, 0.5f,
+	    		0.3f, 0.5f,
 	    		
 	    		0, 0,
 	    		1, 0,

@@ -17,6 +17,11 @@ public class MouseHandler extends GLFWCursorPosCallback {
 	private Camera camera;
 	private Configuration config;	
 
+	/**
+	 * Creates new mousehandler
+	 * @param camera movements get directed at this camera
+	 * @param config to get height and width of the window
+	 */
 	public MouseHandler(Camera camera, Configuration config) {
 		super();
 		this.camera = camera;
@@ -30,12 +35,10 @@ public class MouseHandler extends GLFWCursorPosCallback {
 		// TODO Auto-generated method stub
 		// this basically just prints out the X and Y coordinates 
 		// of our mouse whenever it is in our window
-//		float deltaX = 0;
-//		float deltaY = 0;
-//		deltaX = Configuration.getHeight()/2 - (float) xpos + 420;
-//		deltaY = Configuration.getWidth()/2 - (float) ypos;
-//		System.out.println("X: " + xpos + " Y: " + ypos);
-//		System.out.println("dX: " + deltaX + " dY: " + deltaY);
-//		camera.move(0, 0, 0, deltaX, deltaY, 0);
+		float deltaX = 0;
+		float deltaY = 0;
+		deltaX = Configuration.getHeight()/2 - (float) ypos + 420;
+		deltaY = Configuration.getWidth()/2 - (float) xpos;
+		camera.move(0, 0, 0, -deltaX*Configuration.mouseSensitivity, -deltaY*Configuration.mouseSensitivity, 0);
 	}	
 }
