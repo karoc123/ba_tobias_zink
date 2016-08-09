@@ -41,8 +41,8 @@ public class Game {
 	private Loader loader;
 	private MasterRenderer renderer;
 	private RawModel model;
-	private Entity entity;
-	private ArrayList<Entity> entitys = new ArrayList<Entity>();
+	private Entity activePlayerBlock;
+	private ArrayList<Entity> entities = new ArrayList<Entity>();
 	private Camera camera = new Camera();
 	private Light light;
 	private WorldData world;
@@ -52,6 +52,9 @@ public class Game {
 	
     float temp = 0;
 	
+    /**
+     * Create and initialize a new game with default configuration
+     */
 	public Game() {
 		System.out.println("LWJGL " + Version.getVersion() + "!");
 		
@@ -112,31 +115,34 @@ public class Game {
 		
 		// Load textures and create models with them
 		ModelTexture texture;
-		texture = new ModelTexture(loader.loadTexture("grass"));
+		texture = new ModelTexture(loader.loadTexture("stone"));
 		TexturedModel texMod1 = new TexturedModel(model, texture);
-		texture = new ModelTexture(loader.loadTexture("grass_single"));
+		
+		texture = new ModelTexture(loader.loadTexture("spritesheet"));
 		TexturedModel texMod2 = new TexturedModel(model, texture);
 		
-		entity = new Entity(texMod2, new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
+		Entity enti = new Entity(texMod2, new Vector3f(0f,0,-1.5f),0,0,0,0.25f);
+		entities.add(enti);
+		
+		activePlayerBlock = new Entity(texMod1, new Vector3f(0f,0,-1.5f),0,0,0,0.25f);
+		activePlayerBlock.setPosition(new Vector3f(camera.getPosition().x+10, camera.getPosition().y+10, camera.getPosition().z+10));
 
+		entities.add(activePlayerBlock);
+		
 		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
 		
 		// Create World
 		world = new WorldData(Configuration.getWorldSize(), loader, texture);
+
 		
-		// TEMP
-		texture = new ModelTexture(loader.loadTexture("grass"));
-		entity = new Entity(new TexturedModel(model, texture), new Vector3f(0.5f,0,-1.5f),0,0,0,0.25f);
-		entitys.add(entity);
-		
-		for(int i = 0; i < 0; i++){
-			for(int k = 0; k< 0; k++){
-				for(int j = 0; j< 0; j++){
-					Entity entity = new Entity(texMod1, new Vector3f(0.20f*i-0.9f,-0.6f-0.2f*j,-1.8f-0.2f*k),0,0,0,0.2f);
-					entitys.add(entity);
-				}				
-			}
-		}
+//		for(int i = 0; i < 0; i++){
+//			for(int k = 0; k< 0; k++){
+//				for(int j = 0; j< 0; j++){
+//					Entity entity = new Entity(texMod1, new Vector3f(0.20f*i-0.9f,-0.6f-0.2f*j,-1.8f-0.2f*k),0,0,0,0.2f);
+//					entitys.add(entity);
+//				}				
+//			}
+//		}
 	}
 
 	/**
@@ -149,6 +155,9 @@ public class Game {
 		
 		//process input: keyboard
 		Keyboard.HandleInput(delta, camera, windowID);
+		
+		//Update active player block
+		updatePlayerBlock(delta);
 		
 		//Temp
 		if(Configuration.runDemo){
@@ -165,6 +174,11 @@ public class Game {
 		}
 	}
 
+	public void updatePlayerBlock(float delta){
+		activePlayerBlock.setRotX(0.5f);
+//		activePlayerBlock.setPosition(camera.getPosition().add(new Vector3f(10,10,10), new Vector3f(10,10,10), new Vector3f(10,10,10)));
+	}
+	
 	/**
 	 * This method is used to initialize the renderer & shader
 	 * 
@@ -173,7 +187,7 @@ public class Game {
 	 */
 	public void render(float delta) {
 		// Add every entity in the renderer
-		for (Entity entity : entitys) {
+		for (Entity entity : entities) {
 			renderer.processEntity(entity);
 		}
 		
@@ -254,7 +268,7 @@ public class Game {
 		    info("Used Memory:"
 		            + (runtime.totalMemory() - runtime.freeMemory()) / mb);
 		 
-		        //Print free memory
+		    //Print free memory
 		    info("Free Memory:"
 		        + runtime.freeMemory() / mb);
 		     

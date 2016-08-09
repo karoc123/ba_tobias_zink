@@ -1,5 +1,9 @@
 package modelLoader;
 
+/**
+ * Holds the vertices, textureCoords, normals, indices and the furthestPoint from a model.
+ * Loaded with OBJLoader
+ */
 public class ModelData {
  
     private float[] vertices;

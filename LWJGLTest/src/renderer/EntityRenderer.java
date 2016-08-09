@@ -17,6 +17,9 @@ import models.RawModel;
 import models.TexturedModel;
 import shaders.StaticShader;
 
+/**
+ * Can render singles entities
+ */
 public class EntityRenderer {
 	
 	

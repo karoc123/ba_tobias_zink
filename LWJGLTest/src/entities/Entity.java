@@ -4,6 +4,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
 
+/**
+ * A single entity. Can be loaded by OBJLoader and rendered by the entity renderer.
+ */
 public class Entity {
 	
 	private TexturedModel model;

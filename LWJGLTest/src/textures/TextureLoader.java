@@ -11,6 +11,10 @@ import org.lwjgl.opengl.GL11;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
+/**
+ * Loads textures from png files
+ *
+ */
 public class TextureLoader {
 	private static IntBuffer textureIDBuffer = BufferUtils.createIntBuffer(1);
 
@@ -26,8 +30,8 @@ public class TextureLoader {
 			}
 
 			// Debug
-			System.out.println("width=" + decoder.getWidth());
-			System.out.println("height=" + decoder.getHeight());
+			System.out.println("Texture loaded, " + " width: " + decoder.getWidth() + 
+					" height: " + decoder.getHeight());
 
 			ByteBuffer buf = ByteBuffer.allocateDirect(4 * decoder.getWidth() * decoder.getHeight());
 			try {

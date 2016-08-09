@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -20,6 +21,9 @@ import textures.ModelTexture;
  */
 public class WorldData {
 	
+	//Random Numbers
+	private Random rand = new Random();
+	
 	//cube size of the world
 	public int worldSize;
 	private float cubeSize = 4.0f/2;
@@ -28,10 +32,10 @@ public class WorldData {
 	
 	// Rendering Variables
 	public int vaoID, vboID;
-	public int vertexPosDataVboID, textureCoordsDataVboID, indicesDataVboID;
+	public int vertexPosDataVboID, textureCoordsDataVboID, indicesDataVboID, normalsDataVboID;
 	
 	// Buffer for render process
-	public FloatBuffer vertexPositionData, colorPositionData, textureCoords;
+	public FloatBuffer vertexPositionData, colorPositionData, textureCoords, normalsData;
 	public IntBuffer indicesData;
 	
 	// List of Buffers
@@ -57,6 +61,7 @@ public class WorldData {
 		vertexPositionData = BufferUtils.createFloatBuffer((24*3)*worldSize*worldSize*worldSize);
 		textureCoords = BufferUtils.createFloatBuffer((48)*worldSize*worldSize*worldSize);
 		indicesData = BufferUtils.createIntBuffer(worldSize*worldSize*worldSize*36);
+		normalsData = BufferUtils.createFloatBuffer((24*3)*worldSize*worldSize*worldSize);
 		
 		createVerticesAsBuffer();
 		initMesh();
@@ -137,6 +142,7 @@ public class WorldData {
 		indicesDataVboID = storeIndicesDataInVBO();
 		vertexPosDataVboID = storeDataInAttributeList(0, 3, vertexPositionData);
 		textureCoordsDataVboID = storeDataInAttributeList(1, 2, textureCoords);
+		normalsDataVboID = storeDataInAttributeList(2, 3, normalsData);
 		
 		ubindVAO();
 //		vID = glGenBuffers();
@@ -185,38 +191,35 @@ public class WorldData {
 	private void generateWorld(){
 		this.world = new BlockType[worldSize][worldSize][worldSize];
 		
+		//make every block = nothing
+		for(int i = 0; i < worldSize; i++){
+			for(int k = 0; k< worldSize; k++){
+				for(int j = 0; j< worldSize; j++){
+					world[i][k][j] = BlockType.Nothing;
+				}				
+			}
+		}
+		
+		
 		for(int i = 0; i < worldSize; i++){
 			for(int k = 0; k< 1; k++){
 				for(int j = 0; j< worldSize; j++){
-					world[i][k][j] = BlockType.Grass;
+					world[i][k][j] = randomBlockType();
 				}				
 			}
 		}
 	}
 	
-//	/**
-//	 * Reads chunk from a chunk file
-//	 */
-//	private void readChunkFromFile(){
-//		world[0][0][1] = BlockType.Grass;
-//		world[0][0][2] = BlockType.Grass;
-//		world[0][0][3] = BlockType.Grass;
-//		world[0][0][4] = BlockType.Grass;
-//		world[0][0][5] = BlockType.Grass;
-//		world[0][0][6] = BlockType.Grass;
-//		world[0][0][7] = BlockType.Grass;
-//		world[0][0][8] = BlockType.Grass;
-//		world[0][0][9] = BlockType.Grass;
-//		world[1][0][0] = BlockType.Grass;
-//		world[2][0][0] = BlockType.Grass;
-//		world[3][0][0] = BlockType.Grass;
-//		world[4][0][0] = BlockType.Grass;
-//		world[5][0][0] = BlockType.Grass;
-//		world[6][0][0] = BlockType.Grass;
-//		world[7][0][0] = BlockType.Grass;
-//		world[8][0][0] = BlockType.Grass;
-//		world[9][0][0] = BlockType.Grass;
-//	}
+	/**
+	 * Gives back BlockType.Grass or BlockType.Stone
+	 */
+	private BlockType randomBlockType(){
+		if(rand.nextInt(2) < 1){
+			return BlockType.Grass;
+		} else {
+			return BlockType.Stone;
+		}
+	}
 
 	/**
 	 * Creates cube data and puts it into buffers for one mesh
@@ -226,7 +229,7 @@ public class WorldData {
 	 * @param offset number of indices
 	 * @return number of vertices added
 	 */
-	public int putVertices(float tx, float ty, float tz, int offset) {
+	public int putVertices(float tx, float ty, float tz, int offset, BlockType type) {
 		// create vertices
 	    vertexPositionData.put(new float[]{			  
 				// Back face
@@ -271,8 +274,8 @@ public class WorldData {
 				0+offset,1+offset,3+offset,	// Back face
 				3+offset,1+offset,2+offset,	// Back face
 				
-				4+offset,5+offset,7+offset, // Front face
-				7+offset,5+offset,6+offset, // Front face
+				4+offset,5+offset,6+offset, // Front face
+				6+offset,7+offset,4+offset, // Front face
 				
 				8+offset,9+offset,11+offset, // Right face
 				11+offset,9+offset,10+offset, // Right face
@@ -286,180 +289,82 @@ public class WorldData {
 				20+offset,21+offset,23+offset, // Bottom face
 				23+offset,21+offset,22+offset // Bottom face
 	    });
-	    // create texture coordinates
-	    textureCoords.put(new float[]{
-	    		0, 0,
-	    		1, 0,
-	    		1, 1,
-	    		0, 1,
-	    		
-	    		0, 0,
-	    		1, 0,
-	    		1, 1,
-	    		0, 1,
-	    		
-	    		0, 0,
-	    		1, 0,
-	    		1, 1,
-	    		0, 1,
-	    		
-	    		0, 0,
-	    		1, 0,
-	    		1, 1,
-	    		0, 1,
-	    		
-	    		0.3f, 0.3f,
-	    		0.5f, 0.3f,
-	    		0.5f, 0.5f,
-	    		0.3f, 0.5f,
-	    		
-	    		0, 0,
-	    		1, 0,
-	    		1, 1,
-	    		0, 1
-	    });
-	    return 24;
-	}
 
-	/**
-	 * Creates cube data and puts it into buffers for one mesh
-	 * @param tx
-	 * @param ty
-	 * @param tz
-	 * @param offset number of indices
-	 * @return number of vertices added
-	 */
-	public int putVertices2(float tx, float ty, float tz, int offset) {
-		// create vertices
-		vertexPositionData.put(new float[]{
-			// Back face
-			0 + tx,cubeSize + ty,0 + tz,	//0
-			0 + tx,0 + ty,0 + tz,			//1
-			cubeSize  + tx,0 + ty,0 + tz,	//2
-			cubeSize + tx,cubeSize + ty,0 + tz,		//3
-			
-			// Front face
-			0 + tx,cubeSize + ty,cubeSize + tz,		//4
-			0 + tx,0 + ty,cubeSize + tz,	//5
-			cubeSize + tx,0 + ty,cubeSize + tz,		//6
-			cubeSize + tx,cubeSize + ty,cubeSize + tz,		//7
-			
-			// Right face
-			cubeSize + tx,cubeSize + ty,0 + tz,		//8
-			cubeSize + tx,0 + ty,0 + tz,	//9
-			cubeSize + tx,0 + ty,cubeSize + tz,		//10
-			cubeSize + tx,cubeSize + ty,cubeSize + tz,		//11
-			
-			// Left face
-			0 + tx,cubeSize + ty,0 + tz,	//12
-			0 + tx,0 + ty,0 + tz,	//13
-			0 + tx,0 + ty,cubeSize + tz,	//14
-			0 + tx,cubeSize + ty,cubeSize + tz,		//15
-			
-			// Top face
-			0 + tx,cubeSize + ty,cubeSize + tz,		//16
-			0 + tx,cubeSize + ty,0 + tz,	//17
-			cubeSize + tx,cubeSize + ty,0 + tz,		//18
-			cubeSize + tx,cubeSize + ty,cubeSize + tz,		//19
-			
-			// Bottom face
-			0 + tx,0 + ty,cubeSize + tz,	//20
-			0 + tx,0 + ty,0 + tz,	//21
-			cubeSize + tx,0 + ty,0 + tz,	//22
-			cubeSize + tx,0 + ty,cubeSize + tz		//23
-	    });
-	    // create triangles with vertices
-	    indicesData.put(new int[]{
-				
-				7+offset,4+offset,0+offset, // Top face
-				3+offset,7+offset,0+offset, // Top face
-				
-				1+offset,2+offset,5+offset, // Bottom face
-				5+offset,6+offset,2+offset, // Bottom face
-				
-				0+offset,1+offset,3+offset,	// Front face
-				3+offset,1+offset,2+offset,	// Front face
-				
-				7+offset,5+offset,4+offset, // Back face
-				6+offset,5+offset,7+offset, // Back face
-				
-				3+offset,7+offset,6+offset, // Right face
-				6+offset,2+offset,3+offset, // Right face
-				
-				0+offset,4+offset,1+offset, // Left face
-				1+offset,4+offset,5+offset // Left face
-
-	    });
+	    if(type == BlockType.Grass){
+		    addTextureCoordinates(1, 1, 0.5f);
+		    addTextureCoordinates(1, 1, 0.5f);
+		    addTextureCoordinates(1, 1, 0.5f);
+		    
+		    addTextureCoordinates(1, 1, 0.5f);
+		    addTextureCoordinates(2, 1, 0.5f);
+		    addTextureCoordinates(1, 2, 0.5f);	    	
+	    }
+	    if(type == BlockType.Stone){
+		    addTextureCoordinates(2, 2, 0.5f);
+		    addTextureCoordinates(2, 2, 0.5f);
+		    addTextureCoordinates(2, 2, 0.5f);
+		    
+		    addTextureCoordinates(2, 2, 0.5f);
+		    addTextureCoordinates(2, 2, 0.5f);
+		    addTextureCoordinates(2, 2, 0.5f);
+	    }
 	    
-	    // create texture coordinates
-	    textureCoords.put(new float[]{
-	    		0, 0,
-	    		0.25f, 0,
-	    		0.25f, 0.25f,
-	    		0, 0.25f
-	    });
+//	    // create normals
+//	    normalsData.put(new float[]{
+//				// Back face
+//				0,1,0,	//0
+//				0,0,0,			//1
+//				1 ,0,0,	//2
+//				1,1,0,		//3
+//				
+//				// Front face
+//				0,1,1,		//4
+//				0,0,1,	//5
+//				1,0,1,		//6
+//				1,1,1,		//7
+//				
+//				// Right face
+//				1,1,0,		//8
+//				1,0,0,	//9
+//				1,0,1,		//10
+//				1,1,1,		//11
+//				
+//				// Left face
+//				0,1,0,	//12
+//				0,0,0,	//13
+//				0,0,1,	//14
+//				0,1,1,		//15
+//				
+//				// Top face
+//				0,1,1,		//16
+//				0,1,0,	//17
+//				1,1,0,		//18
+//				1,1,1,		//19
+//				
+//				// Bottom face
+//				0,0,1,	//20
+//				0,0,0,	//21
+//				1,0,0,	//22
+//				1,0,1		//23
+//	    });
+	    
 	    return 24;
 	}
 	
+	
 	/**
-	 * indices
+	 * Creates the u,v coordinates for a single texture from the atlas
+	 * @param row row of the texture
+	 * @param column column of the texture
+	 * @param steps dimension of the texture (calculate: 1/(textures in one row) )
 	 */
-	/**
-	 * Creates cube data and puts it into buffers for one mesh
-	 * @param tx
-	 * @param ty
-	 * @param tz
-	 * @param offset number of indices
-	 * @return number of vertices added
-	 */
-	public int putVertices3(float tx, float ty, float tz, int offset) {
-		// create vertices
-	    vertexPositionData.put(new float[]{			  
-	    		// Back face
-				0 + tx,cubeSize + ty,0 + tz,			//0
-				0 + tx,0 + ty,0 + tz,					//1
-				cubeSize  + tx,0 + ty,0 + tz,			//2
-				cubeSize + tx,cubeSize + ty,0 + tz,		//3
-				
-				// Front face
-				0 + tx,cubeSize + ty,cubeSize + tz,				//4
-				0 + tx,0 + ty,cubeSize + tz,					//5
-				cubeSize + tx,0 + ty,cubeSize + tz,				//6
-				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//7
-	    });
-	    
-	    // create triangles with vertices
-	    indicesData.put(new int[]{
-				
-				7+offset,4+offset,0+offset, // Top face
-				3+offset,7+offset,0+offset, // Top face
-				
-				1+offset,2+offset,5+offset, // Bottom face
-				5+offset,6+offset,2+offset, // Bottom face
-				
-				0+offset,1+offset,3+offset,	// Front face
-				3+offset,1+offset,2+offset,	// Front face
-				
-				7+offset,5+offset,4+offset, // Back face
-				6+offset,5+offset,7+offset, // Back face
-				
-				3+offset,7+offset,6+offset, // Right face
-				6+offset,2+offset,3+offset, // Right face
-				
-				0+offset,4+offset,1+offset, // Left face
-				1+offset,4+offset,5+offset // Left face
-
-	    });
-	    
-	    // create texture coordinates
+	private void addTextureCoordinates(int row, int column, float steps){
 	    textureCoords.put(new float[]{
-	    		0, 0,
-	    		1, 0,
-	    		1, 1,
-	    		0, 1
-	    });
-	    
-	    return 8;
+			((column - 1) * steps), ((row - 1) * steps),
+			(column * steps), ((row - 1) * steps),
+			(column * steps), (row * steps),
+			((column - 1) * steps), (row * steps),	
+		});
 	}
 	
 	/**
@@ -531,9 +436,9 @@ public class WorldData {
 	        for (int y = 0; y < worldSize; y++) {
 	            for (int z = 0; z < worldSize; z++) {
 	            	numberOfCubes++;
-	            	if(world[x][y][z] == BlockType.Grass && checkIfCubeIsVisible(x, y, z))
+	            	if(world[x][y][z] != BlockType.Nothing && checkIfCubeIsVisible(x, y, z))
 	            	{
-	                    i += putVertices(x*cubeSize, y*cubeSize, -z*cubeSize, i);
+	                    i += putVertices(x*cubeSize, y*cubeSize, -z*cubeSize, i, world[x][y][z]);
 	            	}
 	            }
 	        }
@@ -542,6 +447,7 @@ public class WorldData {
 		vertexPositionData.flip();
 		indicesData.flip();
 		textureCoords.flip();
+		normalsData.flip();
 		return vertexPositionData;
 	}
 }

@@ -3,7 +3,7 @@ package entities;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
- * Represents a light
+ * Represents a light (only one light possible at the moment)
  */
 public class Light {
 	
