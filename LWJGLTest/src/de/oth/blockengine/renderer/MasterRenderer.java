@@ -104,7 +104,8 @@ public class MasterRenderer {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// make new background
-		GL11.glClearColor(0, 205 / 255.0f, 255 / 255.0f, 1);
+		GL11.glClearColor(0, 205 / 255.0f, 255 / 255.0f, 1); // blue
+//		GL11.glClearColor(255.0f, 255.0f, 255.0f, 1); // white
 	}
 	
 	/**

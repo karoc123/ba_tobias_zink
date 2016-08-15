@@ -17,7 +17,7 @@ public class Configuration {
 	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000;
 	public static final boolean FULLSCREEN = false;
-	private static final int WORLD_SIZE = 5;
+	private static final int WORLD_SIZE = 10;
 	public static final int CHUNK_SIZE = 16; //not used at the moment
 	
 	// Runtime variables
