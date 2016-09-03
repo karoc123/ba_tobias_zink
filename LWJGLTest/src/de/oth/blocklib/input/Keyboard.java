@@ -8,6 +8,8 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 
 import de.oth.blocklib.Configuration;
 import de.oth.blocklib.entities.Camera;
+import de.oth.blocklib.helper.Log;
+import de.oth.blocklib.helper.PerformanceLog;
 
 /**
  * All Keyboard input handles get handled in this class. There are two
@@ -113,6 +115,10 @@ public final class Keyboard {
 		if (key == GLFW_KEY_F2 && action == GLFW_RELEASE) {
 			Configuration.runDemo = !Configuration.runDemo;
 			System.out.println("Demo: " + Configuration.runDemo);
+		}
+		
+		if (key == GLFW_KEY_F3 && action == GLFW_RELEASE) {
+			PerformanceLog.printMemoryUsage();
 		}
 	}
 

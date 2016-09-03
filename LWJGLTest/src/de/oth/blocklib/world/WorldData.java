@@ -14,6 +14,8 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import de.oth.blocklib.helper.SimplexNoise;
+import de.oth.blocklib.helper.SimplexNoise_octave;
 import de.oth.blocklib.renderer.Loader;
 import de.oth.blocklib.textures.ModelTexture;
 
@@ -27,7 +29,7 @@ public class WorldData {
 	
 	//cube size of the world
 	public int worldSize;
-	private float cubeSize = 4.0f/2;
+	private float cubeSize = 2f/2;
 	private int numberOfVertices = 0;
 	private int numberOfCubes = 0;
 	
@@ -61,13 +63,7 @@ public class WorldData {
 		this.loader = loader;
 		this.texture = texture;
 		generateEmptyWorld();
-		
-		// Create Buffers
-		vertexPositionData = BufferUtils.createFloatBuffer((24*3)*worldSize*worldSize*worldSize);
-		textureCoords = BufferUtils.createFloatBuffer((48)*worldSize*worldSize*worldSize);
-		indicesData = BufferUtils.createIntBuffer(worldSize*worldSize*worldSize*36);
-		normalsData = BufferUtils.createFloatBuffer((24*3)*worldSize*worldSize*worldSize);
-		
+		fillWorldWithBlocks();
 		createVerticesAsBuffer();
 		initMesh();
 		setMeshLatest(true);
@@ -186,8 +182,16 @@ public class WorldData {
 	 * Generates a World Array on world creation without any blocks at all.
 	 */
 	private void generateEmptyWorld() {
+		System.out.format("Creating world with size: %,8d%n cubes", 
+				worldSize * worldSize * worldSize);
 		this.world = new BlockType[worldSize][worldSize][worldSize];
-		
+		fillWorldWithNothing();
+	}
+	
+	/**
+	 * Deletes every block from the world array.
+	 */
+	public void fillWorldWithNothing() {		
 		//make every block = nothing
 		for (int i = 0; i < worldSize; i++) {
 			for (int k = 0; k < worldSize; k++) {
@@ -196,25 +200,30 @@ public class WorldData {
 				}				
 			}
 		}
-		
-		fillWorldWithBlocks();
-	}
+
+		// recreate mesh to make change visible
+		setMeshLatest(false);
+	}	
 	
 	/**
 	 * Fills the world array with random blocks.
 	 */
-	public void fillWorldWithBlocks() {		
+	public void fillWorldWithBlocks() {
+		SimplexNoise sn = new SimplexNoise(100,0.3,5000);
 		// fills the world with blocks
 		for (int i = 0; i < worldSize; i++) {
 			for (int k = 0; k < worldSize; k++) {
 				for (int j = 0; j < worldSize; j++) {
-					world[i][k][j] = randomBlockType(i, k, j);
+					if (sn.getNoise(i, k, j) < 0.001)
+					{
+						world[j][i][k] = randomBlockType(i, k, j);
+					}
 				}				
 			}
 		}
 
 		// recreate mesh to make change visible
-//		recreateMesh();
+		setMeshLatest(false);
 	}
 	
 	/**
@@ -243,98 +252,29 @@ public class WorldData {
 	 * @param ty
 	 * @param tz
 	 * @param offset number of indices
+	 * @param sides array containing the values for the cubes
+	 * 				order: left, right, top, bottom, before, behind
 	 * @return number of vertices added
 	 */
-	public int putVertices(float tx, float ty, float tz, int offset, BlockType type) {
-		// create vertices
-	    vertexPositionData.put(new float[]{			  
-				// Back face
-				0 + tx,cubeSize + ty,0 + tz,	//0
-				0 + tx,0 + ty,0 + tz,			//1
-				cubeSize  + tx,0 + ty,0 + tz,	//2
-				cubeSize + tx,cubeSize + ty,0 + tz,		//3
-				
-				// Front face
-				0 + tx,cubeSize + ty,cubeSize + tz,		//4
-				0 + tx,0 + ty,cubeSize + tz,	//5
-				cubeSize + tx,0 + ty,cubeSize + tz,		//6
-				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//7
-				
-				// Right face
-				cubeSize + tx,cubeSize + ty,0 + tz,		//8
-				cubeSize + tx,0 + ty,0 + tz,	//9
-				cubeSize + tx,0 + ty,cubeSize + tz,		//10
-				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//11
-				
-				// Left face
-				0 + tx,cubeSize + ty,0 + tz,	//12
-				0 + tx,0 + ty,0 + tz,	//13
-				0 + tx,0 + ty,cubeSize + tz,	//14
-				0 + tx,cubeSize + ty,cubeSize + tz,		//15
-				
-				// Top face
-				0 + tx,cubeSize + ty,cubeSize + tz,		//16
-				0 + tx,cubeSize + ty,0 + tz,	//17
-				cubeSize + tx,cubeSize + ty,0 + tz,		//18
-				cubeSize + tx,cubeSize + ty,cubeSize + tz,		//19
-				
-				// Bottom face
-				0 + tx,0 + ty,cubeSize + tz,	//20
-				0 + tx,0 + ty,0 + tz,	//21
-				cubeSize + tx,0 + ty,0 + tz,	//22
-				cubeSize + tx,0 + ty,cubeSize + tz		//23
-	    });
-	    
-	    // create triangles with vertices
-	    indicesData.put(new int[]{
-				0+offset,1+offset,3+offset,	// Back face
-				3+offset,1+offset,2+offset,	// Back face
-				
-				4+offset,5+offset,6+offset, // Front face
-				6+offset,7+offset,4+offset, // Front face
-				
-				8+offset,9+offset,11+offset, // Right face
-				11+offset,9+offset,10+offset, // Right face
-				
-				12+offset,13+offset,15+offset, // Left face
-				15+offset,13+offset,14+offset, // Left face
-				
-				16+offset,17+offset,19+offset, // Top face
-				19+offset,17+offset,18+offset, // Top face
-				
-				20+offset,21+offset,23+offset, // Bottom face
-				23+offset,21+offset,22+offset // Bottom face
-	    });
-
-	    if(type == BlockType.Grass){
-		    addTextureCoordinates(1, 1, 0.5f); // Back
-		    addTextureCoordinates(1, 1, 0.5f); // Front
-		    addTextureCoordinates(1, 1, 0.5f); // Right
-		    
-		    addTextureCoordinates(1, 1, 0.5f); // Left
-		    addTextureCoordinates(2, 1, 0.5f); // Top
-		    addTextureCoordinates(1, 2, 0.5f); // Bottom	
-	    }
-	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.5f);
-	    	addTextureCoordinates(1, 2, 0.5f);
-	    	addTextureCoordinates(1, 2, 0.5f);
-	    	
-	    	addTextureCoordinates(1, 2, 0.5f);
-	    	addTextureCoordinates(1, 2, 0.5f);
-	    	addTextureCoordinates(1, 2, 0.5f);
-	    }
-	    
-	    if(type == BlockType.Stone){
-		    addTextureCoordinates(2, 2, 0.5f);
-		    addTextureCoordinates(2, 2, 0.5f);
-		    addTextureCoordinates(2, 2, 0.5f);
-		    
-		    addTextureCoordinates(2, 2, 0.5f);
-		    addTextureCoordinates(2, 2, 0.5f);
-		    addTextureCoordinates(2, 2, 0.5f);
-	    }
-	    
+	public int putVertices(float tx, float ty, float tz, int offset, BlockType type, boolean[] sides) {
+		if (sides[5]){
+			offset += addBackSide(tx, ty, tz, offset, type);
+		}
+		if (sides[4]){
+			offset += addFrontSide(tx, ty, tz, offset, type);
+		}
+		if (sides[1]){
+			offset += addRightSide(tx, ty, tz, offset, type);
+		}
+		if (sides[0]){
+			offset += addLeftSide(tx, ty, tz, offset, type);
+		}
+		if (sides[2]){
+			offset += addTopSide(tx, ty, tz, offset, type);
+		}
+		if (sides[3]){
+			offset += addBotSide(tx, ty, tz, offset, type);
+		}
 //	    // create normals
 //	    normalsData.put(new float[]{
 //				// Back face
@@ -374,9 +314,184 @@ public class WorldData {
 //				1,0,1		//23
 //	    });
 	    
-	    return 24;
+	    return offset;
+	}
+
+	private int addBotSide(float tx, float ty, float tz, int offset, BlockType type){
+		// create vertices
+	    vertexPositionData.put(new float[]{			  
+				// Bottom face
+				0 + tx,0 + ty,cubeSize + tz,	//20
+				0 + tx,0 + ty,0 + tz,	//21
+				cubeSize + tx,0 + ty,0 + tz,	//22
+				cubeSize + tx,0 + ty,cubeSize + tz		//23
+	    });
+	    
+	    // create triangles with vertices
+	    indicesData.put(new int[]{
+				0+offset,1+offset,3+offset, // Bottom face
+				3+offset,1+offset,2+offset // Bottom face
+	    });
+
+	    if(type == BlockType.Grass){
+		    addTextureCoordinates(1, 2, 0.5f); // Bottom	
+	    }
+	    if(type == BlockType.Dirt){
+	    	addTextureCoordinates(1, 2, 0.5f);
+	    }
+	    
+	    if(type == BlockType.Stone){ 
+		    addTextureCoordinates(2, 2, 0.5f);
+	    }
+//	    System.out.println("tx: " + tx + "ty: " + ty + "tz: " + tz + "offset: " + offset);
+		return 4;
 	}
 	
+	private int addTopSide(float tx, float ty, float tz, int offset, BlockType type){
+		// create vertices
+	    vertexPositionData.put(new float[]{			  
+				// Top face
+				0 + tx,cubeSize + ty,cubeSize + tz,		//16
+				0 + tx,cubeSize + ty,0 + tz,	//17
+				cubeSize + tx,cubeSize + ty,0 + tz,		//18
+				cubeSize + tx,cubeSize + ty,cubeSize + tz		//19
+	    });
+	    
+	    // create triangles with vertices
+	    indicesData.put(new int[]{
+				0+offset,1+offset,3+offset, // Top face
+				3+offset,1+offset,2+offset // Top face
+	    });
+
+	    if(type == BlockType.Grass){
+		    addTextureCoordinates(2, 1, 0.5f); // Top	
+	    }
+	    if(type == BlockType.Dirt){
+	    	addTextureCoordinates(1, 2, 0.5f);
+	    }
+	    
+	    if(type == BlockType.Stone){ 
+		    addTextureCoordinates(2, 2, 0.5f);
+	    }
+		return 4;
+	}
+	
+	private int addLeftSide(float tx, float ty, float tz, int offset, BlockType type){
+		// create vertices
+	    vertexPositionData.put(new float[]{			  
+				// Left face
+				0 + tx,cubeSize + ty,0 + tz,	//12
+				0 + tx,0 + ty,0 + tz,	//13
+				0 + tx,0 + ty,cubeSize + tz,	//14
+				0 + tx,cubeSize + ty,cubeSize + tz		//15
+	    });
+	    
+	    // create triangles with vertices
+	    indicesData.put(new int[]{
+				0+offset,1+offset,3+offset, // Left face
+				3+offset,1+offset,2+offset // Left face
+	    });
+
+	    if(type == BlockType.Grass){
+		    addTextureCoordinates(1, 1, 0.5f); // Left
+	    }
+	    if(type == BlockType.Dirt){
+	    	addTextureCoordinates(1, 2, 0.5f);
+	    }
+	    
+	    if(type == BlockType.Stone){ 
+		    addTextureCoordinates(2, 2, 0.5f);
+	    }
+		return 4;
+	}
+	
+	private int addRightSide(float tx, float ty, float tz, int offset, BlockType type){
+		// create vertices
+	    vertexPositionData.put(new float[]{			  
+				// Right face
+				cubeSize + tx,cubeSize + ty,0 + tz,		//8
+				cubeSize + tx,0 + ty,0 + tz,	//9
+				cubeSize + tx,0 + ty,cubeSize + tz,		//10
+				cubeSize + tx,cubeSize + ty,cubeSize + tz		//11
+	    });
+	    
+	    // create triangles with vertices
+	    indicesData.put(new int[]{
+				0+offset,1+offset,3+offset, // Right face
+				3+offset,1+offset,2+offset // Right face
+	    });
+
+	    if(type == BlockType.Grass){
+		    addTextureCoordinates(1, 1, 0.5f); // Right
+	    }
+	    if(type == BlockType.Dirt){
+	    	addTextureCoordinates(1, 2, 0.5f);
+	    }
+	    
+	    if(type == BlockType.Stone){
+		    addTextureCoordinates(2, 2, 0.5f);
+	    }
+		return 4;
+	}
+	
+	private int addFrontSide(float tx, float ty, float tz, int offset, BlockType type){
+		// create vertices
+	    vertexPositionData.put(new float[]{			  
+				// Front face
+				0 + tx,cubeSize + ty,cubeSize + tz,		//4
+				0 + tx,0 + ty,cubeSize + tz,	//5
+				cubeSize + tx,0 + ty,cubeSize + tz,		//6
+				cubeSize + tx,cubeSize + ty,cubeSize + tz		//7
+	    });
+	    
+	    // create triangles with vertices
+	    indicesData.put(new int[]{
+				0+offset,1+offset,2+offset, // Front face
+				2+offset,3+offset,0+offset	// Front face
+	    });
+
+	    if(type == BlockType.Grass){
+		    addTextureCoordinates(1, 1, 0.5f); // Front	
+	    }
+	    if(type == BlockType.Dirt){
+	    	addTextureCoordinates(1, 2, 0.5f);
+
+	    }
+	    
+	    if(type == BlockType.Stone){
+		    addTextureCoordinates(2, 2, 0.5f);
+	    }
+		return 4;
+	}
+	
+	private int addBackSide(float tx, float ty, float tz, int offset, BlockType type){
+		// create vertices
+	    vertexPositionData.put(new float[]{			  
+				// Back face
+				0 + tx,cubeSize + ty,0 + tz,	//0
+				0 + tx,0 + ty,0 + tz,			//1
+				cubeSize  + tx,0 + ty,0 + tz,	//2
+				cubeSize + tx,cubeSize + ty,0 + tz		//3
+	    });
+	    
+	    // create triangles with vertices
+	    indicesData.put(new int[]{
+				0+offset,1+offset,3+offset,	// Back face
+				3+offset,1+offset,2+offset	// Back face
+	    });
+
+	    if(type == BlockType.Grass){
+		    addTextureCoordinates(1, 1, 0.5f); // Back
+	    }
+	    if(type == BlockType.Dirt){
+	    	addTextureCoordinates(1, 2, 0.5f);
+	    }
+	    
+	    if(type == BlockType.Stone){
+		    addTextureCoordinates(2, 2, 0.5f);
+	    }	
+		return 4;
+	}
 	
 	/**
 	 * Creates the u,v coordinates for a single texture from the atlas
@@ -401,6 +516,10 @@ public class WorldData {
 		return numberOfVertices;
 	}
 	
+	public int getNumberOfVertices(){
+		return numberOfVertices;
+	}
+	
 	/**
 	 * Number of cubes in the mesh
 	 * @return
@@ -411,64 +530,171 @@ public class WorldData {
 	
 	/**
 	 * If a cube has "air" on one of the sides, it is visible
+	 * <b>ATTENTION:</b> changes the values of sides!
 	 * TODO: also check other chunks for border cubes
+	 * @param sides array containing the values for the cubes
+	 * 				order: left, right, top, bottom, before, behind
 	 * @return
 	 */
-	private boolean checkIfCubeIsVisible(int x, int y, int z){
-		//TODO check for other chunks
-		if(x == worldSize-1 || x == 0 || y == worldSize-1 || y == 0 || z == worldSize-1 || z == 0)
-		{
-			return true;
-		}
+	private boolean checkIfCubeIsVisible(int x, int y, int z, boolean[] sides){
+		boolean isVisible = false;
 		
-		if(x < worldSize-1 && world[x+1][y][z] == BlockType.Nothing)
-		{
-			return true;
-		}
 		if(x > 0 && world[x-1][y][z] == BlockType.Nothing)
 		{
-			return true;
+			//Left cube
+			isVisible = true;
+			sides[0] = true;
+		} else
+		{
+			sides[0] = false;
+		}
+		if(x < worldSize-1 && world[x+1][y][z] == BlockType.Nothing)
+		{
+			//Right cube
+			isVisible = true;
+			sides[1] = true;
+		} else 
+		{
+			sides[1] = false;
 		}
 		if(y < worldSize-1 && world[x][y+1][z] == BlockType.Nothing)
 		{
-			return true;
+			//top cube
+			isVisible = true;
+			sides[2] = true;
+		} else
+		{
+			sides[2] = false;
 		}
 		if(y > 0 && world[x][y-1][z] == BlockType.Nothing)
 		{
-			return true;
-		}
-		if(z < worldSize-1 && world[x][y][z+1] == BlockType.Nothing)
+			//bottom cube
+			isVisible = true;
+			sides[3] = true;
+		} else
 		{
-			return true;
+			sides[3] = false;
 		}
 		if(z > 0 && world[x][y][z-1] == BlockType.Nothing)
 		{
-			return true;
+			//cube before
+			isVisible = true;
+			sides[4] = true;
+		} else
+		{
+			sides[4] = false;
 		}
-		return false;
+		if(z < worldSize-1 && world[x][y][z+1] == BlockType.Nothing)
+		{
+			//cube behind
+			isVisible = true;
+			sides[5] = true;
+		} else
+		{
+			sides[5] = false;
+		}
+		
+		//TODO check for other chunks
+		if(x == worldSize-1 || x == 0 || y == worldSize-1 || y == 0 || z == worldSize-1 || z == 0)
+		{
+			isVisible = true;
+			sides[0] = true;
+			sides[1] = true;
+			sides[2] = true;
+			sides[3] = true;
+			sides[4] = true;
+			sides[5] = true;
+		}
+		return isVisible;
 	}
 	
+	/**
+	 * To make buffers with the correct size (in relation to the cubes), the
+	 * number of cubes to be rendered is calculated.
+	 * @return number of cubes to be rendered.
+	 */
+	private int numberOfCubesToRender() {
+		int numberOfCubesToRender = 0;
+		boolean[] sides = new boolean[6];
+		for (int x = 0; x < worldSize; x++) {
+			for (int y = 0; y < worldSize; y++) {
+				for (int z = 0; z < worldSize; z++) {
+
+					if (world[x][y][z] != BlockType.Nothing && checkIfCubeIsVisible(x, y, z, sides)) {
+						numberOfCubesToRender++;
+					}
+				}
+			}
+		}
+		System.out.println("Cubes to render: " + numberOfCubesToRender);
+		return numberOfCubesToRender;
+	}
+	
+	/**
+	 * To make buffers with the correct size (in relation to the sides of the cubes), the
+	 * number of sides of cubes to be rendered is calculated.
+	 * @return number of cubes to be rendered.
+	 */
+	private int numberOfSidesToRender() {
+		int numberOfSidesToRender = 0;
+		int numberOfCubesToRender = 0;
+		boolean[] sides = new boolean[6];
+		for (int x = 0; x < worldSize; x++) {
+			for (int y = 0; y < worldSize; y++) {
+				for (int z = 0; z < worldSize; z++) {
+
+					if (world[x][y][z] != BlockType.Nothing && checkIfCubeIsVisible(x, y, z, sides)) {
+						numberOfCubesToRender++;
+						for (boolean side : sides)
+						{
+							if (side)
+							{
+								numberOfSidesToRender++;
+							}
+						}
+					}
+				}
+			}
+		}
+		System.out.format("Sides to render: : %,8d%n", numberOfSidesToRender);
+		System.out.format("Cubes to render: : %,8d%n", numberOfCubesToRender);
+		return numberOfSidesToRender;
+	}
+
 	/**
 	 * Creates vertices and indices for a mesh
 	 * @return
 	 */
 	public FloatBuffer createVerticesAsBuffer(){
-		vertexPositionData.clear();
-		textureCoords.clear();
-		indicesData.clear();
+		// Create Buffers
+		int numberOfSidesToRender = numberOfSidesToRender();
+		vertexPositionData = BufferUtils.createFloatBuffer(4*3*numberOfSidesToRender);
+		textureCoords = BufferUtils.createFloatBuffer(8*numberOfSidesToRender);
+		indicesData = BufferUtils.createIntBuffer(numberOfSidesToRender*6);
+		normalsData = BufferUtils.createFloatBuffer((4*3)*numberOfSidesToRender);
+		
+//		vertexPositionData.clear();
+//		textureCoords.clear();
+//		indicesData.clear();
+		
 		numberOfCubes = 0;
-		int i = 0;
+		int i = 0; //offset
+		boolean[] sides = new boolean[6]; //visible sides of the dice
+		
 		for (int x = 0; x < worldSize; x++) {
 	        for (int y = 0; y < worldSize; y++) {
 	            for (int z = 0; z < worldSize; z++) {
 	            	numberOfCubes++;
-	            	if(world[x][y][z] != BlockType.Nothing && checkIfCubeIsVisible(x, y, z))
+	            	if(world[x][y][z] != BlockType.Nothing && checkIfCubeIsVisible(x, y, z, sides))
 	            	{
-	                    i += putVertices(x*cubeSize, y*cubeSize, -z*cubeSize, i, world[x][y][z]);
+	                    i = putVertices(x*cubeSize, y*cubeSize, -z*cubeSize, i, world[x][y][z], sides);
+//	                    System.out.println(i);
 	            	}
 	            }
 	        }
 	    }
+		System.out.format("Number of vertices: %,8d%n", i*3);
+		System.out.format("Number of triangles: %,8d%n", i);
 		numberOfVertices = i;
 		vertexPositionData.flip();
 		indicesData.flip();

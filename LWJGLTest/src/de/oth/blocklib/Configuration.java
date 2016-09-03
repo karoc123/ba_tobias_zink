@@ -5,6 +5,8 @@ import de.oth.blocklib.helper.Log;
 import de.oth.blocklib.input.MouseHandler;
 import de.oth.blocklib.renderer.WorldMeshRenderer;
 
+import static de.oth.blocklib.helper.Log.*;
+
 /**
  * An instance of Configuration allows the framework to specify properties.
  * 
@@ -30,15 +32,17 @@ public class Configuration {
 	 * seen on the display at any given moment. Measured as an angle. */
 	public static final float FOV = 70;
 	/** Configures the view frustum  near plane */
-	public static final float NEAR_PLANE = 0.1f;
+	public static final float NEAR_PLANE = 0.10f;
 	/** Configures the view frustum  far plane */
 	public static final float FAR_PLANE = 1000;
 	
 	/** Must be set before window creation, fullscreen can't be switched if the game is running, support maybe in lwjgl 3.2
 	 * @see https://github.com/glfw/glfw/issues/43 */
 	public static final boolean FULLSCREEN = false;
+	
 	/** Size of the cubic world, blocks in the world = world_size^3 */
-	private static final int WORLD_SIZE = 20;
+	private static final int WORLD_SIZE = 100;
+			;
 	/** NOT USED AT THE MOMENT */
 	public static final int CHUNK_SIZE = 16; //not used at the moment
 	
@@ -100,9 +104,9 @@ public class Configuration {
 	 * Width: 1920
 	 */
 	public void loadConfiguration(){
-		Log.set(6);
+		Log.set(LEVEL_INFO);
 		if (DEBUG) { 
-			Log.set(2); 
+			Log.set(LEVEL_DEBUG); 
 		}
 	}
 

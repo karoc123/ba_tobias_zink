@@ -40,7 +40,7 @@ public class WorldMeshRenderer {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, worldData.texture.getID());
 	    
-		GL11.glDrawElements(GL11.GL_TRIANGLES, 36*worldData.getNumberOfCubes(), GL11.GL_UNSIGNED_INT, 0);
+		GL11.glDrawElements(GL11.GL_TRIANGLES, worldData.getNumberOfVertices()*3, GL11.GL_UNSIGNED_INT, 0);
 		
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);

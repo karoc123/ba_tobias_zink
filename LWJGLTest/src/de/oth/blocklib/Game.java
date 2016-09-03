@@ -17,6 +17,7 @@ import de.oth.blocklib.entities.Camera;
 import de.oth.blocklib.entities.Entity;
 import de.oth.blocklib.entities.Light;
 import de.oth.blocklib.helper.Log.Logger;
+import de.oth.blocklib.helper.PerformanceLog;
 import de.oth.blocklib.helper.Utility;
 import de.oth.blocklib.input.Keyboard;
 import de.oth.blocklib.input.KeyboardHandler;
@@ -265,29 +266,6 @@ public class Game {
 	 * @see Logger
 	 */
 	private void performanceLog(final float delta) {
-		// Calculate Memory
-		int mb = Utility.MEGABYTESIZE * Utility.MEGABYTESIZE;
-        if (Utility.getTimeInMilliseconds() - lastFPS > 1000) {
-		    //Getting the runtime reference from system
-		    Runtime runtime = Runtime.getRuntime();
-		     
-		    info("##### Heap utilization statistics [MB] #####");
-		     
-		    //Print used memory
-		    info("Used Memory:"
-		            + (runtime.totalMemory() - runtime.freeMemory()) / mb);
-		 
-		    //Print free memory
-		    info("Free Memory:"
-		        + runtime.freeMemory() / mb);
-		     
-		    //Print total available memory
-		    info("Total Memory:" + runtime.totalMemory() / mb);
-		 
-		        //Print Maximum available memory
-		    info("Max Memory:" + runtime.maxMemory() / mb);
-        }
-        
 		// Calculate FPS
 	    if (Utility.getTimeInMilliseconds() - lastFPS > Utility.SECONDSIZE) {
 	    	glfwSetWindowTitle(
@@ -295,15 +273,54 @@ public class Game {
 	    			"FPS: " + fps + " | Render time: ~"
 	    			+ renderer.getTimeToRender() + "µs"
 	    			);
-	    	info("FPS: " + fps);
 	        fps = 0; //reset the FPS counter
 	        lastFPS += Utility.SECONDSIZE; //add one second
 	    }
 	    fps++;
 	}
 
+	/** Change the type of a specific block in the world. Needs the
+	 * cartesian coordinate of the block in the world and the type of
+	 * the block to set. The placement of the block takes
+	 * place in {@link WorldData}.
+	 * @param x position
+	 * @param y position
+	 * @param z position
+	 * @param block type
+	 * @see WorldData
+	 * @see BlockType
+	 */
+	public final void setBlock(
+			final int x, final int y, final int z, final BlockType block) {
+		world.setBlock(x, y, z, block);
+	}
+
+	/** Removes a specific block in the world. Needs the
+	 * cartesian coordinate of the block in the world.
+	 * The remove of the block takes place in {@link WorldData}.
+	 * @param x position
+	 * @param y position
+	 * @param z position
+	 * @see WorldData
+	 * @see BlockType
+	 */
+	public final void removeBlock(final int x, final int y, final int z) {
+		world.removeBlock(x, y, z);
+	}
+	
+	/** Removes every block from the world array.
+	 * The remove of the block takes place in {@link WorldData}.
+	 * @see WorldData
+	 * @see BlockType
+	 */
+	public final void fillWorldWithNothing() {
+		world.fillWorldWithNothing();
+	}
+	
 	public static void testSetup() {
 		Game game = new Game();
+		game.config.setHeight(1200);
+		game.config.setWidth(1600);
 		game.init();
 		game.initWorld();
 		game.start();		
