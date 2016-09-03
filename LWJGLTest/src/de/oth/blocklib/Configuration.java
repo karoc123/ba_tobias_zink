@@ -41,8 +41,8 @@ public class Configuration {
 	public static final boolean FULLSCREEN = false;
 	
 	/** Size of the cubic world, blocks in the world = world_size^3 */
-	private static final int WORLD_SIZE = 100;
-			;
+	private static final int WORLD_SIZE = 90;
+	
 	/** NOT USED AT THE MOMENT */
 	public static final int CHUNK_SIZE = 16; //not used at the moment
 	

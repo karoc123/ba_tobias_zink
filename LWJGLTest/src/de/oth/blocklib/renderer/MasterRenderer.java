@@ -42,8 +42,8 @@ public class MasterRenderer {
 		entities = new HashMap<TexturedModel,List<Entity>>();
 		
 		// Because backfaces of the model can be "culled" (not rendered)
-//		GL11.glEnable(GL11.GL_CULL_FACE);
-//		GL11.glCullFace(GL11.GL_BACK);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
 	}
 
 	/**

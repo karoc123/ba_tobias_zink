@@ -5,8 +5,11 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import de.oth.blocklib.Configuration;
+import de.oth.blocklib.entities.Entity;
+import de.oth.blocklib.helper.Maths;
 import de.oth.blocklib.shaders.StaticShader;
 import de.oth.blocklib.world.WorldData;
 
@@ -15,8 +18,11 @@ import de.oth.blocklib.world.WorldData;
  *
  */
 public class WorldMeshRenderer {
+	
+	private StaticShader shader;
 
 	public WorldMeshRenderer(StaticShader shader, Matrix4f projectionMatrix) {
+		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
@@ -40,10 +46,24 @@ public class WorldMeshRenderer {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, worldData.texture.getID());
 	    
+		// normals
+		GL20.glEnableVertexAttribArray(2);
+		
+		// draw
+		prepareWorldMesh();
 		GL11.glDrawElements(GL11.GL_TRIANGLES, worldData.getNumberOfVertices()*3, GL11.GL_UNSIGNED_INT, 0);
 		
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+	}
+	
+	/**
+	 * Prepares transformationMatrix for worldmesh
+	 */
+	private void prepareWorldMesh(){
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(new Vector3f(-1,-1,-1), 
+				0, 0, 0, 0.25f);
+		shader.loadTransformationMatrix(transformationMatrix);
 	}
 }

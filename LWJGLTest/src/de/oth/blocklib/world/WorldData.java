@@ -63,7 +63,7 @@ public class WorldData {
 		this.loader = loader;
 		this.texture = texture;
 		generateEmptyWorld();
-		fillWorldWithBlocks();
+		fillWorldWithBlocksOctave();
 		createVerticesAsBuffer();
 		initMesh();
 		setMeshLatest(true);
@@ -208,7 +208,7 @@ public class WorldData {
 	/**
 	 * Fills the world array with random blocks.
 	 */
-	public void fillWorldWithBlocks() {
+	public void fillWorldWithBlocksOctave() {
 		SimplexNoise sn = new SimplexNoise(100,0.3,5000);
 		// fills the world with blocks
 		for (int i = 0; i < worldSize; i++) {
@@ -216,8 +216,25 @@ public class WorldData {
 				for (int j = 0; j < worldSize; j++) {
 					if (sn.getNoise(i, k, j) < 0.001)
 					{
-						world[j][i][k] = randomBlockType(i, k, j);
+						world[j][i][k] = BlockType.Dirt;
 					}
+				}				
+			}
+		}
+
+		// recreate mesh to make change visible
+		setMeshLatest(false);
+	}
+
+	/**
+	 * Fills the world array with random blocks.
+	 */
+	public void fillWorldWithBlocksFull() {
+		// fills the world with blocks
+		for (int i = 0; i < worldSize; i++) {
+			for (int k = 0; k < worldSize; k++) {
+				for (int j = 0; j < worldSize; j++) {
+					world[j][i][k] = randomBlockType(i, k, j);
 				}				
 			}
 		}
@@ -326,12 +343,21 @@ public class WorldData {
 				cubeSize + tx,0 + ty,0 + tz,	//22
 				cubeSize + tx,0 + ty,cubeSize + tz		//23
 	    });
-	    
+
 	    // create triangles with vertices
 	    indicesData.put(new int[]{
 				0+offset,1+offset,3+offset, // Bottom face
 				3+offset,1+offset,2+offset // Bottom face
 	    });
+
+	    // create normals
+	    normalsData.put(new float[]{
+				// Bottom face
+				0,0,1,	//20
+				0,0,0,	//21
+				1,0,0,	//22
+				1,0,1		//23
+	    });	    
 
 	    if(type == BlockType.Grass){
 		    addTextureCoordinates(1, 2, 0.5f); // Bottom	
@@ -343,7 +369,6 @@ public class WorldData {
 	    if(type == BlockType.Stone){ 
 		    addTextureCoordinates(2, 2, 0.5f);
 	    }
-//	    System.out.println("tx: " + tx + "ty: " + ty + "tz: " + tz + "offset: " + offset);
 		return 4;
 	}
 	
@@ -359,10 +384,19 @@ public class WorldData {
 	    
 	    // create triangles with vertices
 	    indicesData.put(new int[]{
-				0+offset,1+offset,3+offset, // Top face
-				3+offset,1+offset,2+offset // Top face
+				1+offset,0+offset,3+offset, // Top face
+				3+offset,2+offset,1+offset // Top face
 	    });
 
+	    // create normals
+	    normalsData.put(new float[]{
+				// Top face
+				0,1,1,		//16
+				0,1,0,	//17
+				1,1,0,		//18
+				1,1,1,		//19
+	    });	 
+	    
 	    if(type == BlockType.Grass){
 		    addTextureCoordinates(2, 1, 0.5f); // Top	
 	    }
@@ -391,6 +425,14 @@ public class WorldData {
 				0+offset,1+offset,3+offset, // Left face
 				3+offset,1+offset,2+offset // Left face
 	    });
+	    
+	    normalsData.put(new float[]{
+				// Left face
+				0,1,0,	//12
+				0,0,0,	//13
+				0,0,1,	//14
+				0,1,1,		//15
+	    });	 
 
 	    if(type == BlockType.Grass){
 		    addTextureCoordinates(1, 1, 0.5f); // Left
@@ -417,9 +459,17 @@ public class WorldData {
 	    
 	    // create triangles with vertices
 	    indicesData.put(new int[]{
-				0+offset,1+offset,3+offset, // Right face
-				3+offset,1+offset,2+offset // Right face
+				1+offset,0+offset,3+offset, // Right face
+				3+offset,2+offset,1+offset // Right face
 	    });
+	    
+	    normalsData.put(new float[]{
+				// Right face
+				1,1,0,		//8
+				1,0,0,	//9
+				1,0,1,		//10
+				1,1,1,		//11
+	    });	 
 
 	    if(type == BlockType.Grass){
 		    addTextureCoordinates(1, 1, 0.5f); // Right
@@ -449,6 +499,14 @@ public class WorldData {
 				0+offset,1+offset,2+offset, // Front face
 				2+offset,3+offset,0+offset	// Front face
 	    });
+	    
+	    normalsData.put(new float[]{
+//				// Front face
+				0,1,1,		//4
+				0,0,1,	//5
+				1,0,1,		//6
+				1,1,1,		//7
+	    });	 
 
 	    if(type == BlockType.Grass){
 		    addTextureCoordinates(1, 1, 0.5f); // Front	
@@ -476,9 +534,17 @@ public class WorldData {
 	    
 	    // create triangles with vertices
 	    indicesData.put(new int[]{
-				0+offset,1+offset,3+offset,	// Back face
-				3+offset,1+offset,2+offset	// Back face
+				1+offset,0+offset,3+offset,	// Back face
+				3+offset,2+offset,1+offset	// Back face
 	    });
+	    
+	    normalsData.put(new float[]{
+				// Back face
+				0,1,0,	//0
+				0,0,0,			//1
+				1 ,0,0,	//2
+				1,1,0,		//3
+	    });	 
 
 	    if(type == BlockType.Grass){
 		    addTextureCoordinates(1, 1, 0.5f); // Back
@@ -673,9 +739,9 @@ public class WorldData {
 		indicesData = BufferUtils.createIntBuffer(numberOfSidesToRender*6);
 		normalsData = BufferUtils.createFloatBuffer((4*3)*numberOfSidesToRender);
 		
-//		vertexPositionData.clear();
-//		textureCoords.clear();
-//		indicesData.clear();
+		vertexPositionData.clear();
+		textureCoords.clear();
+		indicesData.clear();
 		
 		numberOfCubes = 0;
 		int i = 0; //offset

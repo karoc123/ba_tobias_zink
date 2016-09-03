@@ -128,10 +128,10 @@ public class Game {
 		texture = new ModelTexture(loader.loadTexture("spritesheet"));
 		TexturedModel texMod = new TexturedModel(model, texture);
 		
-		Entity entity = new Entity(texMod, new Vector3f(0f,0,-1.5f),0,0,0,0.25f);
+		Entity entity = new Entity(texMod, new Vector3f(4,4,-4),0,0,0,0.25f);
 		entities.add(entity);
 			
-		light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
+		light = new Light(new Vector3f(4,4,-4), new Vector3f(1,1,1));
 		
 		// Create World
 		world = new WorldData(Configuration.getWorldSize(), loader, texture);
