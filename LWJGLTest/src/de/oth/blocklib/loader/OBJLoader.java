@@ -11,16 +11,18 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
- * Loads a .obj file from /res folder
+ * Loads a .obj file from /res folder.
+ * @see ModelData
  */
 public class OBJLoader {
     
     private static final String RES_LOC = "";
  
     /**
-     * Loads a .obj file from /res folder
-     * @param objFileName Name of .obj file
+     * Loads a .obj file from /res folder.
+     * @param objFileName Name of .obj file in the /res folder
      * @return ModelData of the .obj file
+     * @see ModelData
      */
     public static ModelData loadOBJ(String objFileName) {
 //        FileReader isr = null;

@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * A low overhead, lightweight logging system.
  * minlog with BSD License
- * @author Nathan Sweet <misc@n4te.com>
+ * @author Nathan Sweet misc@n4te.com
  */
 public class Log {
 	/** No logging at all. */
@@ -47,6 +47,7 @@ public class Log {
 	/**
 	 * Sets the level to log. If a version of this class is being used that has
 	 * a final log level, this has no affect.
+	 * @param level the log level of the logger
 	 */
 	static public void set(int level) {
 		// Comment out method contents when compiling fixed level JARs.
@@ -82,7 +83,10 @@ public class Log {
 		set(LEVEL_TRACE);
 	}
 
-	/** Sets the logger that will write the log messages. */
+	/** Sets the logger that will write the log messages.
+	 * 
+	 * @param logger the new logger
+	 */
 	static public void setLogger(Logger logger) {
 		Log.logger = logger;
 	}

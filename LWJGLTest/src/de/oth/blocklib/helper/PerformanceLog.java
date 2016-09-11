@@ -10,10 +10,11 @@ import de.oth.blocklib.helper.Log.Logger;
  */
 public final class PerformanceLog {
 
-	/** private constructor. */
+	/** Because there should never be a instance of a utility class. */
 	private PerformanceLog() { }
+	
 	/**
-	 * 
+	 * Output on the console to get a overview over the memory usage.
 	 */
 	public static void printMemoryUsage() {
 		// Calculate Memory

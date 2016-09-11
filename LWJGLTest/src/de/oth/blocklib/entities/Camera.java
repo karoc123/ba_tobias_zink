@@ -109,7 +109,7 @@ public class Camera {
 
 	/**
 	 * Roll of the camera (not usefull in minecraft like game?)
-	 * @return
+	 * @return the roll of the camera
 	 */
 	public float getRoll() {
 		return roll;

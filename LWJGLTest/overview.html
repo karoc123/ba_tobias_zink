@@ -6,9 +6,39 @@
    </HEAD>
    <BODY>
       <P>Implementation of a block-based graphics library with LWJGL!</P>
-      
-      TODO: HIER KOMMEN BEISPIELE
-      <br />
+      <h2>Examples</h2>
+      First include the Library into your own Project with: Properties, Java Build Path, Libraries, Add JAR.
+      Then the library can already be used with the following code:
+<pre><code>
+import de.oth.blocklib.*;
+public class main {
+ public static void main() {
+  Configuration config = new Configuration();
+  config.setWorldSize(8);
+  Game game = new Game(config);
+  World world = new World(config.getWorldSize());
+  world.setBlock(i, 0, j, BlockType.Stone);
+  game.initWorld(world);
+  game.start();
+ }
+}
+</code></pre>
+ <br />
+     If there is a need to get in control of the main loop, this can be done by inheriting from the Game class.
+	The world needs to be recreated if there are changes on the world.
+<pre><code>
+public class ExampleGame extends Game {
+  public ExampleGame(Configuration config) {
+    super(config);
+  }
+  public final void update(final float delta) {
+    if (!getWorld().isMeshLatest()) {
+      getWorldMesh().recreateMesh();
+    }
+    // do something here to change the mesh
+  }
+}
+</code></pre>
       <hr />
       <i>The implementation and documentation is licensed under the "Simplified BSD License".</i>
    </BODY>

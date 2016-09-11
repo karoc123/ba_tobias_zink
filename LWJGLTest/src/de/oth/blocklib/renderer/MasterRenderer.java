@@ -15,54 +15,68 @@ import de.oth.blocklib.entities.Camera;
 import de.oth.blocklib.entities.Entity;
 import de.oth.blocklib.entities.Light;
 import de.oth.blocklib.models.TexturedModel;
+import de.oth.blocklib.shaders.ShaderProgram;
 import de.oth.blocklib.shaders.StaticShader;
-import de.oth.blocklib.world.WorldData;
+import de.oth.blocklib.world.WorldMesh;
 
 /**
- * Can render more than one entity at once
- *
+ * Can render more than one entity at once. Holds instance of the mesh- and the
+ * entity renderer.
+ * 
+ * @see ShaderProgram
+ * @see EntityRenderer
+ * @see WorldMeshRenderer
  */
 public class MasterRenderer {
-	
+
 	private StaticShader shader;
 	private EntityRenderer entityRenderer;
 	private WorldMeshRenderer worldMeshRenderer;
-	private Map<TexturedModel,List<Entity>> entities;
+	private Map<TexturedModel, List<Entity>> entities;
 	private Matrix4f projectionMatrix;
 	private long timeToRender;
 	private Configuration config;
-	
+
+	/**
+	 * Create instance of shader and entity- / meshrenderer.
+	 * 
+	 * @param config to create projection matrix
+	 * @see ShaderProgram
+	 * @see EntityRenderer
+	 * @see WorldMeshRenderer
+	 */
 	public MasterRenderer(Configuration config) {
-		super(); 
+		super();
 		this.config = config;
 		createProjectionMatrix();
 		this.shader = new StaticShader();
 		this.entityRenderer = new EntityRenderer(shader, projectionMatrix);
 		this.worldMeshRenderer = new WorldMeshRenderer(shader, projectionMatrix);
-		entities = new HashMap<TexturedModel,List<Entity>>();
-		
+		entities = new HashMap<TexturedModel, List<Entity>>();
+
 		// Because backfaces of the model can be "culled" (not rendered)
-		if(Configuration.OPTIMIZE){
+		if (Configuration.OPTIMIZE) {
 			GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glCullFace(GL11.GL_BACK);			
+			GL11.glCullFace(GL11.GL_BACK);
 		}
 	}
 
 	/**
-	 * Manages startup of renderer, shaders and cleans everything after each frame
+	 * Manages startup of renderer, shaders and cleans everything after each frame.
 	 * @param sun main light
-	 * @param camera playerobject
+	 * @param camera represents the player
+	 * @param worldData a mesh of the world to render
 	 */
-	public void render(Light sun, Camera camera, WorldData worldData){
+	public void render(Light sun, Camera camera, WorldMesh worldData) {
 		long tick = System.nanoTime();
-		
+
 		// Prepare renderer
 		prepare();
 		shader.start();
 		shader.loadSkyColour(0f, 205 / 255.0f, 255 / 255.0f);
 		shader.loadLight(sun);
 		shader.loadViewMatrix(camera);
-		
+
 		// render process
 		entityRenderer.render(entities);
 		worldMeshRenderer.render(worldData);
@@ -70,25 +84,28 @@ public class MasterRenderer {
 		// cleanup
 		shader.stop();
 		entities.clear();
-		
-		timeToRender = ((System.nanoTime() - tick) + timeToRender)/2;
+
+		timeToRender = ((System.nanoTime() - tick) + timeToRender) / 2;
 	}
-	
+
 	/**
-	 * How much time took the last rendering in microseconds (estimated)
+	 * How much time took the last rendering in microseconds (estimated).
+	 * @return Microseconds needed to render.
 	 */
-	public long getTimeToRender(){
+	public long getTimeToRender() {
 		return timeToRender / 1000;
 	}
-	
+
 	/**
 	 * All entities need to be sorted in every frame
-	 * @param entity entity to put in list
+	 * 
+	 * @param entity
+	 *            entity to put in list
 	 */
-	public void processEntity(Entity entity){
+	public void processEntity(Entity entity) {
 		TexturedModel entityModel = entity.getModel();
 		List<Entity> batch = entities.get(entityModel);
-		if(batch != null){
+		if (batch != null) {
 			batch.add(entity);
 		} else {
 			List<Entity> newBatch = new ArrayList<Entity>();
@@ -96,11 +113,11 @@ public class MasterRenderer {
 			entities.put(entityModel, newBatch);
 		}
 	}
-	
+
 	/**
-	 * Initializes the renderer
+	 * Initializes the renderer.
 	 */
-	public void prepare(){
+	public void prepare() {
 		// enable z-index testing
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 
@@ -111,27 +128,27 @@ public class MasterRenderer {
 		GL11.glClearColor(0, 205 / 255.0f, 255 / 255.0f, 0.001f); // blue
 		GL11.glClearColor(255.0f, 255.0f, 255.0f, 1); // white
 	}
-	
+
 	/**
 	 * Because every renderer needs to be cleaned up
 	 */
-	public void cleanUp(){
+	public void cleanUp() {
 		shader.cleanUp();
 	}
-	
-	public Matrix4f getProjectionMatrix(){
+
+	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}
-	
+
 	/**
 	 * Creates a projectionMatrix
 	 */
-	private void createProjectionMatrix(){
+	private void createProjectionMatrix() {
 		float aspectRatio = (float) config.getWidth() / (float) config.getHeight();
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(Configuration.FOV / 2f))) * aspectRatio);
 		float x_scale = y_scale / aspectRatio;
 		float frustum_length = Configuration.FAR_PLANE - Configuration.NEAR_PLANE;
-		
+
 		projectionMatrix = new Matrix4f();
 		projectionMatrix.m00 = x_scale;
 		projectionMatrix.m11 = y_scale;

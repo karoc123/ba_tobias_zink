@@ -4,8 +4,9 @@ import de.oth.blocklib.models.TexturedModel;
 
 /**
  * Representation of the type of a block in a world array.
- * If a block is added, textures and worlddata needs a reconfiguration.
- * @see WorldData
+ * If a block is added, textures, world and worldmesh needs a reconfiguration.
+ * @see WorldMesh
+ * @see World
  * @see TexturedModel
  */
 public enum BlockType {
@@ -18,8 +19,8 @@ public enum BlockType {
 	Dirt,
 	/** Represents a block of stone on all sides. */
 	Stone,
-	/** Represents a block of rock */
+	/** Represents a block of rock. */
 	Rock,
-	/** Represents a block of wall */
+	/** Represents a block of wall. */
 	Wall
 }

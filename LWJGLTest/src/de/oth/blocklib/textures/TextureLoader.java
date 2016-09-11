@@ -22,8 +22,8 @@ public class TextureLoader {
 	/**
 	 * Makes a tex file from a image.
 	 * !!ONLY PNG AT THE MOMENT!!
-	 * @param filetype
-	 * @param in
+	 * @param filetype type of the file (NOT USED AT THE MOMENT).
+	 * @param in inputstream of the texture to load.
 	 * @return a Texture object
 	 */
 	public static Texture getTexture(String filetype, InputStream in) {

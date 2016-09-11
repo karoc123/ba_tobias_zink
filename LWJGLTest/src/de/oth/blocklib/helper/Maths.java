@@ -7,27 +7,32 @@ import org.lwjgl.util.vector.Vector3f;
 import de.oth.blocklib.entities.Camera;
 
 /**
- * Extra Math functions to create view and transformation matrix
+ * Extra Math functions to create view and transformation matrix.
  */
-public class Maths {
+public final class Maths {
 
 	/**
-	 * Calculates the difference between u and v -> u-v
-	 * @param u
-	 * @param v
-	 * @return
+	 * Because there should never be a instance of a utility class.
 	 */
-	public static Vector3f vectorSubtraction(Vector3f u, Vector3f v){
-		return new Vector3f(u.x-v.x, u.y - v.y, u.z-v.z);
+	private Maths() { }
+	
+	/**
+	 * Calculates the difference between u and v means u-v.
+	 * @param u vector to subtract from
+	 * @param v vector to subtract
+	 * @return u-v.
+	 */
+	public static Vector3f vectorSubtraction(final Vector3f u, final Vector3f v) {
+		return new Vector3f(u.x - v.x, u.y - v.y, u.z - v.z);
 	}
 
 	/**
-	 * Create a transformation matrix with a position and scale
+	 * Create a transformation matrix with a position and scale.
 	 * @param translation position where to translate the vertices
 	 * @param scale to scale the vertices
 	 * @return transformation matrix for given vector
 	 */
-	public static Matrix4f createTransformationMatrix(Vector3f translation, float scale) {
+	public static Matrix4f createTransformationMatrix(final Vector3f translation, final float scale) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(translation, matrix, matrix);
@@ -36,7 +41,7 @@ public class Maths {
 	}
 	
 	/**
-	 * Create a transformation matrix with a position, rotation and scale
+	 * Create a transformation matrix with a position, rotation and scale.
 	 * @param translation position where to translate the vertices
 	 * @param rx x-rotation
 	 * @param ry y-rotation
@@ -44,7 +49,12 @@ public class Maths {
 	 * @param scale to scale the vertices
 	 * @return transformation matrix for given vector
 	 */
-	public static Matrix4f createTransformationMatrix(Vector3f translation, float rx, float ry, float rz, float scale) {
+	public static Matrix4f createTransformationMatrix(
+			final Vector3f translation,
+			final float rx,
+			final float ry,
+			final float rz,
+			final float scale) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(translation, matrix, matrix);
@@ -56,11 +66,11 @@ public class Maths {
 	}
 
 	/**
-	 * Create the view matrix with the position, pitch and yaw of the camera 
-	 * @param camera
-	 * @return
+	 * Create the view matrix with the position, pitch and yaw of the camera.
+	 * @param camera ViewMatrix gets calculated for the camera.
+	 * @return A ViewMatrix calculated for the given camera.
 	 */
-	public static Matrix4f createViewMatrix(Camera camera) {
+	public static Matrix4f createViewMatrix(final Camera camera) {
 		Matrix4f viewMatrix = new Matrix4f();
 		viewMatrix.setIdentity();
 		Matrix4f.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);

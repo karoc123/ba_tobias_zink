@@ -46,7 +46,7 @@ public class Light {
 	/**
 	 * Get colour of the light
 	 * @see Vector3f
-	 * @return
+	 * @return the colour of the light
 	 */
 	public Vector3f getColour() {
 		return colour;
@@ -55,7 +55,7 @@ public class Light {
 	/**
 	 * Set colour of the light (Vector3f)
 	 * @see Vector3f
-	 * @param colour
+	 * @param colour the new colour of the light
 	 */
 	public void setColour(Vector3f colour) {
 		this.colour = colour;

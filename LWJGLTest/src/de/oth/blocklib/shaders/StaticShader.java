@@ -7,6 +7,11 @@ import de.oth.blocklib.entities.Camera;
 import de.oth.blocklib.entities.Light;
 import de.oth.blocklib.helper.Maths;
 
+/**
+ * Extends ShaderProgram. Here is the location of the
+ * vertex shader and the fragment shader hardcoded.
+ * @see ShaderProgram
+ */
 public class StaticShader extends ShaderProgram {
 
 	private static final String VERTEX_FILE = "shaders/vertexShader";	
@@ -19,6 +24,10 @@ public class StaticShader extends ShaderProgram {
 	private int location_lightColour;
 	private int location_skyColour;
 	
+	/**
+	 * Use constructor of StaticShader.
+	 * @see StaticShader
+	 */
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
@@ -68,7 +77,7 @@ public class StaticShader extends ShaderProgram {
 	}
 	
 	/**
-	 * Loads Light Position & Colour
+	 * Loads light position and colour
 	 * 
 	 * @param light
 	 *            Light with Position and Colour
@@ -78,10 +87,18 @@ public class StaticShader extends ShaderProgram {
 		super.loadVector(location_lightColour, light.getColour());
 	}
 
+	/**
+	 * Load the projection matrix in the shader.
+	 * @param projection projection matrix to load in the shader.
+	 */
 	public void loadProjectionMatrix(Matrix4f projection){
 		super.loadMatrix(location_projectionMatrix, projection);
 	}
 	
+	/**
+	 * Load the view matrix in the shader.
+	 * @param camera Camera to create the view matrix from.
+	 */
 	public void loadViewMatrix(Camera camera){
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		super.loadMatrix(location_viewMatrix, viewMatrix);

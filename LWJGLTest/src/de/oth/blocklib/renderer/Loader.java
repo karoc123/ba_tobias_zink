@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import de.oth.blocklib.Configuration;
 import de.oth.blocklib.models.RawModel;
 import de.oth.blocklib.textures.Texture;
 import de.oth.blocklib.textures.TextureLoader;
@@ -33,6 +34,8 @@ public class Loader {
 	 *            array of vertices
 	 * @param textureCoords
 	 *            array of texture coordinates
+	 * @param normals
+	 * 			array of normals
 	 * @param indices
 	 *            array of indices
 	 * @return RawModel with all arrays
@@ -68,6 +71,7 @@ public class Loader {
 	 * 
 	 * @param fileName
 	 *            only the name without .png
+	 * @return the id of the texture generated from opengl
 	 */
 	public int loadTexture(String fileName){
 		Texture texture = null;
@@ -84,8 +88,10 @@ public class Loader {
 //		}
 		
 		// MIPMAPPING
-		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
+		if(Configuration.MIPMAPPING){
+			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
+		}
 		int textureID = texture.getTextureID();
 		textures.add(textureID);
 		
@@ -93,7 +99,7 @@ public class Loader {
 	}
 	
 	/**
-	 * Deletes all loaded resources
+	 * Deletes all loaded resources with glDeleteXXX.
 	 */
 	public void cleanUp(){
 		for(int vao:vaos){

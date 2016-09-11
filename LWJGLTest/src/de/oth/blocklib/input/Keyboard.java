@@ -23,8 +23,9 @@ import de.oth.blocklib.helper.PerformanceLog;
 public final class Keyboard {
 
 	/** private constructor. */
-	private Keyboard() { }
-	
+	private Keyboard() {
+	}
+
 	/**
 	 * Callback to handle Keyboardinputs. Gets called once every update. For
 	 * continuous key presses only
@@ -37,11 +38,7 @@ public final class Keyboard {
 	 *            window to catch keyboard input
 	 * @see GLFWKeyCallback
 	 */
-	public static void handleInput(
-			final float delta,
-			final Camera camera,
-			final long window
-			) {
+	public static void handleInput(final float delta, final Camera camera, final long window) {
 
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_SPACE)) {
 			debug("Space Key Pressed");
@@ -100,12 +97,16 @@ public final class Keyboard {
 
 	}
 
-	/** Callback to handle Keyboardinputs.
-	 * Gets called every time a key is pressed.
-	 * For <B>non</B> continuous key presses only.
-	 * @param key a constant from GLFW_KEY
-	 * @param action a constant from GLFW (release or press)
-	 * @see GLFWKeyCallback */
+	/**
+	 * Callback to handle Keyboardinputs. Gets called every time a key is
+	 * pressed. For <B>non</B> continuous key presses only.
+	 * 
+	 * @param key
+	 *            a constant from GLFW_KEY
+	 * @param action
+	 *            a constant from GLFW (release or press)
+	 * @see GLFWKeyCallback
+	 */
 	public static void keyPressed(final int key, final int action) {
 		if (key == GLFW_KEY_F1 && action == GLFW_RELEASE) {
 			debug("F1 Key Pressed");
@@ -116,7 +117,7 @@ public final class Keyboard {
 			Configuration.runDemo = !Configuration.runDemo;
 			System.out.println("Demo: " + Configuration.runDemo);
 		}
-		
+
 		if (key == GLFW_KEY_F3 && action == GLFW_RELEASE) {
 			PerformanceLog.printMemoryUsage();
 		}

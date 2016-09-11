@@ -30,6 +30,7 @@ public class EntityRenderer {
 	/**
 	 * Setups a single renderer with shader and loads projection matrix
 	 * @param shader initialized shader to use
+	 * @param projectionMatrix the projection matrix to use
 	 */
 	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
