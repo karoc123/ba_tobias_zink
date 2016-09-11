@@ -42,8 +42,10 @@ public class MasterRenderer {
 		entities = new HashMap<TexturedModel,List<Entity>>();
 		
 		// Because backfaces of the model can be "culled" (not rendered)
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
+		if(Configuration.OPTIMIZE){
+			GL11.glEnable(GL11.GL_CULL_FACE);
+			GL11.glCullFace(GL11.GL_BACK);			
+		}
 	}
 
 	/**
@@ -57,6 +59,7 @@ public class MasterRenderer {
 		// Prepare renderer
 		prepare();
 		shader.start();
+		shader.loadSkyColour(0f, 205 / 255.0f, 255 / 255.0f);
 		shader.loadLight(sun);
 		shader.loadViewMatrix(camera);
 		
@@ -106,7 +109,7 @@ public class MasterRenderer {
 
 		// make new background
 		GL11.glClearColor(0, 205 / 255.0f, 255 / 255.0f, 0.001f); // blue
-//		GL11.glClearColor(255.0f, 255.0f, 255.0f, 1); // white
+		GL11.glClearColor(255.0f, 255.0f, 255.0f, 1); // white
 	}
 	
 	/**

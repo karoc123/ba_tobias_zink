@@ -62,8 +62,7 @@ public class WorldMeshRenderer {
 	 * Prepares transformationMatrix for worldmesh
 	 */
 	private void prepareWorldMesh(){
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(new Vector3f(-1,-1,-1), 
-				0, 0, 0, 0.25f);
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(new Vector3f(-2.5f,-2.5f,-7), 1.0f);
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 }

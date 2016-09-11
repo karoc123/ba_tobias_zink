@@ -39,7 +39,7 @@ public abstract class ShaderProgram {
 	}
 	
 	/**
-	 * Binds the shaders
+	 * Binds the shaders with glUseProgram.
 	 * 
 	 */
 	public void start(){
@@ -95,13 +95,12 @@ public abstract class ShaderProgram {
 		GL20.glBindAttribLocation(programID, attribute, variableName);
 	}
 	
-	/**
-	 * Loads shader
-	 * 
+	/** Loads shader from a location and compiles it with glCompileShader.
+	 * If a error occurs the program stops.
 	 * @param file
 	 *            location of shader
 	 * @param type
-	 *            shader type
+	 *            shader type: GL20.GL_VERTEX_SHADER oder GL20.GL_FRAGMENT_SHADER
 	 */
 	private static int loadShader(String file, int type){
 		StringBuilder shaderSource = new StringBuilder();

@@ -17,5 +17,9 @@ public enum BlockType {
 	/** Represents a block of dirt on all sides. */
 	Dirt,
 	/** Represents a block of stone on all sides. */
-	Stone
+	Stone,
+	/** Represents a block of rock */
+	Rock,
+	/** Represents a block of wall */
+	Wall
 }

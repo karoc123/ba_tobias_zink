@@ -51,7 +51,7 @@ public class Game {
     private long lastFPS;
 	private Random rand = new Random();
 	
-    float temp = 0;
+    private float temp = 0;
 	
     /** Create and initialize a new game with default configuration.
      * @see Configuration
@@ -124,24 +124,24 @@ public class Game {
 				modelData.getIndices());
 		
 		// Load textures and create models with them
-		ModelTexture texture;
-		texture = new ModelTexture(loader.loadTexture("spritesheet"));
-		TexturedModel texMod = new TexturedModel(model, texture);
+		ModelTexture spritesheet = new ModelTexture(loader.loadTexture("spritesheet"));
+		ModelTexture stone = new ModelTexture(loader.loadTexture("stone"));
+		TexturedModel texModStone = new TexturedModel(model, stone);
 		
-		Entity entity = new Entity(texMod, new Vector3f(4,4,-4),0,0,0,0.25f);
+		Entity entity = new Entity(texModStone, new Vector3f(-2,-1.f,-5),15,0,0,1.f);
 		entities.add(entity);
 			
 		light = new Light(new Vector3f(4,4,-4), new Vector3f(1,1,1));
 		
 		// Create World
-		world = new WorldData(Configuration.getWorldSize(), loader, texture);
+		world = new WorldData(Configuration.getWorldSize(), loader, spritesheet);
 
-		
-//		for(int i = 0; i < 0; i++){
-//			for(int k = 0; k< 0; k++){
-//				for(int j = 0; j< 0; j++){
-//					Entity entity = new Entity(texture, new Vector3f(0.20f*i-0.9f,-0.6f-0.2f*j,-1.8f-0.2f*k),0,0,0,0.2f);
-//					entitys.add(entity);
+		//Entities Test
+//		for(int i = 0; i < 30; i++){
+//			for(int k = 0; k< 30; k++){
+//				for(int j = 0; j< 30; j++){
+//					Entity entityNew = new Entity(texModStone, new Vector3f(0.20f*i-0.9f,-0.6f-0.2f*j,-1.8f-0.2f*k),0,0,0,0.2f);
+//					entities.add(entityNew);
 //				}				
 //			}
 //		}
@@ -163,7 +163,7 @@ public class Game {
 		//Temp
 		if (Configuration.runDemo) {
 			temp += delta;
-			if (temp > 2) {
+			if (temp > 2.1) {
 				if (rand.nextBoolean()){
 					world.setBlock(
 							rand.nextInt(world.worldSize),
@@ -272,6 +272,8 @@ public class Game {
 	    			windowID,
 	    			"FPS: " + fps + " | Render time: ~"
 	    			+ renderer.getTimeToRender() + "µs"
+	    			+ " | Time to display: ~"
+	    			+ delta + "s"
 	    			);
 	        fps = 0; //reset the FPS counter
 	        lastFPS += Utility.SECONDSIZE; //add one second

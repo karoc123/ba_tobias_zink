@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL11;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
@@ -56,6 +57,11 @@ public class TextureLoader {
 			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 4);
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, decoder.getWidth(), decoder.getHeight(), 0,
 					GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buf);
+			
+//			//Anisotropic Filtering
+//			float filter = 4f;
+//			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, filter);
+			
 		} finally {
 			try {
 				in.close();

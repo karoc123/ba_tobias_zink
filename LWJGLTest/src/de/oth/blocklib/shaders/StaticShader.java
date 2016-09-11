@@ -1,6 +1,7 @@
 package de.oth.blocklib.shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import de.oth.blocklib.entities.Camera;
 import de.oth.blocklib.entities.Light;
@@ -16,6 +17,7 @@ public class StaticShader extends ShaderProgram {
 	private int location_viewMatrix;
 	private int location_lightPosition;
 	private int location_lightColour;
+	private int location_skyColour;
 	
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -42,8 +44,19 @@ public class StaticShader extends ShaderProgram {
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_lightPosition = super.getUniformLocation("lightPosition");
 		location_lightColour = super.getUniformLocation("lightColour");
+		location_skyColour = super.getUniformLocation("skyColour");
 	}
 
+	/**
+	 * Load up the colour of the sky onto the fragmentshader.
+	 * @param r red value
+	 * @param g green value
+	 * @param b blue value
+	 */
+	public void loadSkyColour(float r, float g, float b){
+		super.loadVector(location_skyColour, new Vector3f(r,g,b));
+	}
+	
 	/**
 	 * Loads TransformationMatrix
 	 * 

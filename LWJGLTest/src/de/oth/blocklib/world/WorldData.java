@@ -14,8 +14,10 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import de.oth.blocklib.Configuration;
 import de.oth.blocklib.helper.SimplexNoise;
 import de.oth.blocklib.helper.SimplexNoise_octave;
+import de.oth.blocklib.helper.Utility;
 import de.oth.blocklib.renderer.Loader;
 import de.oth.blocklib.textures.ModelTexture;
 
@@ -44,6 +46,7 @@ public class WorldData {
 	// List of Buffers
 	private List<Integer> vaos = new ArrayList<Integer>();
 	private List<Integer> vbos = new ArrayList<Integer>();
+	private List<Integer> textures = new ArrayList<Integer>();
 	
 	// World array
 	BlockType[][][] world;
@@ -62,8 +65,12 @@ public class WorldData {
 		this.worldSize = worldSize;
 		this.loader = loader;
 		this.texture = texture;
+		textures.add(texture.getID());
 		generateEmptyWorld();
-		fillWorldWithBlocksOctave();
+//		fillWorldWithBlocksOctave();
+		fillWorldWithBlocksLookLikeWorld();
+//		fillWorldWithBlocksFull();
+//		fillWorldWithWorstCaseBlocks();
 		createVerticesAsBuffer();
 		initMesh();
 		setMeshLatest(true);
@@ -93,17 +100,20 @@ public class WorldData {
 	 * TODO: HIER IST IRGENDWO EIN BUG :(
 	 */
 	public void recreateMesh(){
+		long time = Utility.getTimeInMilliseconds();
 		createVerticesAsBuffer();
-		updateMesh();
+		deleteOldMeshFromOpengl();
+		initMesh();
 		setMeshLatest(true);
-		debug("mesh recreated!");
+		info("mesh recreated: " + (Utility.getTimeInMilliseconds() - time) + "ms");
 	}
 
 	/**
 	 * stores data in glBufferData
-	 * @param attributeNumber
-	 * @param coordinateSize
-	 * @param data
+	 * @param attributeNumber Specifies the index of the generic vertex attribute to be modified.
+	 * @param coordinateSize Specifies the number of components per generic vertex attribute.
+	 * 			Must be 1, 2, 3, 4.
+	 * @param buffer Data to put in the vbo
 	 */
 	private int storeDataInAttributeList(int attributeNumber, int coordinateSize, FloatBuffer buffer){
 		int vboID = GL15.glGenBuffers();
@@ -123,7 +133,15 @@ public class WorldData {
 	}
 	
 	/**
+	 * call glDeleteBuffer to finally free the memory allocated for the buffers.
+	 */
+	private void deleteOldMeshFromOpengl(){
+		//nothing to do here?
+	}
+	
+	/**
 	 * Loads updated buffers onto gl
+	 * TODO: remove?
 	 */
 	private void updateMesh(){
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);
@@ -169,9 +187,9 @@ public class WorldData {
 		for(int vbo:vbos){
 			GL15.glDeleteBuffers(vbo);
 		}
-//		for(int texture:textures){
-//			GL11.glDeleteTextures(texture);
-//		}
+		for(int texture:textures){
+			GL11.glDeleteTextures(texture);
+		}
 	}
 	
 	private void ubindVAO(){
@@ -182,7 +200,7 @@ public class WorldData {
 	 * Generates a World Array on world creation without any blocks at all.
 	 */
 	private void generateEmptyWorld() {
-		System.out.format("Creating world with size: %,8d%n cubes", 
+		System.out.format("Worldsize Cubes: %,8d%n", 
 				worldSize * worldSize * worldSize);
 		this.world = new BlockType[worldSize][worldSize][worldSize];
 		fillWorldWithNothing();
@@ -206,22 +224,65 @@ public class WorldData {
 	}	
 	
 	/**
-	 * Fills the world array with random blocks.
+	 * Pseudoworldgeneration.
 	 */
-	public void fillWorldWithBlocksOctave() {
-		SimplexNoise sn = new SimplexNoise(100,0.3,5000);
+	public void fillWorldWithBlocksLookLikeWorld() {
+		SimplexNoise sn = new SimplexNoise(100,0.1,5000);
+		int cubesInMesh = 0;
 		// fills the world with blocks
-		for (int i = 0; i < worldSize; i++) {
+		for (int i = 0; i < (worldSize-(worldSize/2)); i++) {
 			for (int k = 0; k < worldSize; k++) {
 				for (int j = 0; j < worldSize; j++) {
-					if (sn.getNoise(i, k, j) < 0.001)
-					{
+					double noise = sn.getNoise(i, k, j);
+					if (i == 0){
 						world[j][i][k] = BlockType.Dirt;
+					} else if (noise < 0.001)
+					{
+						if(noise > 0.00003){
+							world[j][i][k] = BlockType.Stone;
+						} else if (noise < -0.001) {
+							world[j][i][k] = BlockType.Wall;
+						} else {
+							world[j][i][k] = BlockType.Dirt;
+						}
+//						world[j][i][k] = randomBlockType(i, k, j);
+						cubesInMesh++;
 					}
 				}				
 			}
 		}
-
+		System.out.format("Cubes in mesh: %,8d%n", cubesInMesh);
+		// recreate mesh to make change visible
+		setMeshLatest(false);
+	}
+	
+	/**
+	 * Fills the world array with random blocks.
+	 */
+	public void fillWorldWithBlocksOctave() {
+		SimplexNoise sn = new SimplexNoise(100,0.1,5000);
+		int cubesInMesh = 0;
+		// fills the world with blocks
+		for (int i = 0; i < worldSize; i++) {
+			for (int k = 0; k < worldSize; k++) {
+				for (int j = 0; j < worldSize; j++) {
+					double noise = sn.getNoise(i, k, j);
+					if (noise < 0.001)
+					{
+						if(noise > 0.00003){
+							world[j][i][k] = BlockType.Stone;
+						} else if (noise < -0.001) {
+							world[j][i][k] = BlockType.Wall;
+						} else {
+							world[j][i][k] = BlockType.Dirt;
+						}
+//						world[j][i][k] = randomBlockType(i, k, j);
+						cubesInMesh++;
+					}
+				}				
+			}
+		}
+		System.out.format("Cubes in mesh: %,8d%n", cubesInMesh);
 		// recreate mesh to make change visible
 		setMeshLatest(false);
 	}
@@ -235,8 +296,30 @@ public class WorldData {
 			for (int k = 0; k < worldSize; k++) {
 				for (int j = 0; j < worldSize; j++) {
 					world[j][i][k] = randomBlockType(i, k, j);
+//					world[j][i][k] = BlockType.Stone;
 				}				
 			}
+		}
+
+		// recreate mesh to make change visible
+		setMeshLatest(false);
+	}
+
+	/**
+	 * Fills the world array with random blocks.
+	 */
+	public void fillWorldWithWorstCaseBlocks() {
+		// fills the world with blocks
+		for (int i = 0; i < worldSize; i++) {
+			for (int k = 0; k < worldSize; k++) {
+				for (int j = 0; j < worldSize; j++) {
+//					world[j][i][k] = randomBlockType(i, k, j);
+					world[j][i][k] = BlockType.Stone;
+					j++;
+				}		
+				k++;
+			}
+			i++;
 		}
 
 		// recreate mesh to make change visible
@@ -292,44 +375,6 @@ public class WorldData {
 		if (sides[3]){
 			offset += addBotSide(tx, ty, tz, offset, type);
 		}
-//	    // create normals
-//	    normalsData.put(new float[]{
-//				// Back face
-//				0,1,0,	//0
-//				0,0,0,			//1
-//				1 ,0,0,	//2
-//				1,1,0,		//3
-//				
-//				// Front face
-//				0,1,1,		//4
-//				0,0,1,	//5
-//				1,0,1,		//6
-//				1,1,1,		//7
-//				
-//				// Right face
-//				1,1,0,		//8
-//				1,0,0,	//9
-//				1,0,1,		//10
-//				1,1,1,		//11
-//				
-//				// Left face
-//				0,1,0,	//12
-//				0,0,0,	//13
-//				0,0,1,	//14
-//				0,1,1,		//15
-//				
-//				// Top face
-//				0,1,1,		//16
-//				0,1,0,	//17
-//				1,1,0,		//18
-//				1,1,1,		//19
-//				
-//				// Bottom face
-//				0,0,1,	//20
-//				0,0,0,	//21
-//				1,0,0,	//22
-//				1,0,1		//23
-//	    });
 	    
 	    return offset;
 	}
@@ -360,14 +405,20 @@ public class WorldData {
 	    });	    
 
 	    if(type == BlockType.Grass){
-		    addTextureCoordinates(1, 2, 0.5f); // Bottom	
+		    addTextureCoordinates(1, 2, 0.25f); // Bottom	
 	    }
 	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.5f);
+	    	addTextureCoordinates(1, 2, 0.25f);
 	    }
 	    
 	    if(type == BlockType.Stone){ 
-		    addTextureCoordinates(2, 2, 0.5f);
+		    addTextureCoordinates(2, 2, 0.25f);
+	    }
+	    if(type == BlockType.Rock){
+	    	addTextureCoordinates(3, 1, 0.25f);
+	    }
+	    if(type == BlockType.Wall){
+	    	addTextureCoordinates(2, 3, 0.25f);
 	    }
 		return 4;
 	}
@@ -398,14 +449,20 @@ public class WorldData {
 	    });	 
 	    
 	    if(type == BlockType.Grass){
-		    addTextureCoordinates(2, 1, 0.5f); // Top	
+		    addTextureCoordinates(2, 1, 0.25f); // Top	
 	    }
 	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.5f);
+	    	addTextureCoordinates(1, 2, 0.25f);
 	    }
 	    
 	    if(type == BlockType.Stone){ 
-		    addTextureCoordinates(2, 2, 0.5f);
+		    addTextureCoordinates(2, 2, 0.25f);
+	    }
+	    if(type == BlockType.Rock){
+	    	addTextureCoordinates(3, 1, 0.25f);
+	    }
+	    if(type == BlockType.Wall){
+	    	addTextureCoordinates(2, 3, 0.25f);
 	    }
 		return 4;
 	}
@@ -435,14 +492,20 @@ public class WorldData {
 	    });	 
 
 	    if(type == BlockType.Grass){
-		    addTextureCoordinates(1, 1, 0.5f); // Left
+		    addTextureCoordinates(1, 1, 0.25f); // Left
 	    }
 	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.5f);
+	    	addTextureCoordinates(1, 2, 0.25f);
 	    }
 	    
 	    if(type == BlockType.Stone){ 
-		    addTextureCoordinates(2, 2, 0.5f);
+		    addTextureCoordinates(2, 2, 0.25f);
+	    }
+	    if(type == BlockType.Rock){
+	    	addTextureCoordinates(3, 1, 0.25f);
+	    }
+	    if(type == BlockType.Wall){
+	    	addTextureCoordinates(2, 3, 0.25f);
 	    }
 		return 4;
 	}
@@ -472,14 +535,20 @@ public class WorldData {
 	    });	 
 
 	    if(type == BlockType.Grass){
-		    addTextureCoordinates(1, 1, 0.5f); // Right
+		    addTextureCoordinates(1, 1, 0.25f); // Right
 	    }
 	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.5f);
+	    	addTextureCoordinates(1, 2, 0.25f);
 	    }
 	    
 	    if(type == BlockType.Stone){
-		    addTextureCoordinates(2, 2, 0.5f);
+		    addTextureCoordinates(2, 2, 0.25f);
+	    }
+	    if(type == BlockType.Rock){
+	    	addTextureCoordinates(3, 1, 0.25f);
+	    }
+	    if(type == BlockType.Wall){
+	    	addTextureCoordinates(2, 3, 0.25f);
 	    }
 		return 4;
 	}
@@ -509,15 +578,19 @@ public class WorldData {
 	    });	 
 
 	    if(type == BlockType.Grass){
-		    addTextureCoordinates(1, 1, 0.5f); // Front	
+		    addTextureCoordinates(1, 1, 0.25f); // Front	
 	    }
 	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.5f);
-
+	    	addTextureCoordinates(1, 2, 0.25f);
 	    }
-	    
 	    if(type == BlockType.Stone){
-		    addTextureCoordinates(2, 2, 0.5f);
+		    addTextureCoordinates(2, 2, 0.25f);
+	    }
+	    if(type == BlockType.Rock){
+	    	addTextureCoordinates(3, 1, 0.25f);
+	    }
+	    if(type == BlockType.Wall){
+	    	addTextureCoordinates(2, 3, 0.25f);
 	    }
 		return 4;
 	}
@@ -547,15 +620,21 @@ public class WorldData {
 	    });	 
 
 	    if(type == BlockType.Grass){
-		    addTextureCoordinates(1, 1, 0.5f); // Back
+		    addTextureCoordinates(1, 1, 0.25f); // Back
 	    }
 	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.5f);
+	    	addTextureCoordinates(1, 2, 0.25f);
 	    }
 	    
 	    if(type == BlockType.Stone){
-		    addTextureCoordinates(2, 2, 0.5f);
-	    }	
+		    addTextureCoordinates(2, 2, 0.25f);
+	    }
+	    if(type == BlockType.Rock){
+	    	addTextureCoordinates(3, 1, 0.25f);
+	    }
+	    if(type == BlockType.Wall){
+	    	addTextureCoordinates(2, 3, 0.25f);
+	    }
 		return 4;
 	}
 	
@@ -596,10 +675,11 @@ public class WorldData {
 	
 	/**
 	 * If a cube has "air" on one of the sides, it is visible
-	 * <b>ATTENTION:</b> changes the values of sides!
+	 * <b>ATTENTION:</b> changes the values of parameter sides!
 	 * TODO: also check other chunks for border cubes
 	 * @param sides array containing the values for the cubes
-	 * 				order: left, right, top, bottom, before, behind
+	 * 				order: left, right, top, bottom, before, behind.
+	 * 				<b>Gets changed in this method!</b>
 	 * @return
 	 */
 	private boolean checkIfCubeIsVisible(int x, int y, int z, boolean[] sides){
@@ -660,16 +740,47 @@ public class WorldData {
 			sides[5] = false;
 		}
 		
-		//TODO check for other chunks
-		if(x == worldSize-1 || x == 0 || y == worldSize-1 || y == 0 || z == worldSize-1 || z == 0)
+		// if cube is on a border to the world or the next chunk: add the side
+		if(x == worldSize-1)
 		{
+			isVisible = true;
+			sides[1] = true;
+		}
+		if(x == 0)
+		{
+			isVisible = true;
+			sides[0] = true;
+		}
+		if(y == worldSize-1)
+		{
+			isVisible = true;
+			sides[2] = true;
+		}
+		if(y == 0)
+		{
+			isVisible = true;
+			sides[3] = true;
+		}
+		if(z == worldSize-1)
+		{
+			isVisible = true;
+			sides[5] = true;
+		}
+		if(z == 0)
+		{
+			isVisible = true;
+			sides[4] = true;
+		}
+		
+		// Optimization is not active
+		if(!Configuration.OPTIMIZE) {
 			isVisible = true;
 			sides[0] = true;
 			sides[1] = true;
 			sides[2] = true;
 			sides[3] = true;
 			sides[4] = true;
-			sides[5] = true;
+			sides[5] = true;			
 		}
 		return isVisible;
 	}
@@ -692,7 +803,7 @@ public class WorldData {
 				}
 			}
 		}
-		System.out.println("Cubes to render: " + numberOfCubesToRender);
+		System.out.println("Rendered cubes: " + numberOfCubesToRender);
 		return numberOfCubesToRender;
 	}
 	
@@ -742,6 +853,7 @@ public class WorldData {
 		vertexPositionData.clear();
 		textureCoords.clear();
 		indicesData.clear();
+		normalsData.clear();
 		
 		numberOfCubes = 0;
 		int i = 0; //offset
@@ -759,8 +871,8 @@ public class WorldData {
 	            }
 	        }
 	    }
-		System.out.format("Number of vertices: %,8d%n", i*3);
-		System.out.format("Number of triangles: %,8d%n", i);
+		System.out.format("Triangles: %,8d%n", i/2);
+		System.out.format("Vertices: %,8d%n", i);
 		numberOfVertices = i;
 		vertexPositionData.flip();
 		indicesData.flip();

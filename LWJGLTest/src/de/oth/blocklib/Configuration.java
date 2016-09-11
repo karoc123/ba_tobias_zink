@@ -36,15 +36,19 @@ public class Configuration {
 	/** Configures the view frustum  far plane */
 	public static final float FAR_PLANE = 1000;
 	
-	/** Must be set before window creation, fullscreen can't be switched if the game is running, support maybe in lwjgl 3.2
+	/** Must be set before window creation, fullscreen can't be switched if 
+	 * the game is running, support maybe in lwjgl 3.2
 	 * @see https://github.com/glfw/glfw/issues/43 */
 	public static final boolean FULLSCREEN = false;
 	
 	/** Size of the cubic world, blocks in the world = world_size^3 */
-	private static final int WORLD_SIZE = 90;
+	private static final int WORLD_SIZE = 100;
 	
 	/** NOT USED AT THE MOMENT */
 	public static final int CHUNK_SIZE = 16; //not used at the moment
+
+	/**  */
+	public static final boolean OPTIMIZE = true;
 	
 	// Runtime variables
 	/** Used in the renderer to switch between rendering the cubes with texture

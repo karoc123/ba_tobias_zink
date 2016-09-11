@@ -3,7 +3,8 @@ package de.oth.blocklib.entities;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
- * Represents the state of the camera
+ * Represents the state of the camera.
+ * Has a position, pitch, yaw and roll value.
  */
 public class Camera {
 	
@@ -13,6 +14,7 @@ public class Camera {
 	private float roll;
 	
 	/** Constructor of Camera. Used to calculate the viewport in the shaders.
+	 * Has a position, pitch, yaw and roll value
 	 */
 	public Camera() { }
 
@@ -29,8 +31,10 @@ public class Camera {
 	 * @param yaw
 	 *            turns camera left / right
 	 * @param roll
+	 * 			  rolls the camera
 	 */
 	public void move(float dx, float dy, float dz, float pitch, float yaw, float roll){
+//		System.out.println(position.x + " - " + position.y + " - " + position.z);
 		this.position.x += dx;
 		this.position.y += dy;
 		this.position.z += dz;

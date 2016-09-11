@@ -55,7 +55,8 @@ public class EntityRenderer {
 	}
 	
 	/**
-	 * Prepares rendering, called once a frame
+	 * Prepares rendering, called once a frame. Enables vbo
+	 * for the TexturedModel and binds the right texture in opengl.
 	 * @param model a single textured model
 	 */
 	private void prepareTexturedModel(TexturedModel model){
@@ -69,7 +70,7 @@ public class EntityRenderer {
 	}
 	
 	/**
-	 * Called once rendering is finished
+	 * Called once rendering is finished. Disables all vbo and the vba.
 	 */
 	private void unbindTexturedModel(){
 		GL20.glDisableVertexAttribArray(0);
@@ -79,7 +80,7 @@ public class EntityRenderer {
 	}
 	
 	/**
-	 * Prepares instances of TexturedModels
+	 * Loads up the transformationMatrix for the entity on the shader.
 	 */
 	private void prepareInstance(Entity entity){
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), 
