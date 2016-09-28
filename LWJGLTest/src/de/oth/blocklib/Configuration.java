@@ -41,7 +41,7 @@ public class Configuration {
 	 * the game is running, support maybe in lwjgl 3.2.
 	 * <a href="https://github.com/glfw/glfw/issues/43">Bug in glfw</a>
 	 * @see <a href="https://github.com/glfw/glfw/issues/43">Bug in glfw</a> */
-	public static final boolean FULLSCREEN = false;
+	public static final boolean FULLSCREEN = true;
 	
 	/** Size of the cubic world, blocks in the world = world_size^3. */
 	private int worldSize = 150;
