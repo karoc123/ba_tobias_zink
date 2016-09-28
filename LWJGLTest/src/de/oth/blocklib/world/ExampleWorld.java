@@ -17,10 +17,10 @@ public class ExampleWorld extends World{
 		for (int i = 0; i < worldSize; i++) {
 			for (int j = 0; j < worldSize; j++) {
 				if (chess) {
-					world[i][0][j] = BlockType.Stone;
+					world[i][0][j] = BlockType.STONE;
 					chess = !chess;
 				} else {
-					world[i][0][j] = BlockType.Dirt;
+					world[i][0][j] = BlockType.DIRT;
 					chess = !chess;
 				}
 			}
@@ -43,11 +43,11 @@ public class ExampleWorld extends World{
 					if (noise < 0.001)
 					{
 						if(noise > 0.00003){
-							world[j][i][k] = BlockType.Stone;
+							world[j][i][k] = BlockType.STONE;
 						} else if (noise < -0.001) {
-							world[j][i][k] = BlockType.Wall;
+							world[j][i][k] = BlockType.WALL;
 						} else {
-							world[j][i][k] = BlockType.Dirt;
+							world[j][i][k] = BlockType.DIRT;
 						}
 //						world[j][i][k] = randomBlockType(i, k, j);
 						cubesInMesh++;

@@ -187,14 +187,14 @@ public class Game {
 							rand.nextInt(getWorld().worldSize),
 							rand.nextInt(getWorld().worldSize), 
 							rand.nextInt(getWorld().worldSize), 
-							BlockType.Nothing
+							BlockType.NOTHING
 							);					
 				} else {
 					getWorld().setBlock(
 							rand.nextInt(getWorld().worldSize),
 							rand.nextInt(getWorld().worldSize),
 							rand.nextInt(getWorld().worldSize),
-							BlockType.Grass
+							BlockType.GRASS
 							);					
 				}
 				getWorldMesh().recreateMesh();	
@@ -352,16 +352,13 @@ public class Game {
 	
 	public static void testSetup() {
 		Configuration config = new Configuration();
-		config.setHeight(1200);
-		config.setWidth(1600);
-		config.setWorldSize(100);
 		ExampleGame game = new ExampleGame(config);
 
 		ExampleWorld world = new ExampleWorld(config.getWorldSize());
 //		world.fillWorldWithBlocksOctaveNew();
-//		world.fillWorldWithBlocksOctave();
+		world.fillWorldWithBlocksOctave();
 //		world.fillWorldWithChessboard();
-		world.fillWorldWithBlocksLookLikeWorld();
+//		world.fillWorldWithBlocksLookLikeWorld();
 //		world.fillWorldWithBlocksFull();
 //		world.fillWorldWithWorstCaseBlocks();
 

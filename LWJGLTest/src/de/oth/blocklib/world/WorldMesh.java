@@ -222,21 +222,24 @@ public class WorldMesh {
 				1,0,1		//23
 	    });	    
 
-	    if(type == BlockType.Grass){
-		    addTextureCoordinates(1, 2, 0.25f); // Bottom	
+	    if(type == BlockType.GRASS){
+		    addTextureCoordinates(3, 3, 0.25f); // Bottom	
 	    }
-	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.25f);
+	    if(type == BlockType.DIRT){
+	    	addTextureCoordinates(3, 3, 0.25f);
 	    }
 	    
-	    if(type == BlockType.Stone){ 
-		    addTextureCoordinates(2, 2, 0.25f);
+	    if(type == BlockType.STONE){ 
+		    addTextureCoordinates(2, 3, 0.25f);
 	    }
-	    if(type == BlockType.Rock){
+	    if(type == BlockType.LAVA){
 	    	addTextureCoordinates(3, 1, 0.25f);
 	    }
-	    if(type == BlockType.Wall){
-	    	addTextureCoordinates(2, 3, 0.25f);
+	    if(type == BlockType.WALL){
+	    	addTextureCoordinates(4, 3, 0.25f);
+	    }
+	    if(type == BlockType.GOLD){
+	    	addTextureCoordinates(4, 1, 0.25f);
 	    }
 		return 4;
 	}
@@ -266,21 +269,24 @@ public class WorldMesh {
 				1,1,1,		//19
 	    });	 
 	    
-	    if(type == BlockType.Grass){
-		    addTextureCoordinates(2, 1, 0.25f); // Top	
+	    if(type == BlockType.GRASS){
+		    addTextureCoordinates(2, 2, 0.25f); // Top	
 	    }
-	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.25f);
+	    if(type == BlockType.DIRT){
+	    	addTextureCoordinates(3, 3, 0.25f);
 	    }
 	    
-	    if(type == BlockType.Stone){ 
-		    addTextureCoordinates(2, 2, 0.25f);
+	    if(type == BlockType.STONE){ 
+		    addTextureCoordinates(2, 3, 0.25f);
 	    }
-	    if(type == BlockType.Rock){
+	    if(type == BlockType.LAVA){
 	    	addTextureCoordinates(3, 1, 0.25f);
 	    }
-	    if(type == BlockType.Wall){
-	    	addTextureCoordinates(2, 3, 0.25f);
+	    if(type == BlockType.WALL){
+	    	addTextureCoordinates(4, 3, 0.25f);
+	    }
+	    if(type == BlockType.GOLD){
+	    	addTextureCoordinates(4, 1, 0.25f);
 	    }
 		return 4;
 	}
@@ -309,21 +315,24 @@ public class WorldMesh {
 				0,1,1,		//15
 	    });	 
 
-	    if(type == BlockType.Grass){
-		    addTextureCoordinates(1, 1, 0.25f); // Left
+	    if(type == BlockType.GRASS){
+		    addTextureCoordinates(2, 1, 0.25f); // Left
 	    }
-	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.25f);
+	    if(type == BlockType.DIRT){
+	    	addTextureCoordinates(3, 3, 0.25f);
 	    }
 	    
-	    if(type == BlockType.Stone){ 
-		    addTextureCoordinates(2, 2, 0.25f);
+	    if(type == BlockType.STONE){ 
+		    addTextureCoordinates(2, 3, 0.25f);
 	    }
-	    if(type == BlockType.Rock){
+	    if(type == BlockType.LAVA){
 	    	addTextureCoordinates(3, 1, 0.25f);
 	    }
-	    if(type == BlockType.Wall){
-	    	addTextureCoordinates(2, 3, 0.25f);
+	    if(type == BlockType.WALL){
+	    	addTextureCoordinates(4, 3, 0.25f);
+	    }
+	    if(type == BlockType.GOLD){
+	    	addTextureCoordinates(4, 1, 0.25f);
 	    }
 		return 4;
 	}
@@ -352,21 +361,24 @@ public class WorldMesh {
 				1,1,1,		//11
 	    });	 
 
-	    if(type == BlockType.Grass){
-		    addTextureCoordinates(1, 1, 0.25f); // Right
+	    if(type == BlockType.GRASS){
+		    addTextureCoordinates(2, 1, 0.25f); // Right
 	    }
-	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.25f);
+	    if(type == BlockType.DIRT){
+	    	addTextureCoordinates(3, 3, 0.25f);
 	    }
 	    
-	    if(type == BlockType.Stone){
-		    addTextureCoordinates(2, 2, 0.25f);
+	    if(type == BlockType.STONE){
+		    addTextureCoordinates(2, 3, 0.25f);
 	    }
-	    if(type == BlockType.Rock){
+	    if(type == BlockType.LAVA){
 	    	addTextureCoordinates(3, 1, 0.25f);
 	    }
-	    if(type == BlockType.Wall){
-	    	addTextureCoordinates(2, 3, 0.25f);
+	    if(type == BlockType.WALL){
+	    	addTextureCoordinates(4, 3, 0.25f);
+	    }
+	    if(type == BlockType.GOLD){
+	    	addTextureCoordinates(4, 1, 0.25f);
 	    }
 		return 4;
 	}
@@ -395,20 +407,23 @@ public class WorldMesh {
 				1,1,1,		//7
 	    });	 
 
-	    if(type == BlockType.Grass){
-		    addTextureCoordinates(1, 1, 0.25f); // Front	
+	    if(type == BlockType.GRASS){
+		    addTextureCoordinates(2, 1, 0.25f); // Front	
 	    }
-	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.25f);
+	    if(type == BlockType.DIRT){
+	    	addTextureCoordinates(3, 3, 0.25f);
 	    }
-	    if(type == BlockType.Stone){
-		    addTextureCoordinates(2, 2, 0.25f);
+	    if(type == BlockType.STONE){
+		    addTextureCoordinates(2, 3, 0.25f);
 	    }
-	    if(type == BlockType.Rock){
+	    if(type == BlockType.LAVA){
 	    	addTextureCoordinates(3, 1, 0.25f);
 	    }
-	    if(type == BlockType.Wall){
-	    	addTextureCoordinates(2, 3, 0.25f);
+	    if(type == BlockType.WALL){
+	    	addTextureCoordinates(4, 3, 0.25f);
+	    }
+	    if(type == BlockType.GOLD){
+	    	addTextureCoordinates(4, 1, 0.25f);
 	    }
 		return 4;
 	}
@@ -437,21 +452,24 @@ public class WorldMesh {
 				1,1,0,		//3
 	    });	 
 
-	    if(type == BlockType.Grass){
-		    addTextureCoordinates(1, 1, 0.25f); // Back
+	    if(type == BlockType.GRASS){
+		    addTextureCoordinates(2, 1, 0.25f); // Back
 	    }
-	    if(type == BlockType.Dirt){
-	    	addTextureCoordinates(1, 2, 0.25f);
+	    if(type == BlockType.DIRT){
+	    	addTextureCoordinates(3, 3, 0.25f);
 	    }
 	    
-	    if(type == BlockType.Stone){
-		    addTextureCoordinates(2, 2, 0.25f);
+	    if(type == BlockType.STONE){
+		    addTextureCoordinates(2, 3, 0.25f);
 	    }
-	    if(type == BlockType.Rock){
+	    if(type == BlockType.LAVA){
 	    	addTextureCoordinates(3, 1, 0.25f);
 	    }
-	    if(type == BlockType.Wall){
-	    	addTextureCoordinates(2, 3, 0.25f);
+	    if(type == BlockType.WALL){
+	    	addTextureCoordinates(4, 3, 0.25f);
+	    }
+	    if(type == BlockType.GOLD){
+	    	addTextureCoordinates(4, 1, 0.25f);
 	    }
 		return 4;
 	}
@@ -499,7 +517,7 @@ public class WorldMesh {
 	private boolean checkIfCubeIsVisible(int x, int y, int z, boolean[] sides){
 		boolean isVisible = false;
 		
-		if(x > 0 && world.world[x-1][y][z] == BlockType.Nothing)
+		if(x > 0 && world.world[x-1][y][z] == BlockType.NOTHING)
 		{
 			//Left cube
 			isVisible = true;
@@ -508,7 +526,7 @@ public class WorldMesh {
 		{
 			sides[0] = false;
 		}
-		if(x < world.worldSize-1 && world.world[x+1][y][z] == BlockType.Nothing)
+		if(x < world.worldSize-1 && world.world[x+1][y][z] == BlockType.NOTHING)
 		{
 			//Right cube
 			isVisible = true;
@@ -517,7 +535,7 @@ public class WorldMesh {
 		{
 			sides[1] = false;
 		}
-		if(y < world.worldSize-1 && world.world[x][y+1][z] == BlockType.Nothing)
+		if(y < world.worldSize-1 && world.world[x][y+1][z] == BlockType.NOTHING)
 		{
 			//top cube
 			isVisible = true;
@@ -526,7 +544,7 @@ public class WorldMesh {
 		{
 			sides[2] = false;
 		}
-		if(y > 0 && world.world[x][y-1][z] == BlockType.Nothing)
+		if(y > 0 && world.world[x][y-1][z] == BlockType.NOTHING)
 		{
 			//bottom cube
 			isVisible = true;
@@ -535,7 +553,7 @@ public class WorldMesh {
 		{
 			sides[3] = false;
 		}
-		if(z > 0 && world.world[x][y][z-1] == BlockType.Nothing)
+		if(z > 0 && world.world[x][y][z-1] == BlockType.NOTHING)
 		{
 			//cube before
 			isVisible = true;
@@ -544,7 +562,7 @@ public class WorldMesh {
 		{
 			sides[4] = false;
 		}
-		if(z < world.worldSize-1 && world.world[x][y][z+1] == BlockType.Nothing)
+		if(z < world.worldSize-1 && world.world[x][y][z+1] == BlockType.NOTHING)
 		{
 			//cube behind
 			isVisible = true;
@@ -611,7 +629,7 @@ public class WorldMesh {
 			for (int y = 0; y < world.worldSize; y++) {
 				for (int z = 0; z < world.worldSize; z++) {
 
-					if (world.world[x][y][z] != BlockType.Nothing && checkIfCubeIsVisible(x, y, z, sides)) {
+					if (world.world[x][y][z] != BlockType.NOTHING && checkIfCubeIsVisible(x, y, z, sides)) {
 						numberOfCubesToRender++;
 					}
 				}
@@ -634,7 +652,7 @@ public class WorldMesh {
 			for (int y = 0; y < world.worldSize; y++) {
 				for (int z = 0; z < world.worldSize; z++) {
 
-					if (world.world[x][y][z] != BlockType.Nothing && checkIfCubeIsVisible(x, y, z, sides)) {
+					if (world.world[x][y][z] != BlockType.NOTHING && checkIfCubeIsVisible(x, y, z, sides)) {
 						numberOfCubesToRender++;
 						for (boolean side : sides)
 						{
@@ -678,7 +696,7 @@ public class WorldMesh {
 	        for (int y = 0; y < world.worldSize; y++) {
 	            for (int z = 0; z < world.worldSize; z++) {
 	            	numberOfCubes++;
-	            	if(world.world[x][y][z] != BlockType.Nothing && checkIfCubeIsVisible(x, y, z, sides))
+	            	if(world.world[x][y][z] != BlockType.NOTHING && checkIfCubeIsVisible(x, y, z, sides))
 	            	{
 	                    i = putVertices(x*cubeSize, y*cubeSize, -z*cubeSize, i, world.world[x][y][z], sides);
 //	                    System.out.println(i);

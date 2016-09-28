@@ -11,16 +11,18 @@ import de.oth.blocklib.models.TexturedModel;
  */
 public enum BlockType {
 	/** No block present (= air). */
-	Nothing,
+	NOTHING,
 	/** Represents a block of grass.
 	 * Sides of dirt and top with green grass. */
-	Grass,
+	GRASS,
 	/** Represents a block of dirt on all sides. */
-	Dirt,
+	DIRT,
 	/** Represents a block of stone on all sides. */
-	Stone,
-	/** Represents a block of rock. */
-	Rock,
+	STONE,
+	/** Represents a block of lava. */
+	LAVA,
 	/** Represents a block of wall. */
-	Wall
+	WALL,
+	/** Represents a block of gold. */
+	GOLD
 }

@@ -42,32 +42,32 @@ public final class Keyboard {
 
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_SPACE)) {
 			debug("Space Key Pressed");
-			camera.move(0, delta * 1.0f, 0, 0, 0, 0);
+			camera.move(0, delta * Configuration.velocity, 0, 0, 0, 0);
 		}
 
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
 			debug("Left Shift Key Pressed");
-			camera.move(0, -delta * 1.0f, 0, 0, 0, 0);
+			camera.move(0, -delta * Configuration.velocity, 0, 0, 0, 0);
 		}
 
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_W)) {
 			debug("W Key Pressed");
-			camera.walkForward(-delta * 1.0f);
+			camera.walkForward(-delta * Configuration.velocity);
 		}
 
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_A)) {
 			debug("A Key Pressed");
-			camera.strafeLeft(-delta * 1.0f);
+			camera.strafeLeft(-delta * Configuration.velocity);
 		}
 
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_S)) {
 			debug("S Key Pressed");
-			camera.walkBackwards(-delta * 1.0f);
+			camera.walkBackwards(-delta * Configuration.velocity);
 		}
 
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_D)) {
 			debug("D Key Pressed");
-			camera.strafeRight(-delta * 1.0f);
+			camera.strafeRight(-delta * Configuration.velocity);
 		}
 
 		if (KeyboardHandler.isKeyDown(GLFW_KEY_LEFT)) {

@@ -52,7 +52,7 @@ public class World {
 		for (int i = 0; i < worldSize; i++) {
 			for (int k = 0; k < worldSize; k++) {
 				for (int j = 0; j < worldSize; j++) {
-					world[i][k][j] = BlockType.Nothing;
+					world[i][k][j] = BlockType.NOTHING;
 				}				
 			}
 		}
@@ -73,15 +73,15 @@ public class World {
 				for (int j = 0; j < worldSize; j++) {
 					double noise = sn.getNoise(i, k, j);
 					if (i == 0){
-						world[j][i][k] = BlockType.Dirt;
+						world[j][i][k] = BlockType.DIRT;
 					} else if (noise < 0.001)
 					{
 						if(noise > 0.00003){
-							world[j][i][k] = BlockType.Stone;
+							world[j][i][k] = BlockType.STONE;
 						} else if (noise < -0.001) {
-							world[j][i][k] = BlockType.Wall;
+							world[j][i][k] = BlockType.WALL;
 						} else {
-							world[j][i][k] = BlockType.Dirt;
+							world[j][i][k] = BlockType.DIRT;
 						}
 //						world[j][i][k] = randomBlockType(i, k, j);
 						cubesInMesh++;
@@ -108,11 +108,11 @@ public class World {
 					if (noise < 0.001)
 					{
 						if(noise > 0.00003){
-							world[j][i][k] = BlockType.Stone;
+							world[j][i][k] = BlockType.STONE;
 						} else if (noise < -0.001) {
-							world[j][i][k] = BlockType.Wall;
+							world[j][i][k] = BlockType.WALL;
 						} else {
-							world[j][i][k] = BlockType.Dirt;
+							world[j][i][k] = BlockType.DIRT;
 						}
 //						world[j][i][k] = randomBlockType(i, k, j);
 						cubesInMesh++;
@@ -134,7 +134,7 @@ public class World {
 			for (int k = 0; k < worldSize; k++) {
 				for (int j = 0; j < worldSize; j++) {
 					world[j][i][k] = randomBlockType(i, k, j);
-//					world[j][i][k] = BlockType.Stone;
+//					world[j][i][k] = BlockType.WALL;
 				}				
 			}
 		}
@@ -152,7 +152,7 @@ public class World {
 			for (int k = 0; k < worldSize; k++) {
 				for (int j = 0; j < worldSize; j++) {
 //					world[j][i][k] = randomBlockType(i, k, j);
-					world[j][i][k] = BlockType.Stone;
+					world[j][i][k] = BlockType.STONE;
 					j++;
 				}		
 				k++;
@@ -176,11 +176,11 @@ public class World {
 	private BlockType randomBlockType(int i, int k, int j){
 		if(rand.nextInt(2) < 1){
 			if(k == worldSize-1){
-				return BlockType.Grass;
+				return BlockType.GRASS;
 			}
-			return BlockType.Dirt;
+			return BlockType.DIRT;
 		} else {
-			return BlockType.Stone;
+			return BlockType.STONE;
 		}
 	}
 	
@@ -218,7 +218,7 @@ public class World {
 	 * @param z z coordinate of the block to remove.
 	 */
 	public void removeBlock(int x, int y, int z){
-		world[x][y][z] = BlockType.Nothing;
+		world[x][y][z] = BlockType.NOTHING;
 		System.out.println(x + " " + y + " "+ z +" removed ");
 		setMeshLatest(false);
 	}

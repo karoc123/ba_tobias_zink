@@ -41,10 +41,10 @@ public class Configuration {
 	 * the game is running, support maybe in lwjgl 3.2.
 	 * <a href="https://github.com/glfw/glfw/issues/43">Bug in glfw</a>
 	 * @see <a href="https://github.com/glfw/glfw/issues/43">Bug in glfw</a> */
-	public static final boolean FULLSCREEN = false;
+	public static final boolean FULLSCREEN = true;
 	
 	/** Size of the cubic world, blocks in the world = world_size^3. */
-	private int worldSize = 100;
+	private int worldSize = 50;
 	
 	/** NOT USED AT THE MOMENT. */
 	public static final int CHUNK_SIZE = 16; //not used at the moment
@@ -53,7 +53,7 @@ public class Configuration {
 	public static final boolean OPTIMIZE = true;
 	
 	/** Should textures be mip mapped */
-	public static final boolean MIPMAPPING = true;
+	public static final boolean MIPMAPPING = false;
 	
 	// Runtime variables
 	/** Used in the renderer to switch between rendering the cubes with texture
@@ -77,6 +77,9 @@ public class Configuration {
 	public static float mouseSensitivity = 0.05f;
 	/** NOT USED AT THE MOMENT. */
 	public static boolean mouseInvert = false;
+	
+	/** velocity of the player / camera movement */
+	public static float velocity = 6.0f;
 	
 	/** Hight of the window.
 	 *  Can only be set before window creation.
