@@ -157,6 +157,9 @@ public class Game {
 		
 		// Create World
 		setWorldMesh(new WorldMesh(world, spritesheet));
+		
+		// set camera in the middle of the world
+		camera.setPosition(new Vector3f(config.getWorldSize()/2, config.getWorldSize()/2, -config.getWorldSize()/2));
 
 		//Entities Test
 //		for(int i = 0; i < 30; i++){
@@ -356,9 +359,9 @@ public class Game {
 
 		ExampleWorld world = new ExampleWorld(config.getWorldSize());
 //		world.fillWorldWithBlocksOctaveNew();
-		world.fillWorldWithBlocksOctave();
+//		world.fillWorldWithBlocksOctave();
 //		world.fillWorldWithChessboard();
-//		world.fillWorldWithBlocksLookLikeWorld();
+		world.fillWorldWithBlocksLookLikeWorld();
 //		world.fillWorldWithBlocksFull();
 //		world.fillWorldWithWorstCaseBlocks();
 

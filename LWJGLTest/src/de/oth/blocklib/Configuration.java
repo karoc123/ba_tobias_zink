@@ -41,10 +41,10 @@ public class Configuration {
 	 * the game is running, support maybe in lwjgl 3.2.
 	 * <a href="https://github.com/glfw/glfw/issues/43">Bug in glfw</a>
 	 * @see <a href="https://github.com/glfw/glfw/issues/43">Bug in glfw</a> */
-	public static final boolean FULLSCREEN = true;
+	public static final boolean FULLSCREEN = false;
 	
 	/** Size of the cubic world, blocks in the world = world_size^3. */
-	private int worldSize = 50;
+	private int worldSize = 150;
 	
 	/** NOT USED AT THE MOMENT. */
 	public static final int CHUNK_SIZE = 16; //not used at the moment

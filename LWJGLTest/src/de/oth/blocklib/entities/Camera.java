@@ -115,4 +115,12 @@ public class Camera {
 		return roll;
 	}
 
+	/**
+	 * Change the position of the camera.
+	 * @param vector3f a new position.
+	 */
+	public void setPosition(Vector3f vector3f) {
+		this.position = vector3f;
+	}
+
 }
