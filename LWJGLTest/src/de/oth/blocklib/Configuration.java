@@ -14,15 +14,18 @@ import static de.oth.blocklib.helper.Log.*;
 public class Configuration {
 	// Window variables
 	/** Measures the height of the window in pixels. */
-	private int windowHeight = 1080;
+	private int windowHeight = 800;
 	/** Measures the width of the window in pixels. */
-	private int windowWidth = 1920;
+	private int windowWidth = 1200;
+	
+	/** Use this monitor to create fullscreen */
+	public static final int MONITOR = 1;
 	
 	/** Major OpenGL Version to use. */
 	public static final int OPENGL_MAJOR_VERSION = 3;
 	
 	/** Minor OpenGL Version to use. */
-	public static final int OPENGL_MINOR_VERSION = 2;
+	public static final int OPENGL_MINOR_VERSION = 0;
 	
 	/** Changes the behavior of the framework to output more 
 	 * debug information. */
@@ -53,7 +56,7 @@ public class Configuration {
 	public static final boolean OPTIMIZE = true;
 	
 	/** Should textures be mip mapped */
-	public static final boolean MIPMAPPING = false;
+	public static final boolean MIPMAPPING = true;
 	
 	// Runtime variables
 	/** Used in the renderer to switch between rendering the cubes with texture

@@ -5,11 +5,16 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.Version;
+import org.lwjgl.glfw.Callbacks;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -93,17 +98,19 @@ public class Game {
 			System.err.println("Error initializing GLFW");
 			System.exit(1);
 		}
-
+		
+		PointerBuffer  monitors = glfwGetMonitors();
+		monitors.get(0);
 		// Window Hints for OpenGL context
 		glfwWindowHint(GLFW_SAMPLES, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, Configuration.OPENGL_MAJOR_VERSION);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, Configuration.OPENGL_MINOR_VERSION);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 		if (Configuration.FULLSCREEN) {
 			setWindowID(glfwCreateWindow(config.getWidth(), config.getHeight(), 
-					"LWJGL Block Engine", glfwGetPrimaryMonitor(), NULL));
+					"LWJGL Block Engine", monitors.get(Configuration.MONITOR), 0));
 
 		} else {
 			setWindowID(glfwCreateWindow(config.getWidth(), config.getHeight(), 
@@ -111,7 +118,7 @@ public class Game {
 		}
 
 		if (getWindowID() == NULL) {
-			System.err.println("Error creating a window");
+			System.err.println("Error creating a window.");
 			System.exit(1);
 		}
 
