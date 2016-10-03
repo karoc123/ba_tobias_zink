@@ -50,9 +50,9 @@ public class Game {
 	private long windowID;
 	private GLFWKeyCallback keyCallback;
 	private MouseHandler mouseCallback;
-	private Loader loader;
+	private static Loader loader;
 	private MasterRenderer renderer;
-	private ArrayList<Entity> entities = new ArrayList<Entity>();
+	private static ArrayList<Entity> entities = new ArrayList<Entity>();
 	private Camera camera = new Camera();
 	private Light light;
 	private WorldMesh worldMesh;
@@ -100,7 +100,6 @@ public class Game {
 		}
 		
 		PointerBuffer  monitors = glfwGetMonitors();
-		monitors.get(0);
 		// Window Hints for OpenGL context
 		glfwWindowHint(GLFW_SAMPLES, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, Configuration.OPENGL_MAJOR_VERSION);
@@ -109,9 +108,13 @@ public class Game {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
 		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 		if (Configuration.FULLSCREEN) {
-			setWindowID(glfwCreateWindow(config.getWidth(), config.getHeight(), 
-					"LWJGL Block Engine", monitors.get(Configuration.MONITOR), 0));
-
+			if (monitors.limit() > 1){
+				setWindowID(glfwCreateWindow(config.getWidth(), config.getHeight(), 
+						"LWJGL Block Engine", monitors.get(Configuration.MONITOR), 0));
+			} else {
+				setWindowID(glfwCreateWindow(config.getWidth(), config.getHeight(), 
+						"LWJGL Block Engine", glfwGetPrimaryMonitor(), 0));
+			}
 		} else {
 			setWindowID(glfwCreateWindow(config.getWidth(), config.getHeight(), 
 					"LWJGL Block Engine", NULL, NULL));
@@ -158,7 +161,7 @@ public class Game {
 		TexturedModel texModStone = new TexturedModel(model, stone);
 		
 		Entity entity = new Entity(texModStone, new Vector3f(-2,-1.f,-5),15,0,0,1.f);
-		//entities.add(entity);
+//		entities.add(entity);
 			
 		light = new Light(new Vector3f(4,4,-4), new Vector3f(1,1,1));
 		
@@ -166,7 +169,7 @@ public class Game {
 		setWorldMesh(new WorldMesh(world, spritesheet));
 		
 		// set camera in the middle of the world
-		camera.setPosition(new Vector3f(config.getWorldSize()/2, config.getWorldSize()/2, -config.getWorldSize()/2));
+//		camera.setPosition(new Vector3f(config.getWorldSize()/2, config.getWorldSize()/2, -config.getWorldSize()/2));
 
 		//Entities Test
 //		for(int i = 0; i < 30; i++){
@@ -177,6 +180,36 @@ public class Game {
 //				}				
 //			}
 //		}
+	}
+	
+	/**
+	 * Create a entity from ModelData and ModelTexture. Entity needs to be added to the entity list.
+	 * @param modelData vertices of the entity
+	 * @param modelTexture texture of the entity
+	 * @param Position position of the entity
+	 * @return created entity
+	 * @see ModelTexture
+	 * @see ModelData
+	 * @see Loader
+	 */
+	public static Entity loadEntity(ModelData modelData, ModelTexture modelTexture, Vector3f Position){
+		RawModel model = loader.loadToVAO(modelData.getVertices(), 
+				modelData.getTextureCoords(), 
+				modelData.getNormals(), 
+				modelData.getIndices());
+		
+		TexturedModel texMod = new TexturedModel(model, modelTexture);
+		
+		return new Entity(texMod, Position,0,0,0,1.f);
+	}
+	
+	/** Add a entitiy to the list of entities to render. 
+	 * @param e the entitiy to add
+	 * @see Entity
+	 * @see Loader
+	 * */
+	public static void addEntity(Entity e){
+		entities.add(e);
 	}
 
 	/** This method is used to update the game logic.
@@ -388,6 +421,13 @@ public class Game {
 //		}
 //		// ENDE TEMP
 		
+		// Entity example
+		ModelData modelData = OBJLoader.loadOBJ("dragon");
+		ModelTexture stone = new ModelTexture(loader.loadTexture("stone"));
+		Entity entity = loadEntity(modelData, stone, new Vector3f(-2,-1.f,-5));
+//		addEntity(entity); // add to display the dragon
+		
+		// Start world
 		game.initWorld(world);
 		game.start();
 	}

@@ -19,7 +19,7 @@ public class Configuration {
 	private int windowWidth = 1200;
 	
 	/** Use this monitor to create fullscreen */
-	public static final int MONITOR = 1;
+	public static final int MONITOR = 0;
 	
 	/** Major OpenGL Version to use. */
 	public static final int OPENGL_MAJOR_VERSION = 3;
@@ -44,10 +44,10 @@ public class Configuration {
 	 * the game is running, support maybe in lwjgl 3.2.
 	 * <a href="https://github.com/glfw/glfw/issues/43">Bug in glfw</a>
 	 * @see <a href="https://github.com/glfw/glfw/issues/43">Bug in glfw</a> */
-	public static final boolean FULLSCREEN = true;
+	public static final boolean FULLSCREEN = false;
 	
 	/** Size of the cubic world, blocks in the world = world_size^3. */
-	private int worldSize = 150;
+	private int worldSize = 30;
 	
 	/** NOT USED AT THE MOMENT. */
 	public static final int CHUNK_SIZE = 16; //not used at the moment
